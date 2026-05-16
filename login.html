@@ -376,6 +376,11 @@
           <p class="form-subtitle">Preencha seus dados para se cadastrar.</p>
 
           <div class="input-group">
+            <label for="registerName">Nome completo</label>
+            <input type="text" id="registerName" placeholder="Seu nome completo" required />
+          </div>
+
+          <div class="input-group">
             <label for="registerEmail">Email</label>
             <input type="email" id="registerEmail" placeholder="seuemail@exemplo.com" required />
           </div>
@@ -407,7 +412,14 @@
             </div>
           </div>
 
+          <div class="input-group">
+            <label for="verificationCode">Código recebido no email</label>
+            <input type="number" id="verificationCode" placeholder="Digite o código" />
+          </div>
+
+          <button class="primary-btn" id="sendCodeBtn" type="button">Enviar código</button>
           <button class="primary-btn" type="submit">Criar conta</button>
+
           <div id="registerMessage" class="message"></div>
         </form>
       </div>
@@ -415,12 +427,23 @@
   </main>
 
   <script>
-    const API_BASE_URL = "http://localhost:8000";
+    /*
+      API principal corrigida para a URL informada.
+      Mantive a URL antiga como fallback: se a primeira API estiver fora, bloqueada
+      ou a rota não existir nela, o front tenta a segunda automaticamente.
+    */
+    const API_BASE_URLS = [
+      "https://web-production-40ead.up.railway.app",
+      "https://web-production-81b91.up.railway.app"
+    ];
+
+    const REQUEST_TIMEOUT_MS = 20000;
 
     const loginTab = document.getElementById("loginTab");
     const registerTab = document.getElementById("registerTab");
     const loginForm = document.getElementById("loginForm");
     const registerForm = document.getElementById("registerForm");
+    const sendCodeBtn = document.getElementById("sendCodeBtn");
 
     function showMessage(element, text, type) {
       element.textContent = text;
@@ -439,6 +462,155 @@
       registerTab.classList.toggle("active", !isLogin);
       loginForm.classList.toggle("active", isLogin);
       registerForm.classList.toggle("active", !isLogin);
+    }
+
+    function setButtonLoading(button, text) {
+      button.dataset.originalText = button.textContent;
+      button.textContent = text;
+      button.disabled = true;
+    }
+
+    function removeButtonLoading(button) {
+      button.textContent = button.dataset.originalText || button.textContent;
+      button.disabled = false;
+    }
+
+    function calculateAge(birthDateValue) {
+      const birthDate = new Date(birthDateValue);
+      const today = new Date();
+
+      let age = today.getFullYear() - birthDate.getFullYear();
+      const monthDiff = today.getMonth() - birthDate.getMonth();
+
+      if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+        age--;
+      }
+
+      return age;
+    }
+
+    async function readResponseBody(response) {
+      const text = await response.text();
+
+      if (!text) {
+        return null;
+      }
+
+      try {
+        return JSON.parse(text);
+      } catch (error) {
+        return text;
+      }
+    }
+
+    function getApiErrorMessage(error, endpoint) {
+      const rawMessage = String(error && error.message ? error.message : error);
+
+      if (
+        rawMessage.includes("Failed to fetch") ||
+        rawMessage.includes("NetworkError") ||
+        rawMessage.includes("Load failed") ||
+        rawMessage.includes("AbortError")
+      ) {
+        return (
+          "Não foi possível conectar na API. " +
+          "Confira se o servidor está online e se o CORS está liberado para este site. " +
+          `Rota: ${endpoint}`
+        );
+      }
+
+      return rawMessage || "Erro ao comunicar com o servidor.";
+    }
+
+    async function fetchWithTimeout(url, options) {
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), REQUEST_TIMEOUT_MS);
+
+      try {
+        return await fetch(url, {
+          ...options,
+          mode: "cors",
+          cache: "no-store",
+          signal: controller.signal
+        });
+      } finally {
+        clearTimeout(timeoutId);
+      }
+    }
+
+    async function apiRequest(endpoint, method = "GET", body = null) {
+      let lastError = null;
+
+      for (const baseUrl of API_BASE_URLS) {
+        const cleanBaseUrl = baseUrl.replace(/\/+$/, "");
+        const cleanEndpoint = endpoint.startsWith("/") ? endpoint : `/${endpoint}`;
+        const url = `${cleanBaseUrl}${cleanEndpoint}`;
+
+        try {
+          const response = await fetchWithTimeout(url, {
+            method,
+            headers: {
+              "Content-Type": "application/json",
+              "Accept": "application/json"
+            },
+            body: body ? JSON.stringify(body) : undefined
+          });
+
+          const data = await readResponseBody(response);
+
+          if (!response.ok) {
+            let errorMessage = `Erro ${response.status} ao comunicar com o servidor.`;
+
+            if (data && typeof data === "object") {
+              errorMessage =
+                data.message ||
+                data.detail ||
+                data.error ||
+                data.msg ||
+                errorMessage;
+            } else if (typeof data === "string" && data.trim()) {
+              errorMessage = data;
+            }
+
+            // Se a rota não existe nessa API, tenta a próxima URL configurada.
+            if ([404, 405].includes(response.status)) {
+              lastError = new Error(errorMessage);
+              continue;
+            }
+
+            throw new Error(errorMessage);
+          }
+
+          return data;
+
+        } catch (error) {
+          lastError = error;
+
+          // Tenta a próxima API apenas em erro de rede, timeout, CORS ou rota inexistente.
+          const rawMessage = String(error && error.message ? error.message : error);
+          const canTryNext =
+            rawMessage.includes("Failed to fetch") ||
+            rawMessage.includes("NetworkError") ||
+            rawMessage.includes("Load failed") ||
+            rawMessage.includes("AbortError") ||
+            rawMessage.includes("Erro 404") ||
+            rawMessage.includes("Erro 405");
+
+          if (!canTryNext) {
+            throw new Error(getApiErrorMessage(error, endpoint));
+          }
+        }
+      }
+
+      throw new Error(getApiErrorMessage(lastError, endpoint));
+    }
+
+    function saveSession(data) {
+      localStorage.setItem("token", data.token || "");
+      localStorage.setItem("user_name", data.name || "");
+      localStorage.setItem("user_gender", data.gender || "");
+      localStorage.setItem("user_age", data.age || "");
+      localStorage.setItem("is_logged", "true");
     }
 
     loginTab.addEventListener("click", () => setActiveForm("login"));
@@ -461,28 +633,70 @@
       try {
         loginForm.classList.add("loading");
 
-        const response = await fetch(`${API_BASE_URL}/login`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify({ email, password })
+        const data = await apiRequest("/login", "POST", {
+          email,
+          password
         });
 
-        const data = await response.json();
-
-        if (!response.ok) {
-          throw new Error(data.message || "Email ou senha incorretos.");
+        if (!data) {
+          throw new Error("Não foi possível fazer login.");
         }
 
-        localStorage.setItem("token", data.token);
+        if (data.exists === false) {
+          throw new Error("Este email não está cadastrado.");
+        }
+
+        if (data.status === false || !data.token) {
+          throw new Error("Email ou senha incorretos.");
+        }
+
+        saveSession(data);
+
         showMessage(message, "Login realizado com sucesso!", "success");
 
-        // window.location.href = "dashboard.html";
+        setTimeout(() => {
+          window.location.href = "home.html";
+        }, 700);
+
       } catch (error) {
         showMessage(message, error.message, "error");
       } finally {
         loginForm.classList.remove("loading");
+      }
+    });
+
+    sendCodeBtn.addEventListener("click", async () => {
+      const message = document.getElementById("registerMessage");
+      clearMessage(message);
+
+      const email = document.getElementById("registerEmail").value.trim();
+
+      if (!email) {
+        showMessage(message, "Digite seu email antes de enviar o código.", "error");
+        return;
+      }
+
+      try {
+        setButtonLoading(sendCodeBtn, "Enviando...");
+
+        const validUser = await apiRequest("/valid_user", "POST", {
+          email
+        });
+
+        if (validUser && validUser.exists === true) {
+          throw new Error("Este email já está cadastrado. Faça login.");
+        }
+
+        await apiRequest("/env_code_create", "POST", {
+          email
+        });
+
+        showMessage(message, "Código enviado para seu email. Digite o código recebido e clique em Criar conta.", "success");
+
+      } catch (error) {
+        showMessage(message, error.message, "error");
+      } finally {
+        removeButtonLoading(sendCodeBtn);
       }
     });
 
@@ -492,14 +706,16 @@
       const message = document.getElementById("registerMessage");
       clearMessage(message);
 
+      const name = document.getElementById("registerName").value.trim();
       const email = document.getElementById("registerEmail").value.trim();
       const gender = document.getElementById("gender").value;
       const birthDate = document.getElementById("birthDate").value;
       const password = document.getElementById("registerPassword").value;
       const confirmPassword = document.getElementById("confirmPassword").value;
+      const codeValue = document.getElementById("verificationCode").value.trim();
 
-      if (!email || !gender || !birthDate || !password || !confirmPassword) {
-        showMessage(message, "Preencha todos os campos.", "error");
+      if (!name || !email || !gender || !birthDate || !password || !confirmPassword || !codeValue) {
+        showMessage(message, "Preencha todos os campos, incluindo o código recebido no email.", "error");
         return;
       }
 
@@ -513,38 +729,88 @@
         return;
       }
 
+      const age = calculateAge(birthDate);
+
+      if (!age || age < 1) {
+        showMessage(message, "Informe uma data de nascimento válida.", "error");
+        return;
+      }
+
+      const code = Number(codeValue);
+
+      if (!code || Number.isNaN(code)) {
+        showMessage(message, "Digite um código válido.", "error");
+        return;
+      }
+
       try {
         registerForm.classList.add("loading");
 
-        const response = await fetch(`${API_BASE_URL}/register`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify({
-            email,
-            gender,
-            birthDate,
-            password
-          })
+        const validUser = await apiRequest("/valid_user", "POST", {
+          email
         });
 
-        const data = await response.json();
-
-        if (!response.ok) {
-          throw new Error(data.message || "Não foi possível criar a conta.");
+        if (validUser && validUser.exists === true) {
+          throw new Error("Este email já está cadastrado. Faça login.");
         }
 
-        showMessage(message, "Conta criada com sucesso! Agora você pode fazer login.", "success");
-        registerForm.reset();
+        const data = await apiRequest("/create_user", "POST", {
+          email,
+          password,
+          name,
+          age,
+          gender,
+          code
+        });
 
-        setTimeout(() => setActiveForm("login"), 1200);
+        if (!data) {
+          throw new Error("Código inválido ou expirado.");
+        }
+
+        if (data.status === false || !data.token) {
+          throw new Error("Não foi possível criar a conta. Verifique o código enviado por email.");
+        }
+
+        saveSession(data);
+
+        showMessage(message, "Conta criada com sucesso!", "success");
+
+        setTimeout(() => {
+          window.location.href = "home.html";
+        }, 700);
+
       } catch (error) {
         showMessage(message, error.message, "error");
       } finally {
         registerForm.classList.remove("loading");
       }
     });
+
+    async function validateCurrentToken() {
+      const token = localStorage.getItem("token");
+
+      if (!token) {
+        return;
+      }
+
+      try {
+        const data = await apiRequest("/valid_token", "POST", {
+          token
+        });
+
+        if (data && data.is_valid === true) {
+          localStorage.setItem("is_logged", "true");
+        } else {
+          localStorage.removeItem("token");
+          localStorage.removeItem("is_logged");
+        }
+      } catch (error) {
+        localStorage.removeItem("token");
+        localStorage.removeItem("is_logged");
+      }
+    }
+
+    validateCurrentToken();
   </script>
 </body>
 </html>
