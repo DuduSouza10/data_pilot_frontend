@@ -1,0 +1,145 @@
+/* Sidebar compartilhada - Facilita Financeiro */
+#sidebar-container {
+  flex-shrink: 0;
+}
+
+.sidebar {
+  width: 260px;
+  height: 100vh;
+  position: fixed;
+  left: 0;
+  top: 0;
+  background: rgba(16, 24, 39, 0.96);
+  border-right: 1px solid var(--border);
+  padding: 28px 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  box-shadow: 10px 0 40px rgba(0, 0, 0, 0.25);
+  z-index: 10;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 20px;
+  font-weight: 800;
+  margin-bottom: 34px;
+}
+
+.logo-icon {
+  width: 42px;
+  height: 42px;
+  background: var(--blue);
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 900;
+  color: white;
+  box-shadow: 0 0 35px rgba(30, 144, 255, 0.55);
+}
+
+.menu {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.menu a {
+  text-decoration: none;
+  color: var(--muted);
+  padding: 13px 14px;
+  border-radius: 12px;
+  font-weight: 700;
+  font-size: 14px;
+  transition: 0.25s;
+  display: flex;
+  align-items: center;
+  gap: 11px;
+}
+
+.menu a:hover,
+.menu a.active {
+  background: rgba(30, 144, 255, 0.12);
+  color: white;
+}
+
+.menu a.active {
+  background: var(--blue);
+  box-shadow: 0 8px 22px rgba(30, 144, 255, 0.28);
+}
+
+.menu-icon {
+  width: 22px;
+  min-width: 22px;
+  text-align: center;
+  font-size: 16px;
+  line-height: 1;
+  opacity: 0.95;
+}
+
+.sidebar-bottom {
+  display: grid;
+  grid-template-columns: 1fr 46px;
+  gap: 10px;
+  align-items: stretch;
+}
+
+.sidebar-footer {
+  padding: 14px;
+  border: 1px solid rgba(30, 144, 255, 0.25);
+  background: rgba(30, 144, 255, 0.08);
+  border-radius: 16px;
+  color: #cce7ff;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.settings-button {
+  width: 46px;
+  min-height: 100%;
+  border-radius: 16px;
+  border: 1px solid rgba(30, 144, 255, 0.25);
+  background: rgba(30, 144, 255, 0.08);
+  color: #cce7ff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  font-size: 20px;
+  transition: 0.25s;
+}
+
+.settings-button:hover,
+.settings-button.active {
+  background: var(--blue);
+  color: white;
+  box-shadow: 0 8px 22px rgba(30, 144, 255, 0.28);
+  transform: translateY(-1px);
+}
+
+.main {
+  margin-left: 260px;
+  width: calc(100% - 260px);
+  padding: 30px;
+}
+
+@media (max-width: 760px) {
+  .sidebar {
+    position: relative;
+    width: 100%;
+    height: auto;
+  }
+
+  .sidebar-bottom {
+    grid-template-columns: 1fr 46px;
+  }
+
+  .main {
+    margin-left: 0;
+    width: 100%;
+    padding: 22px;
+  }
+}

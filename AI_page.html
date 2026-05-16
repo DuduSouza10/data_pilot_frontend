@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Facilita Financeiro | IA Financeira</title>
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: Arial, Helvetica, sans-serif;
+    }
+
+    :root {
+      --bg: #080c14;
+      --card: #101827;
+      --card-2: #121d30;
+      --blue: #1e90ff;
+      --blue-hover: #0f75d8;
+      --text: #f4f7fb;
+      --muted: #9ca8ba;
+      --border: #24324a;
+      --danger: #ff4d4d;
+      --success: #30d158;
+      --warning: #ffcc00;
+    }
+
+    body {
+      min-height: 100vh;
+      background: radial-gradient(circle at top, #10284a 0%, var(--bg) 45%, #05070c 100%);
+      color: var(--text);
+      display: flex;
+    }
+
+    .sidebar {
+      width: 260px;
+      height: 100vh;
+      position: fixed;
+      left: 0;
+      top: 0;
+      background: rgba(16, 24, 39, 0.96);
+      border-right: 1px solid var(--border);
+      padding: 28px 20px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      box-shadow: 10px 0 40px rgba(0, 0, 0, 0.25);
+      z-index: 10;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 20px;
+      font-weight: 800;
+      margin-bottom: 34px;
+    }
+
+    .logo-icon {
+      width: 42px;
+      height: 42px;
+      background: var(--blue);
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 900;
+      color: white;
+      box-shadow: 0 0 35px rgba(30, 144, 255, 0.55);
+    }
+
+    .menu {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .menu a {
+      text-decoration: none;
+      color: var(--muted);
+      padding: 13px 14px;
+      border-radius: 12px;
+      font-weight: 700;
+      font-size: 14px;
+      transition: 0.25s;
+    }
+
+    .menu a:hover,
+    .menu a.active {
+      background: rgba(30, 144, 255, 0.12);
+      color: white;
+    }
+
+    .menu a.active {
+      background: var(--blue);
+      box-shadow: 0 8px 22px rgba(30, 144, 255, 0.28);
+    }
+
+    .sidebar-footer {
+      padding: 14px;
+      border: 1px solid rgba(30, 144, 255, 0.25);
+      background: rgba(30, 144, 255, 0.08);
+      border-radius: 16px;
+      color: #cce7ff;
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    .main {
+      margin-left: 260px;
+      width: calc(100% - 260px);
+      padding: 30px;
+    }
+
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 28px;
+    }
+
+    .page-title h1 {
+      font-size: 30px;
+      margin-bottom: 6px;
+    }
+
+    .page-title p {
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .ai-status {
+      padding: 11px 16px;
+      border-radius: 999px;
+      background: rgba(48, 209, 88, 0.12);
+      border: 1px solid rgba(48, 209, 88, 0.35);
+      color: #b8ffc8;
+      font-size: 13px;
+      font-weight: 800;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 1.4fr 0.8fr;
+      gap: 22px;
+    }
+
+    .panel {
+      background: rgba(16, 24, 39, 0.92);
+      border: 1px solid var(--border);
+      border-radius: 22px;
+      padding: 24px;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.25);
+      animation: fadeUp 0.55s ease both;
+    }
+
+    .panel-header {
+      margin-bottom: 20px;
+    }
+
+    .panel-header h2 {
+      font-size: 20px;
+      margin-bottom: 6px;
+    }
+
+    .panel-header p {
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .suggestions {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+      margin-bottom: 20px;
+    }
+
+    .suggestion-card {
+      background: #0b1220;
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 16px;
+      cursor: pointer;
+      transition: 0.25s;
+    }
+
+    .suggestion-card:hover {
+      transform: translateY(-3px);
+      border-color: rgba(30, 144, 255, 0.45);
+      background: rgba(30, 144, 255, 0.08);
+    }
+
+    .suggestion-card strong {
+      display: block;
+      margin-bottom: 8px;
+      font-size: 14px;
+    }
+
+    .suggestion-card span {
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.4;
+    }
+
+    .chat-box {
+      height: 430px;
+      background: #0b1220;
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 20px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .message {
+      max-width: 82%;
+      padding: 14px 16px;
+      border-radius: 16px;
+      font-size: 14px;
+      line-height: 1.6;
+      animation: messageEnter 0.35s ease;
+    }
+
+    .message.ai {
+      align-self: flex-start;
+      background: rgba(30, 144, 255, 0.1);
+      border: 1px solid rgba(30, 144, 255, 0.25);
+      color: #dbeeff;
+    }
+
+    .message.user {
+      align-self: flex-end;
+      background: var(--blue);
+      color: white;
+      font-weight: 600;
+    }
+
+    .chat-input {
+      display: flex;
+      gap: 12px;
+      margin-top: 16px;
+    }
+
+    .chat-input input {
+      flex: 1;
+      padding: 15px;
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      background: #0b1220;
+      color: var(--text);
+      outline: none;
+      font-size: 14px;
+    }
+
+    .chat-input input:focus {
+      border-color: var(--blue);
+      box-shadow: 0 0 0 4px rgba(30, 144, 255, 0.12);
+    }
+
+    .chat-input button {
+      border: none;
+      border-radius: 14px;
+      padding: 0 22px;
+      background: var(--blue);
+      color: white;
+      font-weight: 900;
+      cursor: pointer;
+      transition: 0.25s;
+    }
+
+    .chat-input button:hover {
+      background: var(--blue-hover);
+      transform: translateY(-1px);
+      box-shadow: 0 12px 28px rgba(30, 144, 255, 0.24);
+    }
+
+    .alerts {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .alert {
+      padding: 16px;
+      border-radius: 18px;
+      border: 1px solid var(--border);
+      background: #0b1220;
+      transition: 0.25s;
+    }
+
+    .alert:hover {
+      transform: translateX(3px);
+      border-color: rgba(30, 144, 255, 0.35);
+    }
+
+    .alert-top {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 8px;
+    }
+
+    .alert-icon {
+      width: 34px;
+      height: 34px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 900;
+      flex-shrink: 0;
+    }
+
+    .alert-icon.green {
+      background: rgba(48, 209, 88, 0.12);
+      color: var(--success);
+    }
+
+    .alert-icon.yellow {
+      background: rgba(255, 204, 0, 0.12);
+      color: var(--warning);
+    }
+
+    .alert-icon.red {
+      background: rgba(255, 77, 77, 0.12);
+      color: var(--danger);
+    }
+
+    .alert h3 {
+      font-size: 14px;
+    }
+
+    .alert p {
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    .health-card {
+      margin-top: 22px;
+      background: linear-gradient(145deg, rgba(30, 144, 255, 0.16), rgba(16, 24, 39, 0.9));
+      border: 1px solid rgba(30, 144, 255, 0.35);
+      border-radius: 22px;
+      padding: 22px;
+      animation: fadeUp 0.7s ease both;
+    }
+
+    .health-card h2 {
+      font-size: 20px;
+      margin-bottom: 12px;
+    }
+
+    .health-score {
+      font-size: 42px;
+      font-weight: 900;
+      color: var(--success);
+      margin-bottom: 8px;
+    }
+
+    .health-card p {
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    .progress {
+      width: 100%;
+      height: 10px;
+      border-radius: 999px;
+      background: #0b1220;
+      margin-top: 18px;
+      overflow: hidden;
+    }
+
+    .progress-bar {
+      width: 78%;
+      height: 100%;
+      background: linear-gradient(90deg, var(--blue), var(--success));
+      border-radius: 999px;
+      animation: growBar 1s ease;
+    }
+
+    @keyframes fadeUp {
+      from {
+        opacity: 0;
+        transform: translateY(14px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes messageEnter {
+      from {
+        opacity: 0;
+        transform: translateY(8px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes growBar {
+      from {
+        width: 0;
+      }
+
+      to {
+        width: 78%;
+      }
+    }
+
+    @media (max-width: 1100px) {
+      .grid {
+        grid-template-columns: 1fr;
+      }
+
+      .suggestions {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 760px) {
+      body {
+        display: block;
+      }
+
+      .sidebar {
+        position: relative;
+        width: 100%;
+        height: auto;
+      }
+
+      .main {
+        margin-left: 0;
+        width: 100%;
+        padding: 22px;
+      }
+
+      .topbar {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 14px;
+      }
+
+      .chat-input {
+        flex-direction: column;
+      }
+
+      .chat-input button {
+        padding: 15px;
+      }
+    }
+  </style>
+
+  <link rel="stylesheet" href="sidebar-shared.css" />
+</head>
+
+<body data-page="AI_page">
+  <div id="sidebar-container"></div>
+
+<main class="main">
+    <header class="topbar">
+      <div class="page-title">
+        <h1>IA Financeira</h1>
+        <p>Converse com sua assistente financeira inteligente.</p>
+      </div>
+
+      <div class="ai-status">IA online</div>
+    </header>
+
+    <section class="grid">
+      <div class="panel">
+        <div class="panel-header">
+          <h2>Assistente financeiro</h2>
+          <p>Faça perguntas sobre lucro, despesas, caixa e saúde financeira.</p>
+        </div>
+
+        <div class="suggestions">
+          <div class="suggestion-card" data-question="Quanto eu lucrei esse mês?">
+            <strong>Lucro do mês</strong>
+            <span>Descubra o resultado financeiro atual.</span>
+          </div>
+
+          <div class="suggestion-card" data-question="Quais despesas posso reduzir?">
+            <strong>Reduzir despesas</strong>
+            <span>Receba sugestões para economizar.</span>
+          </div>
+
+          <div class="suggestion-card" data-question="Tenho dinheiro para pagar as contas da semana?">
+            <strong>Contas da semana</strong>
+            <span>Analise seu caixa para próximos pagamentos.</span>
+          </div>
+        </div>
+
+        <div class="chat-box" id="chatBox">
+          <div class="message ai">
+            Olá! Eu sou a IA Financeira do Facilita Financeiro. Posso analisar seu caixa, despesas, receitas e dar sugestões para melhorar a saúde financeira da sua empresa.
+          </div>
+        </div>
+
+        <div class="chat-input">
+          <input type="text" id="userInput" placeholder="Digite sua pergunta financeira..." />
+          <button id="sendBtn">Enviar</button>
+        </div>
+      </div>
+
+      <div>
+        <div class="panel">
+          <div class="panel-header">
+            <h2>Alertas inteligentes</h2>
+            <p>Insights automáticos sobre sua empresa.</p>
+          </div>
+
+          <div class="alerts">
+            <div class="alert">
+              <div class="alert-top">
+                <div class="alert-icon yellow">!</div>
+                <h3>Despesas em alta</h3>
+              </div>
+              <p>Suas despesas operacionais aumentaram 8% em relação ao mês anterior.</p>
+            </div>
+
+            <div class="alert">
+              <div class="alert-top">
+                <div class="alert-icon green">✓</div>
+                <h3>Caixa saudável</h3>
+              </div>
+              <p>Seu saldo atual cobre as contas previstas para os próximos 7 dias.</p>
+            </div>
+
+            <div class="alert">
+              <div class="alert-top">
+                <div class="alert-icon red">R$</div>
+                <h3>Atenção a recebíveis</h3>
+              </div>
+              <p>Existem R$ 4.800,00 em recebimentos atrasados aguardando cobrança.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="health-card">
+          <h2>Saúde financeira</h2>
+          <div class="health-score">78%</div>
+          <p>Sua empresa está em uma condição financeira positiva, mas ainda há oportunidades para reduzir custos e melhorar o fluxo de caixa.</p>
+
+          <div class="progress">
+            <div class="progress-bar"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const chatBox = document.getElementById("chatBox");
+    const userInput = document.getElementById("userInput");
+    const sendBtn = document.getElementById("sendBtn");
+    const suggestionCards = document.querySelectorAll(".suggestion-card");
+
+    function addMessage(text, type) {
+      const message = document.createElement("div");
+      message.className = `message ${type}`;
+      message.textContent = text;
+      chatBox.appendChild(message);
+      chatBox.scrollTop = chatBox.scrollHeight;
+    }
+
+    function getFakeAIResponse(question) {
+      const lower = question.toLowerCase();
+
+      if (lower.includes("lucrei") || lower.includes("lucro")) {
+        return "Com base nos dados simulados, seu lucro estimado neste mês é de R$ 34.220,00. O resultado está positivo, principalmente pelo aumento das receitas e controle das despesas fixas.";
+      }
+
+      if (lower.includes("despesas") || lower.includes("reduzir")) {
+        return "Você pode reduzir despesas analisando serviços recorrentes, renegociando fornecedores e revisando gastos operacionais. A maior oportunidade está em despesas administrativas, que subiram 8% este mês.";
+      }
+
+      if (lower.includes("contas") || lower.includes("semana") || lower.includes("pagar")) {
+        return "Sim. Seu saldo atual cobre as contas previstas para os próximos 7 dias. Mesmo assim, recomendo acompanhar os recebimentos atrasados para manter uma margem de segurança.";
+      }
+
+      return "Analisei sua pergunta com base em dados simulados. Sua empresa apresenta uma situação estável, mas é importante acompanhar fluxo de caixa, contas vencendo e despesas operacionais.";
+    }
+
+    function sendMessage() {
+      const question = userInput.value.trim();
+
+      if (!question) return;
+
+      addMessage(question, "user");
+      userInput.value = "";
+
+      setTimeout(() => {
+        addMessage(getFakeAIResponse(question), "ai");
+      }, 600);
+    }
+
+    sendBtn.addEventListener("click", sendMessage);
+
+    userInput.addEventListener("keydown", (event) => {
+      if (event.key === "Enter") {
+        sendMessage();
+      }
+    });
+
+    suggestionCards.forEach(card => {
+      card.addEventListener("click", () => {
+        userInput.value = card.dataset.question;
+        sendMessage();
+      });
+    });
+  </script>
+  <script src="sidebar-loader.js"></script>
+</body>
+</html>

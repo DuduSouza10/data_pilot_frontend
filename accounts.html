@@ -1,0 +1,1392 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Facilita Financeiro | Contas</title>
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: Arial, Helvetica, sans-serif;
+    }
+
+    :root {
+      --bg: #080c14;
+      --card: #101827;
+      --card-2: #121d30;
+      --blue: #1e90ff;
+      --blue-hover: #0f75d8;
+      --text: #f4f7fb;
+      --muted: #9ca8ba;
+      --border: #24324a;
+      --danger: #ff4d4d;
+      --success: #30d158;
+      --warning: #ffcc00;
+    }
+
+    body {
+      min-height: 100vh;
+      background: radial-gradient(circle at top, #10284a 0%, var(--bg) 45%, #05070c 100%);
+      color: var(--text);
+      display: flex;
+    }
+
+    .sidebar {
+      width: 260px;
+      height: 100vh;
+      position: fixed;
+      left: 0;
+      top: 0;
+      background: rgba(16, 24, 39, 0.96);
+      border-right: 1px solid var(--border);
+      padding: 28px 20px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      box-shadow: 10px 0 40px rgba(0, 0, 0, 0.25);
+      z-index: 10;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 20px;
+      font-weight: 800;
+      margin-bottom: 34px;
+    }
+
+    .logo-icon {
+      width: 42px;
+      height: 42px;
+      background: var(--blue);
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 900;
+      color: white;
+      box-shadow: 0 0 35px rgba(30, 144, 255, 0.55);
+    }
+
+    .menu {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .menu a {
+      text-decoration: none;
+      color: var(--muted);
+      padding: 13px 14px;
+      border-radius: 12px;
+      font-weight: 700;
+      font-size: 14px;
+      transition: 0.25s;
+    }
+
+    .menu a:hover,
+    .menu a.active {
+      background: rgba(30, 144, 255, 0.12);
+      color: white;
+    }
+
+    .menu a.active {
+      background: var(--blue);
+      box-shadow: 0 8px 22px rgba(30, 144, 255, 0.28);
+    }
+
+    .sidebar-footer {
+      padding: 14px;
+      border: 1px solid rgba(30, 144, 255, 0.25);
+      background: rgba(30, 144, 255, 0.08);
+      border-radius: 16px;
+      color: #cce7ff;
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    .main {
+      margin-left: 260px;
+      width: calc(100% - 260px);
+      padding: 30px;
+    }
+
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 18px;
+      margin-bottom: 28px;
+    }
+
+    .page-title h1 {
+      font-size: 30px;
+      margin-bottom: 6px;
+    }
+
+    .page-title p {
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .top-actions {
+      display: flex;
+      gap: 12px;
+    }
+
+    .btn {
+      border: none;
+      border-radius: 12px;
+      padding: 13px 16px;
+      font-size: 14px;
+      font-weight: 800;
+      cursor: pointer;
+      transition: 0.25s;
+    }
+
+    .btn-primary {
+      background: var(--blue);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background: var(--blue-hover);
+      transform: translateY(-1px);
+      box-shadow: 0 12px 28px rgba(30, 144, 255, 0.24);
+    }
+
+    .btn-outline {
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--text);
+    }
+
+    .btn-outline:hover {
+      background: rgba(30, 144, 255, 0.08);
+      color: var(--blue);
+      transform: translateY(-1px);
+    }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 18px;
+      margin-bottom: 24px;
+    }
+
+    .card {
+      background: rgba(16, 24, 39, 0.92);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 22px;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.25);
+      position: relative;
+      overflow: hidden;
+      transition: 0.25s;
+    }
+
+    .card:hover {
+      transform: translateY(-3px);
+      border-color: rgba(30, 144, 255, 0.45);
+      box-shadow: 0 22px 60px rgba(0, 0, 0, 0.35);
+    }
+
+    .card::before {
+      content: "";
+      position: absolute;
+      width: 130px;
+      height: 130px;
+      border-radius: 50%;
+      background: rgba(30, 144, 255, 0.12);
+      filter: blur(10px);
+      top: -60px;
+      right: -60px;
+    }
+
+    .card-title {
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 700;
+      margin-bottom: 12px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .card-value {
+      font-size: 25px;
+      font-weight: 900;
+      margin-bottom: 8px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .card-info {
+      font-size: 12px;
+      color: var(--muted);
+      position: relative;
+      z-index: 1;
+    }
+
+    .positive {
+      color: var(--success);
+    }
+
+    .negative {
+      color: var(--danger);
+    }
+
+    .warning {
+      color: var(--warning);
+    }
+
+    .panel {
+      background: rgba(16, 24, 39, 0.92);
+      border: 1px solid var(--border);
+      border-radius: 22px;
+      padding: 24px;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.25);
+      margin-bottom: 22px;
+    }
+
+    .panel-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 22px;
+    }
+
+    .panel-header h2 {
+      font-size: 20px;
+    }
+
+    .panel-header span {
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .tabs {
+      display: flex;
+      background: var(--card-2);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 5px;
+      width: fit-content;
+      min-width: 320px;
+    }
+
+    .tab-btn {
+      flex: 1;
+      border: none;
+      background: transparent;
+      color: var(--muted);
+      padding: 12px 18px;
+      border-radius: 10px;
+      cursor: pointer;
+      font-weight: 800;
+      transition: 0.25s;
+    }
+
+    .tab-btn:hover {
+      color: white;
+      transform: translateY(-1px);
+    }
+
+    .tab-btn.active {
+      background: var(--blue);
+      color: white;
+      box-shadow: 0 8px 22px rgba(30, 144, 255, 0.28);
+    }
+
+    .table-wrapper {
+      overflow-x: auto;
+      max-height: 520px;
+      overflow-y: auto;
+      padding-right: 4px;
+    }
+
+    .table-wrapper::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+
+    .table-wrapper::-webkit-scrollbar-track {
+      background: #0b1220;
+      border-radius: 999px;
+    }
+
+    .table-wrapper::-webkit-scrollbar-thumb {
+      background: rgba(30, 144, 255, 0.45);
+      border-radius: 999px;
+    }
+
+    .table-wrapper::-webkit-scrollbar-thumb:hover {
+      background: rgba(30, 144, 255, 0.7);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 950px;
+    }
+
+    th,
+    td {
+      padding: 15px 10px;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+      font-size: 14px;
+    }
+
+    th {
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 800;
+      position: sticky;
+      top: 0;
+      background: rgba(16, 24, 39, 0.98);
+      z-index: 2;
+    }
+
+    td {
+      color: var(--text);
+    }
+
+    tbody tr {
+      transition: 0.25s;
+    }
+
+    tbody tr:hover {
+      background: rgba(30, 144, 255, 0.05);
+    }
+
+    .status {
+      padding: 6px 10px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 900;
+      white-space: nowrap;
+    }
+
+    .status.paid {
+      background: rgba(48, 209, 88, 0.12);
+      color: var(--success);
+    }
+
+    .status.pending {
+      background: rgba(255, 204, 0, 0.12);
+      color: var(--warning);
+    }
+
+    .status.late {
+      background: rgba(255, 77, 77, 0.12);
+      color: var(--danger);
+    }
+
+    .status.today {
+      background: rgba(30, 144, 255, 0.12);
+      color: var(--blue);
+    }
+
+    .actions {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .action-btn {
+      border: 1px solid var(--border);
+      background: #0b1220;
+      color: var(--text);
+      border-radius: 10px;
+      padding: 8px 10px;
+      font-size: 12px;
+      font-weight: 800;
+      cursor: pointer;
+      transition: 0.25s;
+      white-space: nowrap;
+    }
+
+    .action-btn:hover {
+      transform: translateY(-1px);
+      border-color: rgba(30, 144, 255, 0.45);
+      background: rgba(30, 144, 255, 0.08);
+      color: var(--blue);
+    }
+
+    .action-btn.pay:hover {
+      border-color: rgba(48, 209, 88, 0.45);
+      background: rgba(48, 209, 88, 0.1);
+      color: var(--success);
+    }
+
+    .empty-state {
+      display: none;
+      text-align: center;
+      color: var(--muted);
+      padding: 26px;
+      font-size: 14px;
+    }
+
+    .empty-state.show {
+      display: block;
+    }
+
+    input,
+    select,
+    textarea {
+      width: 100%;
+      padding: 14px 15px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      background: #0b1220;
+      color: var(--text);
+      outline: none;
+      font-size: 14px;
+      transition: 0.25s;
+    }
+
+    textarea {
+      resize: none;
+      height: 92px;
+    }
+
+    input:focus,
+    select:focus,
+    textarea:focus {
+      border-color: var(--blue);
+      box-shadow: 0 0 0 4px rgba(30, 144, 255, 0.12);
+    }
+
+    select option {
+      background: #0b1220;
+      color: var(--text);
+    }
+
+    .input-group label {
+      display: block;
+      margin-bottom: 7px;
+      color: #d8e2f0;
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(5, 7, 12, 0.62);
+      backdrop-filter: blur(10px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 100;
+      padding: 20px;
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+      transition: opacity 0.28s ease, visibility 0.28s ease;
+    }
+
+    .modal-overlay.show {
+      opacity: 1;
+      visibility: visible;
+      pointer-events: auto;
+    }
+
+    .modal-overlay.hide {
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+    }
+
+    .modal {
+      width: 100%;
+      max-width: 720px;
+      background: rgba(16, 24, 39, 0.98);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      box-shadow: 0 30px 100px rgba(0, 0, 0, 0.65);
+      overflow: hidden;
+      position: relative;
+      opacity: 0;
+      transform: translateY(28px) scale(0.94);
+      transition: opacity 0.28s ease, transform 0.28s ease;
+    }
+
+    .modal-overlay.show .modal {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+
+    .modal-overlay.hide .modal {
+      opacity: 0;
+      transform: translateY(24px) scale(0.94);
+    }
+
+    .modal::before {
+      content: "";
+      position: absolute;
+      width: 220px;
+      height: 220px;
+      border-radius: 50%;
+      background: rgba(30, 144, 255, 0.16);
+      filter: blur(12px);
+      top: -90px;
+      right: -80px;
+    }
+
+    .modal-header {
+      padding: 24px 26px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: relative;
+      z-index: 1;
+    }
+
+    .modal-header h2 {
+      font-size: 22px;
+      margin-bottom: 5px;
+    }
+
+    .modal-header p {
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .close-modal {
+      width: 38px;
+      height: 38px;
+      border: 1px solid var(--border);
+      background: #0b1220;
+      color: var(--text);
+      border-radius: 12px;
+      cursor: pointer;
+      font-size: 18px;
+      transition: 0.25s;
+    }
+
+    .close-modal:hover {
+      background: rgba(255, 77, 77, 0.12);
+      color: #ffb3b3;
+      border-color: rgba(255, 77, 77, 0.35);
+    }
+
+    .modal-body {
+      padding: 26px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .account-form {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+    }
+
+    .account-form .full {
+      grid-column: 1 / -1;
+    }
+
+    .modal-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 12px;
+      padding: 0 26px 26px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .detail-list {
+      display: grid;
+      gap: 12px;
+    }
+
+    .detail-item {
+      padding: 14px;
+      background: #0b1220;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+    }
+
+    .detail-item span {
+      display: block;
+      color: var(--muted);
+      font-size: 12px;
+      margin-bottom: 5px;
+    }
+
+    .detail-item strong {
+      font-size: 15px;
+    }
+
+    .form-message {
+      display: none;
+      margin-top: 16px;
+      padding: 12px;
+      border-radius: 12px;
+      font-size: 14px;
+      background: rgba(48, 209, 88, 0.12);
+      border: 1px solid rgba(48, 209, 88, 0.35);
+      color: #b8ffc8;
+    }
+
+    .form-message.show {
+      display: block;
+      animation: fadeUp 0.3s ease;
+    }
+
+    .fade-up {
+      animation: fadeUp 0.55s ease both;
+    }
+
+    @keyframes fadeUp {
+      from {
+        opacity: 0;
+        transform: translateY(14px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @media (max-width: 1200px) {
+      .cards {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .topbar {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .top-actions {
+        width: 100%;
+      }
+    }
+
+    @media (max-width: 760px) {
+      body {
+        display: block;
+      }
+
+      .sidebar {
+        position: relative;
+        width: 100%;
+        height: auto;
+      }
+
+      .main {
+        margin-left: 0;
+        width: 100%;
+        padding: 22px;
+      }
+
+      .cards {
+        grid-template-columns: 1fr;
+      }
+
+      .panel-header {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .tabs {
+        width: 100%;
+        min-width: unset;
+      }
+
+      .btn {
+        width: 100%;
+      }
+
+      .account-form {
+        grid-template-columns: 1fr;
+      }
+
+      .modal-actions {
+        flex-direction: column-reverse;
+      }
+    }
+  </style>
+
+  <link rel="stylesheet" href="sidebar-shared.css" />
+</head>
+
+<body data-page="accounts">
+  <div id="sidebar-container"></div>
+
+<main class="main">
+    <header class="topbar fade-up">
+      <div class="page-title">
+        <h1>Contas</h1>
+        <p>Gerencie contas a pagar e contas a receber em um só lugar.</p>
+      </div>
+
+      <div class="top-actions">
+        <button class="btn btn-outline" id="exportBtn" type="button">Exportar</button>
+        <button class="btn btn-primary" id="openAccountModal" type="button">Nova conta</button>
+      </div>
+    </header>
+
+    <section class="cards">
+      <div class="card fade-up">
+        <div class="card-title">Total a pagar</div>
+        <div class="card-value negative" id="totalPayable">R$ 0,00</div>
+        <div class="card-info">Contas em aberto para pagamento</div>
+      </div>
+
+      <div class="card fade-up">
+        <div class="card-title">Total a receber</div>
+        <div class="card-value positive" id="totalReceivable">R$ 0,00</div>
+        <div class="card-info">Valores previstos de clientes</div>
+      </div>
+
+      <div class="card fade-up">
+        <div class="card-title">Contas vencidas</div>
+        <div class="card-value negative" id="overdueAccounts">0</div>
+        <div class="card-info">Itens com vencimento em atraso</div>
+      </div>
+
+      <div class="card fade-up">
+        <div class="card-title">Vencendo hoje</div>
+        <div class="card-value warning" id="dueTodayAccounts">0</div>
+        <div class="card-info">Contas com vencimento hoje</div>
+      </div>
+    </section>
+
+    <section class="panel fade-up">
+      <div class="panel-header">
+        <div>
+          <h2>Controle de contas</h2>
+          <span id="tableInfo">Exibindo contas a pagar</span>
+        </div>
+
+        <div class="tabs">
+          <button class="tab-btn active" id="payableTab" type="button">A pagar</button>
+          <button class="tab-btn" id="receivableTab" type="button">A receber</button>
+        </div>
+      </div>
+
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>Vencimento</th>
+              <th>Descrição</th>
+              <th id="personColumn">Fornecedor</th>
+              <th>Valor</th>
+              <th>Status</th>
+              <th>Ação</th>
+            </tr>
+          </thead>
+
+          <tbody id="accountsTable"></tbody>
+        </table>
+
+        <div class="empty-state" id="emptyState">Nenhuma conta encontrada.</div>
+      </div>
+    </section>
+  </main>
+
+  <div class="modal-overlay" id="accountModalOverlay">
+    <div class="modal">
+      <div class="modal-header">
+        <div>
+          <h2 id="accountModalTitle">Nova conta</h2>
+          <p>Cadastre uma conta a pagar ou a receber.</p>
+        </div>
+
+        <button class="close-modal" id="closeAccountModal" type="button">×</button>
+      </div>
+
+      <div class="modal-body">
+        <form id="accountForm" class="account-form">
+          <div class="input-group">
+            <label for="accountDueDate">Vencimento</label>
+            <input type="text" id="accountDueDate" placeholder="dd/mm/aaaa" maxlength="10" required />
+          </div>
+
+          <div class="input-group">
+            <label for="accountType">Tipo</label>
+            <select id="accountType" required>
+              <option value="">Selecione</option>
+              <option value="payable">A pagar</option>
+              <option value="receivable">A receber</option>
+            </select>
+          </div>
+
+          <div class="input-group full">
+            <label for="accountDescription">Descrição</label>
+            <input type="text" id="accountDescription" placeholder="Ex: Aluguel, fornecedor, recebimento cliente..." required />
+          </div>
+
+          <div class="input-group">
+            <label for="accountPerson">Cliente / Fornecedor</label>
+            <input type="text" id="accountPerson" placeholder="Nome do cliente ou fornecedor" required />
+          </div>
+
+          <div class="input-group">
+            <label for="accountValue">Valor</label>
+            <input type="text" id="accountValue" placeholder="R$ 0,00" required />
+          </div>
+
+          <div class="input-group">
+            <label for="accountStatus">Status</label>
+            <select id="accountStatus" required>
+              <option value="">Selecione</option>
+              <option value="Pendente">Pendente</option>
+              <option value="Pago">Pago</option>
+              <option value="Atrasado">Atrasado</option>
+              <option value="Vence hoje">Vence hoje</option>
+            </select>
+          </div>
+
+          <div class="input-group">
+            <label for="accountBank">Conta bancária</label>
+            <select id="accountBank" required>
+              <option value="">Selecione</option>
+              <option value="Banco Principal">Banco Principal</option>
+              <option value="Conta PJ">Conta PJ</option>
+              <option value="Caixa Interno">Caixa Interno</option>
+              <option value="Conta Reserva">Conta Reserva</option>
+            </select>
+          </div>
+
+          <div class="input-group full">
+            <label for="accountNotes">Observações</label>
+            <textarea id="accountNotes" placeholder="Adicione detalhes opcionais sobre esta conta..."></textarea>
+          </div>
+        </form>
+
+        <div class="form-message" id="accountFormMessage">
+          Conta salva com sucesso!
+        </div>
+      </div>
+
+      <div class="modal-actions">
+        <button class="btn btn-outline" type="button" id="cancelAccountModal">Cancelar</button>
+        <button class="btn btn-primary" type="submit" form="accountForm">Salvar conta</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="detailsModalOverlay">
+    <div class="modal">
+      <div class="modal-header">
+        <div>
+          <h2>Detalhes da conta</h2>
+          <p>Informações completas do lançamento financeiro.</p>
+        </div>
+
+        <button class="close-modal" id="closeDetailsModal" type="button">×</button>
+      </div>
+
+      <div class="modal-body">
+        <div class="detail-list" id="detailList"></div>
+      </div>
+
+      <div class="modal-actions">
+        <button class="btn btn-outline" type="button" id="closeDetailsBottom">Fechar</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const animatedItems = document.querySelectorAll(".fade-up");
+
+    animatedItems.forEach((item, index) => {
+      item.style.animationDelay = `${index * 0.06}s`;
+    });
+
+    let activeTab = "payable";
+    let editingId = null;
+
+    let accounts = [
+      {
+        id: 1,
+        type: "payable",
+        dueDate: "02/05/2026",
+        description: "Fornecedor sistema",
+        person: "Tech Solutions Ltda",
+        value: 1250,
+        status: "Atrasado",
+        bank: "Caixa Interno",
+        notes: "Conta referente ao plano mensal do sistema operacional."
+      },
+      {
+        id: 2,
+        type: "payable",
+        dueDate: "02/05/2026",
+        description: "Aluguel escritório",
+        person: "Imobiliária Central",
+        value: 3200,
+        status: "Vence hoje",
+        bank: "Conta PJ",
+        notes: "Aluguel da sede administrativa."
+      },
+      {
+        id: 3,
+        type: "payable",
+        dueDate: "07/05/2026",
+        description: "Campanha tráfego pago",
+        person: "Agência Blue Ads",
+        value: 1850,
+        status: "Pendente",
+        bank: "Banco Principal",
+        notes: "Campanha de aquisição de leads."
+      },
+      {
+        id: 4,
+        type: "payable",
+        dueDate: "10/05/2026",
+        description: "Compra de materiais",
+        person: "Fornecedor Alpha",
+        value: 2480,
+        status: "Pendente",
+        bank: "Conta PJ",
+        notes: "Materiais de escritório e operação."
+      },
+      {
+        id: 5,
+        type: "payable",
+        dueDate: "15/05/2026",
+        description: "Licenças de software",
+        person: "Cloud Pro",
+        value: 920,
+        status: "Pago",
+        bank: "Banco Principal",
+        notes: "Licenças mensais utilizadas pela equipe."
+      },
+      {
+        id: 6,
+        type: "receivable",
+        dueDate: "02/05/2026",
+        description: "Recebimento cliente Alpha",
+        person: "Cliente Alpha",
+        value: 8400,
+        status: "Vence hoje",
+        bank: "Banco Principal",
+        notes: "Pagamento referente ao contrato mensal."
+      },
+      {
+        id: 7,
+        type: "receivable",
+        dueDate: "05/05/2026",
+        description: "Prestação de serviço",
+        person: "Grupo Delta",
+        value: 12700,
+        status: "Pendente",
+        bank: "Conta PJ",
+        notes: "Projeto avulso de consultoria financeira."
+      },
+      {
+        id: 8,
+        type: "receivable",
+        dueDate: "10/05/2026",
+        description: "Venda pacote premium",
+        person: "Cliente Beta",
+        value: 15400,
+        status: "Pendente",
+        bank: "Banco Principal",
+        notes: "Contrato premium anual parcelado."
+      },
+      {
+        id: 9,
+        type: "receivable",
+        dueDate: "25/04/2026",
+        description: "Recebimento atrasado",
+        person: "Cliente Omega",
+        value: 4800,
+        status: "Atrasado",
+        bank: "Banco Principal",
+        notes: "Cliente ainda não confirmou pagamento."
+      },
+      {
+        id: 10,
+        type: "receivable",
+        dueDate: "28/04/2026",
+        description: "Consultoria financeira",
+        person: "Empresa Nova Era",
+        value: 6900,
+        status: "Pago",
+        bank: "Conta PJ",
+        notes: "Serviço já concluído e pago."
+      }
+    ];
+
+    const totalPayable = document.getElementById("totalPayable");
+    const totalReceivable = document.getElementById("totalReceivable");
+    const overdueAccounts = document.getElementById("overdueAccounts");
+    const dueTodayAccounts = document.getElementById("dueTodayAccounts");
+
+    const payableTab = document.getElementById("payableTab");
+    const receivableTab = document.getElementById("receivableTab");
+    const accountsTable = document.getElementById("accountsTable");
+    const emptyState = document.getElementById("emptyState");
+    const tableInfo = document.getElementById("tableInfo");
+    const personColumn = document.getElementById("personColumn");
+
+    const openAccountModal = document.getElementById("openAccountModal");
+    const closeAccountModal = document.getElementById("closeAccountModal");
+    const cancelAccountModal = document.getElementById("cancelAccountModal");
+    const accountModalOverlay = document.getElementById("accountModalOverlay");
+    const accountForm = document.getElementById("accountForm");
+    const accountFormMessage = document.getElementById("accountFormMessage");
+    const accountModalTitle = document.getElementById("accountModalTitle");
+
+    const accountDueDate = document.getElementById("accountDueDate");
+    const accountType = document.getElementById("accountType");
+    const accountDescription = document.getElementById("accountDescription");
+    const accountPerson = document.getElementById("accountPerson");
+    const accountValue = document.getElementById("accountValue");
+    const accountStatus = document.getElementById("accountStatus");
+    const accountBank = document.getElementById("accountBank");
+    const accountNotes = document.getElementById("accountNotes");
+
+    const detailsModalOverlay = document.getElementById("detailsModalOverlay");
+    const closeDetailsModal = document.getElementById("closeDetailsModal");
+    const closeDetailsBottom = document.getElementById("closeDetailsBottom");
+    const detailList = document.getElementById("detailList");
+
+    function formatCurrency(value) {
+      return value.toLocaleString("pt-BR", {
+        style: "currency",
+        currency: "BRL"
+      });
+    }
+
+    function currencyToNumber(value) {
+      return Number(
+        value
+          .replace("R$", "")
+          .replace(/\./g, "")
+          .replace(",", ".")
+          .trim()
+      );
+    }
+
+    function maskDate(input) {
+      input.addEventListener("input", () => {
+        let value = input.value.replace(/\D/g, "");
+
+        if (value.length > 2) {
+          value = value.slice(0, 2) + "/" + value.slice(2);
+        }
+
+        if (value.length > 5) {
+          value = value.slice(0, 5) + "/" + value.slice(5, 9);
+        }
+
+        input.value = value;
+      });
+    }
+
+    function maskMoney(input) {
+      input.addEventListener("input", () => {
+        let value = input.value.replace(/\D/g, "");
+
+        if (!value) {
+          input.value = "";
+          return;
+        }
+
+        value = (Number(value) / 100).toLocaleString("pt-BR", {
+          style: "currency",
+          currency: "BRL"
+        });
+
+        input.value = value;
+      });
+    }
+
+    function getStatusClass(status) {
+      if (status === "Pago") return "paid";
+      if (status === "Atrasado") return "late";
+      if (status === "Vence hoje") return "today";
+      return "pending";
+    }
+
+    function updateCards() {
+      const payable = accounts
+        .filter(account => account.type === "payable" && account.status !== "Pago")
+        .reduce((sum, account) => sum + account.value, 0);
+
+      const receivable = accounts
+        .filter(account => account.type === "receivable" && account.status !== "Pago")
+        .reduce((sum, account) => sum + account.value, 0);
+
+      const overdue = accounts.filter(account => account.status === "Atrasado").length;
+      const dueToday = accounts.filter(account => account.status === "Vence hoje").length;
+
+      totalPayable.textContent = formatCurrency(payable);
+      totalReceivable.textContent = formatCurrency(receivable);
+      overdueAccounts.textContent = overdue;
+      dueTodayAccounts.textContent = dueToday;
+    }
+
+    function renderTable() {
+      const filtered = accounts.filter(account => account.type === activeTab);
+
+      accountsTable.innerHTML = "";
+
+      filtered.forEach(account => {
+        const row = document.createElement("tr");
+
+        const valueClass = account.type === "payable" ? "negative" : "positive";
+
+        row.innerHTML = `
+          <td>${account.dueDate}</td>
+          <td>${account.description}</td>
+          <td>${account.person}</td>
+          <td class="${valueClass}">${formatCurrency(account.value)}</td>
+          <td><span class="status ${getStatusClass(account.status)}">${account.status}</span></td>
+          <td>
+            <div class="actions">
+              <button class="action-btn pay" type="button" onclick="markAsPaid(${account.id})">Pago</button>
+              <button class="action-btn" type="button" onclick="editAccount(${account.id})">Editar</button>
+              <button class="action-btn" type="button" onclick="viewDetails(${account.id})">Detalhes</button>
+            </div>
+          </td>
+        `;
+
+        accountsTable.appendChild(row);
+      });
+
+      emptyState.classList.toggle("show", filtered.length === 0);
+      tableInfo.textContent = activeTab === "payable" ? "Exibindo contas a pagar" : "Exibindo contas a receber";
+      personColumn.textContent = activeTab === "payable" ? "Fornecedor" : "Cliente";
+    }
+
+    function refreshPage() {
+      updateCards();
+      renderTable();
+    }
+
+    function setActiveTab(tab) {
+      activeTab = tab;
+
+      payableTab.classList.toggle("active", tab === "payable");
+      receivableTab.classList.toggle("active", tab === "receivable");
+
+      renderTable();
+    }
+
+    function openModal(overlay) {
+      overlay.classList.remove("hide");
+      overlay.classList.add("show");
+      document.body.style.overflow = "hidden";
+    }
+
+    function closeModal(overlay) {
+      overlay.classList.remove("show");
+      overlay.classList.add("hide");
+
+      setTimeout(() => {
+        overlay.classList.remove("hide");
+        document.body.style.overflow = "";
+      }, 280);
+    }
+
+    function openNewAccountModal() {
+      editingId = null;
+      accountModalTitle.textContent = "Nova conta";
+      accountForm.reset();
+      accountFormMessage.classList.remove("show");
+      accountType.value = activeTab;
+      openModal(accountModalOverlay);
+
+      setTimeout(() => {
+        accountDueDate.focus();
+      }, 180);
+    }
+
+    function closeAccountWindow() {
+      closeModal(accountModalOverlay);
+      accountFormMessage.classList.remove("show");
+    }
+
+    function saveAccount(event) {
+      event.preventDefault();
+
+      const dueDate = accountDueDate.value.trim();
+      const type = accountType.value;
+      const description = accountDescription.value.trim();
+      const person = accountPerson.value.trim();
+      const value = currencyToNumber(accountValue.value.trim());
+      const status = accountStatus.value;
+      const bank = accountBank.value;
+      const notes = accountNotes.value.trim();
+
+      if (!dueDate || !type || !description || !person || !value || !status || !bank) {
+        return;
+      }
+
+      if (editingId) {
+        const account = accounts.find(item => item.id === editingId);
+
+        account.dueDate = dueDate;
+        account.type = type;
+        account.description = description;
+        account.person = person;
+        account.value = value;
+        account.status = status;
+        account.bank = bank;
+        account.notes = notes;
+
+        activeTab = type;
+      } else {
+        accounts.push({
+          id: Date.now(),
+          dueDate,
+          type,
+          description,
+          person,
+          value,
+          status,
+          bank,
+          notes
+        });
+
+        activeTab = type;
+      }
+
+      accountFormMessage.classList.add("show");
+      refreshPage();
+      setActiveTab(activeTab);
+
+      setTimeout(() => {
+        closeAccountWindow();
+      }, 900);
+    }
+
+    function markAsPaid(id) {
+      const account = accounts.find(item => item.id === id);
+
+      if (!account) return;
+
+      account.status = "Pago";
+      refreshPage();
+    }
+
+    function editAccount(id) {
+      const account = accounts.find(item => item.id === id);
+
+      if (!account) return;
+
+      editingId = id;
+      accountModalTitle.textContent = "Editar conta";
+
+      accountDueDate.value = account.dueDate;
+      accountType.value = account.type;
+      accountDescription.value = account.description;
+      accountPerson.value = account.person;
+      accountValue.value = formatCurrency(account.value);
+      accountStatus.value = account.status;
+      accountBank.value = account.bank;
+      accountNotes.value = account.notes || "";
+
+      accountFormMessage.classList.remove("show");
+      openModal(accountModalOverlay);
+    }
+
+    function viewDetails(id) {
+      const account = accounts.find(item => item.id === id);
+
+      if (!account) return;
+
+      detailList.innerHTML = `
+        <div class="detail-item">
+          <span>Tipo</span>
+          <strong>${account.type === "payable" ? "A pagar" : "A receber"}</strong>
+        </div>
+
+        <div class="detail-item">
+          <span>Vencimento</span>
+          <strong>${account.dueDate}</strong>
+        </div>
+
+        <div class="detail-item">
+          <span>Descrição</span>
+          <strong>${account.description}</strong>
+        </div>
+
+        <div class="detail-item">
+          <span>${account.type === "payable" ? "Fornecedor" : "Cliente"}</span>
+          <strong>${account.person}</strong>
+        </div>
+
+        <div class="detail-item">
+          <span>Valor</span>
+          <strong>${formatCurrency(account.value)}</strong>
+        </div>
+
+        <div class="detail-item">
+          <span>Status</span>
+          <strong>${account.status}</strong>
+        </div>
+
+        <div class="detail-item">
+          <span>Conta bancária</span>
+          <strong>${account.bank}</strong>
+        </div>
+
+        <div class="detail-item">
+          <span>Observações</span>
+          <strong>${account.notes || "Nenhuma observação cadastrada."}</strong>
+        </div>
+      `;
+
+      openModal(detailsModalOverlay);
+    }
+
+    maskDate(accountDueDate);
+    maskMoney(accountValue);
+
+    payableTab.addEventListener("click", () => setActiveTab("payable"));
+    receivableTab.addEventListener("click", () => setActiveTab("receivable"));
+
+    openAccountModal.addEventListener("click", openNewAccountModal);
+    closeAccountModal.addEventListener("click", closeAccountWindow);
+    cancelAccountModal.addEventListener("click", closeAccountWindow);
+    accountForm.addEventListener("submit", saveAccount);
+
+    closeDetailsModal.addEventListener("click", () => closeModal(detailsModalOverlay));
+    closeDetailsBottom.addEventListener("click", () => closeModal(detailsModalOverlay));
+
+    accountModalOverlay.addEventListener("click", event => {
+      if (event.target === accountModalOverlay) {
+        closeAccountWindow();
+      }
+    });
+
+    detailsModalOverlay.addEventListener("click", event => {
+      if (event.target === detailsModalOverlay) {
+        closeModal(detailsModalOverlay);
+      }
+    });
+
+    document.addEventListener("keydown", event => {
+      if (event.key === "Escape" && accountModalOverlay.classList.contains("show")) {
+        closeAccountWindow();
+      }
+
+      if (event.key === "Escape" && detailsModalOverlay.classList.contains("show")) {
+        closeModal(detailsModalOverlay);
+      }
+    });
+
+    refreshPage();
+  </script>
+  <script src="sidebar-loader.js"></script>
+</body>
+
+</html>

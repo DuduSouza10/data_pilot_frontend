@@ -1,0 +1,1504 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Facilita Financeiro | Relatórios</title>
+  <link rel="stylesheet" href="sidebar-shared.css" />
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: Arial, Helvetica, sans-serif;
+    }
+
+    :root {
+      --bg: #080c14;
+      --card: #101827;
+      --card-2: #121d30;
+      --blue: #1e90ff;
+      --blue-hover: #0f75d8;
+      --text: #f4f7fb;
+      --muted: #9ca8ba;
+      --border: #24324a;
+      --danger: #ff4d4d;
+      --success: #30d158;
+      --warning: #ffcc00;
+    }
+
+    body {
+      min-height: 100vh;
+      background: radial-gradient(circle at top, #10284a 0%, var(--bg) 45%, #05070c 100%);
+      color: var(--text);
+      display: flex;
+    }
+
+    .sidebar {
+      width: 260px;
+      height: 100vh;
+      position: fixed;
+      left: 0;
+      top: 0;
+      background: rgba(16, 24, 39, 0.96);
+      border-right: 1px solid var(--border);
+      padding: 28px 20px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      box-shadow: 10px 0 40px rgba(0, 0, 0, 0.25);
+      z-index: 10;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 20px;
+      font-weight: 800;
+      margin-bottom: 34px;
+    }
+
+    .logo-icon {
+      width: 42px;
+      height: 42px;
+      background: var(--blue);
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 900;
+      color: white;
+      box-shadow: 0 0 35px rgba(30, 144, 255, 0.55);
+    }
+
+    .menu {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .menu a {
+      text-decoration: none;
+      color: var(--muted);
+      padding: 13px 14px;
+      border-radius: 12px;
+      font-weight: 700;
+      font-size: 14px;
+      transition: 0.25s;
+    }
+
+    .menu a:hover,
+    .menu a.active {
+      background: rgba(30, 144, 255, 0.12);
+      color: white;
+    }
+
+    .menu a.active {
+      background: var(--blue);
+      box-shadow: 0 8px 22px rgba(30, 144, 255, 0.28);
+    }
+
+    .sidebar-footer {
+      padding: 14px;
+      border: 1px solid rgba(30, 144, 255, 0.25);
+      background: rgba(30, 144, 255, 0.08);
+      border-radius: 16px;
+      color: #cce7ff;
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    .main {
+      margin-left: 260px;
+      width: calc(100% - 260px);
+      padding: 30px;
+    }
+
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 18px;
+      margin-bottom: 28px;
+    }
+
+    .page-title h1 {
+      font-size: 30px;
+      margin-bottom: 6px;
+    }
+
+    .page-title p {
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .top-actions {
+      display: flex;
+      gap: 12px;
+    }
+
+    .btn {
+      border: none;
+      border-radius: 12px;
+      padding: 13px 16px;
+      font-size: 14px;
+      font-weight: 800;
+      cursor: pointer;
+      transition: 0.25s;
+      white-space: nowrap;
+    }
+
+    .btn-primary {
+      background: var(--blue);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background: var(--blue-hover);
+      transform: translateY(-1px);
+      box-shadow: 0 12px 28px rgba(30, 144, 255, 0.24);
+    }
+
+    .btn-outline {
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--text);
+    }
+
+    .btn-outline:hover {
+      background: rgba(30, 144, 255, 0.08);
+      color: var(--blue);
+      transform: translateY(-1px);
+    }
+
+    .filters-panel {
+      background: rgba(16, 24, 39, 0.92);
+      border: 1px solid var(--border);
+      border-radius: 22px;
+      padding: 22px;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.25);
+      margin-bottom: 24px;
+    }
+
+    .filters {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 14px;
+      align-items: end;
+    }
+
+    .input-group label {
+      display: block;
+      margin-bottom: 7px;
+      color: #d8e2f0;
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    input,
+    select {
+      width: 100%;
+      padding: 14px 15px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      background: #0b1220;
+      color: var(--text);
+      outline: none;
+      font-size: 14px;
+      transition: 0.25s;
+    }
+
+    input:focus,
+    select:focus {
+      border-color: var(--blue);
+      box-shadow: 0 0 0 4px rgba(30, 144, 255, 0.12);
+    }
+
+    select option {
+      background: #0b1220;
+      color: var(--text);
+    }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 18px;
+      margin-bottom: 24px;
+    }
+
+    .card {
+      background: rgba(16, 24, 39, 0.92);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 22px;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.25);
+      position: relative;
+      overflow: hidden;
+      transition: 0.25s;
+    }
+
+    .card:hover {
+      transform: translateY(-3px);
+      border-color: rgba(30, 144, 255, 0.45);
+      box-shadow: 0 22px 60px rgba(0, 0, 0, 0.35);
+    }
+
+    .card::before {
+      content: "";
+      position: absolute;
+      width: 130px;
+      height: 130px;
+      border-radius: 50%;
+      background: rgba(30, 144, 255, 0.12);
+      filter: blur(10px);
+      top: -60px;
+      right: -60px;
+    }
+
+    .card-title {
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 700;
+      margin-bottom: 12px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .card-value {
+      font-size: 25px;
+      font-weight: 900;
+      margin-bottom: 8px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .card-info {
+      font-size: 12px;
+      color: var(--muted);
+      position: relative;
+      z-index: 1;
+    }
+
+    .positive {
+      color: var(--success);
+    }
+
+    .negative {
+      color: var(--danger);
+    }
+
+    .warning {
+      color: var(--warning);
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 1.05fr 0.95fr;
+      gap: 22px;
+      margin-bottom: 22px;
+    }
+
+    .panel {
+      background: rgba(16, 24, 39, 0.92);
+      border: 1px solid var(--border);
+      border-radius: 22px;
+      padding: 24px;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.25);
+      margin-bottom: 22px;
+    }
+
+    .panel-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 22px;
+    }
+
+    .panel-header h2 {
+      font-size: 20px;
+    }
+
+    .panel-header span {
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .dre-list {
+      display: grid;
+      gap: 12px;
+    }
+
+    .dre-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 14px;
+      padding: 15px;
+      background: #0b1220;
+      border: 1px solid var(--border);
+      border-radius: 15px;
+      transition: 0.25s;
+    }
+
+    .dre-row:hover {
+      transform: translateX(3px);
+      border-color: rgba(30, 144, 255, 0.35);
+    }
+
+    .dre-row strong {
+      font-size: 14px;
+    }
+
+    .dre-row span {
+      font-size: 14px;
+      font-weight: 900;
+    }
+
+    .dre-row.total {
+      background: rgba(30, 144, 255, 0.1);
+      border-color: rgba(30, 144, 255, 0.35);
+    }
+
+    .bar-list {
+      display: grid;
+      gap: 16px;
+    }
+
+    .bar-item {
+      display: grid;
+      gap: 8px;
+    }
+
+    .bar-top {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      font-size: 14px;
+    }
+
+    .bar-top strong {
+      color: var(--text);
+    }
+
+    .bar-top span {
+      color: var(--muted);
+      font-weight: 800;
+    }
+
+    .progress {
+      height: 12px;
+      background: #0b1220;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      border-radius: 999px;
+      background: linear-gradient(90deg, var(--blue), rgba(30, 144, 255, 0.35));
+      animation: growBar 0.8s ease both;
+    }
+
+    .progress-fill.expense {
+      background: linear-gradient(90deg, var(--danger), rgba(255, 77, 77, 0.35));
+    }
+
+    .progress-fill.income {
+      background: linear-gradient(90deg, var(--success), rgba(48, 209, 88, 0.35));
+    }
+
+    @keyframes growBar {
+      from {
+        width: 0;
+      }
+    }
+
+    .monthly-chart {
+      height: 310px;
+      display: flex;
+      align-items: flex-end;
+      gap: 14px;
+      padding-top: 18px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .month-group {
+      flex: 1;
+      height: 100%;
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      gap: 6px;
+      border-radius: 14px;
+      padding: 0 5px;
+      cursor: pointer;
+      transition: 0.25s;
+    }
+
+    .month-group:hover {
+      background: rgba(30, 144, 255, 0.08);
+      transform: translateY(-2px);
+    }
+
+    .month-bar {
+      width: 24px;
+      border-radius: 10px 10px 0 0;
+      transition: 0.25s;
+    }
+
+    .month-bar.income {
+      background: linear-gradient(to top, var(--success), rgba(48, 209, 88, 0.35));
+    }
+
+    .month-bar.expense {
+      background: linear-gradient(to top, var(--danger), rgba(255, 77, 77, 0.35));
+    }
+
+    .month-group:hover .month-bar {
+      filter: brightness(1.15);
+    }
+
+    .month-labels {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 14px;
+      color: var(--muted);
+      font-size: 12px;
+      text-align: center;
+      margin-top: 12px;
+    }
+
+    .legend {
+      display: flex;
+      gap: 16px;
+      margin-top: 18px;
+      color: var(--muted);
+      font-size: 13px;
+      flex-wrap: wrap;
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+    }
+
+    .dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+    }
+
+    .dot.green {
+      background: var(--success);
+    }
+
+    .dot.red {
+      background: var(--danger);
+    }
+
+    .table-wrapper {
+      overflow-x: auto;
+      max-height: 420px;
+      overflow-y: auto;
+      padding-right: 4px;
+    }
+
+    .table-wrapper::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+
+    .table-wrapper::-webkit-scrollbar-track {
+      background: #0b1220;
+      border-radius: 999px;
+    }
+
+    .table-wrapper::-webkit-scrollbar-thumb {
+      background: rgba(30, 144, 255, 0.45);
+      border-radius: 999px;
+    }
+
+    .table-wrapper::-webkit-scrollbar-thumb:hover {
+      background: rgba(30, 144, 255, 0.7);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 760px;
+    }
+
+    th,
+    td {
+      padding: 15px 10px;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+      font-size: 14px;
+    }
+
+    th {
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 800;
+      position: sticky;
+      top: 0;
+      background: rgba(16, 24, 39, 0.98);
+      z-index: 2;
+    }
+
+    td {
+      color: var(--text);
+    }
+
+    tbody tr {
+      transition: 0.25s;
+    }
+
+    tbody tr:hover {
+      background: rgba(30, 144, 255, 0.05);
+    }
+
+    .fade-up {
+      animation: fadeUp 0.55s ease both;
+    }
+
+    @keyframes fadeUp {
+      from {
+        opacity: 0;
+        transform: translateY(14px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+
+
+    /* INTERAÇÃO DOS DASHBOARDS */
+    .dashboard-clickable {
+      cursor: pointer;
+    }
+
+    .dashboard-active {
+      border-color: rgba(30, 144, 255, 0.9) !important;
+      background: rgba(30, 144, 255, 0.12) !important;
+      box-shadow: 0 0 0 1px rgba(30, 144, 255, 0.35), 0 18px 45px rgba(30, 144, 255, 0.12) !important;
+    }
+
+    .dashboard-muted {
+      opacity: 0.35;
+      filter: grayscale(0.4);
+    }
+
+    .filter-chip-area {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 22px;
+    }
+
+    .filter-chip {
+      display: none;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 13px;
+      border-radius: 999px;
+      border: 1px solid rgba(30, 144, 255, 0.35);
+      background: rgba(30, 144, 255, 0.1);
+      color: #cce7ff;
+      font-size: 13px;
+      font-weight: 800;
+    }
+
+    .filter-chip.active {
+      display: inline-flex;
+    }
+
+    .filter-chip button {
+      border: none;
+      background: transparent;
+      color: white;
+      font-weight: 900;
+      cursor: pointer;
+      font-size: 15px;
+    }
+
+    .bar-item,
+    .dre-row,
+    .month-group,
+    .card {
+      cursor: pointer;
+    }
+
+    @media (max-width: 1250px) {
+      .cards {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .grid {
+        grid-template-columns: 1fr;
+      }
+
+      .filters {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 760px) {
+      body {
+        display: block;
+      }
+
+      .sidebar {
+        position: relative;
+        width: 100%;
+        height: auto;
+      }
+
+      .main {
+        margin-left: 0;
+        width: 100%;
+        padding: 22px;
+      }
+
+      .topbar {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .top-actions {
+        width: 100%;
+        flex-direction: column;
+      }
+
+      .btn {
+        width: 100%;
+      }
+
+      .cards,
+      .filters {
+        grid-template-columns: 1fr;
+      }
+
+      .panel-header {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .month-bar {
+        width: 16px;
+      }
+
+      .monthly-chart {
+        gap: 7px;
+      }
+
+      .month-labels {
+        gap: 6px;
+        font-size: 10px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div id="sidebar-container" data-active-page="reports"></div>
+
+  <main class="main">
+    <header class="topbar fade-up">
+      <div class="page-title">
+        <h1>Relatórios</h1>
+        <p>Análises financeiras para acompanhar desempenho, lucro e despesas.</p>
+      </div>
+
+      <div class="top-actions">
+        <button class="btn btn-outline" type="button" id="exportBtn">Exportar PDF</button>
+        <button class="btn btn-primary" type="button" id="refreshBtn">Atualizar relatório</button>
+      </div>
+    </header>
+
+    <section class="filters-panel fade-up">
+      <div class="filters">
+        <div class="input-group">
+          <label for="startDate">Data inicial</label>
+          <input type="text" id="startDate" placeholder="dd/mm/aaaa" maxlength="10" value="01/04/2026" />
+        </div>
+
+        <div class="input-group">
+          <label for="endDate">Data final</label>
+          <input type="text" id="endDate" placeholder="dd/mm/aaaa" maxlength="10" value="30/04/2026" />
+        </div>
+
+        <div class="input-group">
+          <label for="reportType">Tipo de relatório</label>
+          <select id="reportType">
+            <option value="complete">Relatório completo</option>
+            <option value="dre">DRE gerencial</option>
+            <option value="expenses">Despesas por categoria</option>
+            <option value="revenue">Receitas por cliente</option>
+            <option value="monthly">Comparativo mensal</option>
+          </select>
+        </div>
+
+        <div class="input-group">
+          <label for="periodPreset">Período rápido</label>
+          <select id="periodPreset">
+            <option value="month">Este mês</option>
+            <option value="quarter">Último trimestre</option>
+            <option value="semester">Últimos 6 meses</option>
+            <option value="year">Ano atual</option>
+          </select>
+        </div>
+
+        <button class="btn btn-primary" type="button" id="applyFilters">Aplicar filtros</button>
+      </div>
+    </section>
+
+    <div class="filter-chip-area fade-up">
+      <div class="filter-chip" id="activeDashboardFilter">
+        <span id="activeDashboardText"></span>
+        <button type="button" id="clearDashboardFilter">×</button>
+      </div>
+    </div>
+
+    <section class="cards">
+      <div class="card fade-up dashboard-clickable" data-filter-type="card-net-profit" data-filter-name="Lucro líquido">
+        <div class="card-title">Lucro líquido</div>
+        <div class="card-value positive" id="netProfit">R$ 0,00</div>
+        <div class="card-info" id="profitInfo">Resultado final do período</div>
+      </div>
+
+      <div class="card fade-up dashboard-clickable" data-filter-type="card-profit-margin" data-filter-name="Margem de lucro">
+        <div class="card-title">Margem de lucro</div>
+        <div class="card-value positive" id="profitMargin">0%</div>
+        <div class="card-info">Lucro líquido sobre receita</div>
+      </div>
+
+      <div class="card fade-up dashboard-clickable" data-filter-type="card-total-revenue" data-filter-name="Receita total">
+        <div class="card-title">Receita total</div>
+        <div class="card-value positive" id="totalRevenue">R$ 0,00</div>
+        <div class="card-info">Entradas acumuladas</div>
+      </div>
+
+      <div class="card fade-up dashboard-clickable" data-filter-type="card-total-expense" data-filter-name="Despesa total">
+        <div class="card-title">Despesa total</div>
+        <div class="card-value negative" id="totalExpense">R$ 0,00</div>
+        <div class="card-info">Saídas acumuladas</div>
+      </div>
+    </section>
+
+    <section class="grid">
+      <div class="panel fade-up report-section" data-report="dre">
+        <div class="panel-header">
+          <div>
+            <h2>DRE gerencial</h2>
+            <span>Resumo de receitas, custos, despesas e lucro</span>
+          </div>
+        </div>
+
+        <div class="dre-list" id="dreList"></div>
+      </div>
+
+      <div class="panel fade-up report-section" data-report="expenses">
+        <div class="panel-header">
+          <div>
+            <h2>Despesas por categoria</h2>
+            <span>Distribuição dos maiores custos do período</span>
+          </div>
+        </div>
+
+        <div class="bar-list" id="expenseChart"></div>
+      </div>
+    </section>
+
+    <section class="grid">
+      <div class="panel fade-up report-section" data-report="revenue">
+        <div class="panel-header">
+          <div>
+            <h2>Receitas por cliente</h2>
+            <span>Principais fontes de faturamento</span>
+          </div>
+        </div>
+
+        <div class="bar-list" id="revenueChart"></div>
+      </div>
+
+      <div class="panel fade-up report-section" data-report="monthly">
+        <div class="panel-header">
+          <div>
+            <h2>Comparativo mês a mês</h2>
+            <span>Receitas e despesas dos últimos meses</span>
+          </div>
+        </div>
+
+        <div class="monthly-chart" id="monthlyChart"></div>
+
+        <div class="month-labels" id="monthLabels"></div>
+
+        <div class="legend">
+          <div class="legend-item">
+            <span class="dot green"></span>
+            Receita
+          </div>
+
+          <div class="legend-item">
+            <span class="dot red"></span>
+            Despesa
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel fade-up report-section" data-report="dre">
+      <div class="panel-header">
+        <div>
+          <h2>Resumo analítico</h2>
+          <span>Indicadores financeiros detalhados do período</span>
+        </div>
+      </div>
+
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>Indicador</th>
+              <th>Valor</th>
+              <th>Variação</th>
+              <th>Análise</th>
+            </tr>
+          </thead>
+
+          <tbody id="analyticsTable"></tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <script src="sidebar-loader.js" defer></script>
+
+  <script>
+    const animatedItems = document.querySelectorAll(".fade-up");
+
+    animatedItems.forEach((item, index) => {
+      item.style.animationDelay = `${index * 0.06}s`;
+    });
+
+    const reportData = {
+      revenue: 86400,
+      expense: 52180,
+      taxes: 6400,
+      operationalCosts: 18400,
+      fixedExpenses: 16480,
+      variableExpenses: 10800,
+      payroll: 10500,
+      otherExpenses: 0,
+      clients: [
+        { name: "Cliente Alpha", value: 22400 },
+        { name: "Grupo Delta", value: 18700 },
+        { name: "Beta Comércio", value: 15400 },
+        { name: "Cliente Omega", value: 12800 },
+        { name: "Nova Era", value: 9800 },
+        { name: "Outros clientes", value: 7300 }
+      ],
+      expenses: [
+        { name: "Fornecedor", value: 12400 },
+        { name: "Salários", value: 10500 },
+        { name: "Marketing", value: 8200 },
+        { name: "Aluguel", value: 6400 },
+        { name: "Tecnologia", value: 5200 },
+        { name: "Impostos", value: 6400 },
+        { name: "Logística", value: 3080 }
+      ],
+      months: [
+        { label: "Nov", revenue: 67200, expense: 42400 },
+        { label: "Dez", revenue: 70900, expense: 46800 },
+        { label: "Jan", revenue: 69400, expense: 38200 },
+        { label: "Fev", revenue: 81700, expense: 49700 },
+        { label: "Mar", revenue: 73100, expense: 50300 },
+        { label: "Abr", revenue: 86400, expense: 52180 }
+      ]
+    };
+
+    const netProfit = document.getElementById("netProfit");
+    const profitMargin = document.getElementById("profitMargin");
+    const totalRevenue = document.getElementById("totalRevenue");
+    const totalExpense = document.getElementById("totalExpense");
+    const profitInfo = document.getElementById("profitInfo");
+
+    const dreList = document.getElementById("dreList");
+    const expenseChart = document.getElementById("expenseChart");
+    const revenueChart = document.getElementById("revenueChart");
+    const monthlyChart = document.getElementById("monthlyChart");
+    const monthLabels = document.getElementById("monthLabels");
+    const analyticsTable = document.getElementById("analyticsTable");
+
+    const startDate = document.getElementById("startDate");
+    const endDate = document.getElementById("endDate");
+    const reportType = document.getElementById("reportType");
+    const periodPreset = document.getElementById("periodPreset");
+    const applyFilters = document.getElementById("applyFilters");
+    const refreshBtn = document.getElementById("refreshBtn");
+
+    function formatCurrency(value) {
+      return value.toLocaleString("pt-BR", {
+        style: "currency",
+        currency: "BRL"
+      });
+    }
+
+    function formatPercent(value) {
+      return `${value.toFixed(1).replace(".", ",")}%`;
+    }
+
+    function maskDate(input) {
+      input.addEventListener("input", () => {
+        let value = input.value.replace(/\D/g, "");
+
+        if (value.length > 2) {
+          value = value.slice(0, 2) + "/" + value.slice(2);
+        }
+
+        if (value.length > 5) {
+          value = value.slice(0, 5) + "/" + value.slice(5, 9);
+        }
+
+        input.value = value;
+      });
+    }
+
+    function updateCards() {
+      const profit = reportData.revenue - reportData.expense;
+      const margin = reportData.revenue > 0 ? (profit / reportData.revenue) * 100 : 0;
+
+      netProfit.textContent = formatCurrency(profit);
+      profitMargin.textContent = formatPercent(margin);
+      totalRevenue.textContent = formatCurrency(reportData.revenue);
+      totalExpense.textContent = formatCurrency(reportData.expense);
+
+      netProfit.classList.toggle("positive", profit >= 0);
+      netProfit.classList.toggle("negative", profit < 0);
+
+      profitMargin.classList.toggle("positive", margin >= 20);
+      profitMargin.classList.toggle("warning", margin < 20 && margin >= 10);
+      profitMargin.classList.toggle("negative", margin < 10);
+
+      profitInfo.textContent = profit >= 0 ? "Resultado positivo no período" : "Resultado negativo no período";
+    }
+
+    function renderDRE() {
+      const grossProfit = reportData.revenue - reportData.operationalCosts;
+      const net = reportData.revenue - reportData.expense;
+
+      const rows = [
+        { label: "Receita bruta", value: reportData.revenue, className: "positive", type: "dre-revenue" },
+        { label: "Custos operacionais", value: -reportData.operationalCosts, className: "negative", type: "dre-costs" },
+        { label: "Lucro bruto", value: grossProfit, className: grossProfit >= 0 ? "positive" : "negative", type: "dre-gross-profit" },
+        { label: "Despesas fixas", value: -reportData.fixedExpenses, className: "negative", type: "dre-fixed-expenses" },
+        { label: "Despesas variáveis", value: -reportData.variableExpenses, className: "negative", type: "dre-variable-expenses" },
+        { label: "Folha de pagamento", value: -reportData.payroll, className: "negative", type: "dre-payroll" },
+        { label: "Impostos", value: -reportData.taxes, className: "negative", type: "dre-taxes" },
+        { label: "Lucro líquido", value: net, className: net >= 0 ? "positive" : "negative", total: true, type: "dre-net-profit" }
+      ];
+
+      dreList.innerHTML = "";
+
+      rows.forEach(item => {
+        const div = document.createElement("div");
+        div.className = `dre-row dashboard-clickable ${item.total ? "total" : ""}`;
+        div.dataset.filterType = item.type;
+        div.dataset.filterName = item.label;
+        div.dataset.filterValue = item.value;
+
+        div.innerHTML = `
+          <strong>${item.label}</strong>
+          <span class="${item.className}">${formatCurrency(item.value)}</span>
+        `;
+
+        dreList.appendChild(div);
+      });
+    }
+
+    function renderBarChart(container, items, type) {
+      const maxValue = Math.max(...items.map(item => item.value), 1);
+
+      container.innerHTML = "";
+
+      items.forEach(item => {
+        const percentage = (item.value / maxValue) * 100;
+
+        const div = document.createElement("div");
+        div.className = "bar-item dashboard-clickable";
+        div.dataset.filterType = type === "expense" ? "expense-category" : "revenue-client";
+        div.dataset.filterName = item.name;
+        div.dataset.filterValue = item.value;
+
+        div.innerHTML = `
+          <div class="bar-top">
+            <strong>${item.name}</strong>
+            <span>${formatCurrency(item.value)}</span>
+          </div>
+
+          <div class="progress">
+            <div class="progress-fill ${type}" style="width: ${percentage}%"></div>
+          </div>
+        `;
+
+        container.appendChild(div);
+      });
+    }
+
+    function renderMonthlyChart() {
+      const maxValue = Math.max(
+        ...reportData.months.map(item => Math.max(item.revenue, item.expense)),
+        1
+      );
+
+      monthlyChart.innerHTML = "";
+      monthLabels.innerHTML = "";
+
+      reportData.months.forEach(item => {
+        const incomeHeight = Math.max((item.revenue / maxValue) * 100, 5);
+        const expenseHeight = Math.max((item.expense / maxValue) * 100, 5);
+
+        const group = document.createElement("div");
+        group.className = "month-group dashboard-clickable";
+        group.dataset.filterType = "month";
+        group.dataset.filterName = item.label;
+        group.dataset.revenue = item.revenue;
+        group.dataset.expense = item.expense;
+
+        group.title = `${item.label} | Receita: ${formatCurrency(item.revenue)} | Despesa: ${formatCurrency(item.expense)}`;
+
+        group.innerHTML = `
+          <div class="month-bar income" style="height: ${incomeHeight}%"></div>
+          <div class="month-bar expense" style="height: ${expenseHeight}%"></div>
+        `;
+
+        monthlyChart.appendChild(group);
+
+        const label = document.createElement("span");
+        label.textContent = item.label;
+        monthLabels.appendChild(label);
+      });
+    }
+
+    function renderAnalyticsTable() {
+      const profit = reportData.revenue - reportData.expense;
+      const margin = reportData.revenue > 0 ? (profit / reportData.revenue) * 100 : 0;
+      const expenseRatio = reportData.revenue > 0 ? (reportData.expense / reportData.revenue) * 100 : 0;
+      const payrollRatio = reportData.revenue > 0 ? (reportData.payroll / reportData.revenue) * 100 : 0;
+
+      const rows = [
+        {
+          label: "Receita total",
+          value: formatCurrency(reportData.revenue),
+          variation: "+18,2%",
+          analysis: "Crescimento positivo em relação ao período anterior."
+        },
+        {
+          label: "Despesa total",
+          value: formatCurrency(reportData.expense),
+          variation: "+7,4%",
+          analysis: "Despesas cresceram abaixo da receita, mantendo margem saudável."
+        },
+        {
+          label: "Margem de lucro",
+          value: formatPercent(margin),
+          variation: "+3,1 p.p.",
+          analysis: "Margem acima do mínimo recomendado para o negócio."
+        },
+        {
+          label: "Peso das despesas",
+          value: formatPercent(expenseRatio),
+          variation: "-2,8 p.p.",
+          analysis: "A empresa reduziu a proporção de custos sobre o faturamento."
+        },
+        {
+          label: "Folha sobre receita",
+          value: formatPercent(payrollRatio),
+          variation: "Estável",
+          analysis: "Gasto com equipe está controlado dentro do período."
+        }
+      ];
+
+      analyticsTable.innerHTML = "";
+
+      rows.forEach(row => {
+        const tr = document.createElement("tr");
+
+        tr.innerHTML = `
+          <td>${row.label}</td>
+          <td>${row.value}</td>
+          <td class="${row.variation.includes("+") ? "positive" : row.variation.includes("-") ? "warning" : ""}">${row.variation}</td>
+          <td>${row.analysis}</td>
+        `;
+
+        analyticsTable.appendChild(tr);
+      });
+    }
+
+    function applyReportVisibility() {
+      const selected = reportType.value;
+      const sections = document.querySelectorAll(".report-section");
+
+      sections.forEach(section => {
+        const sectionType = section.dataset.report;
+
+        if (selected === "complete" || selected === sectionType) {
+          section.style.display = "";
+        } else {
+          section.style.display = "none";
+        }
+      });
+    }
+
+    function setPresetDates() {
+      const preset = periodPreset.value;
+
+      if (preset === "month") {
+        startDate.value = "01/04/2026";
+        endDate.value = "30/04/2026";
+      }
+
+      if (preset === "quarter") {
+        startDate.value = "01/02/2026";
+        endDate.value = "30/04/2026";
+      }
+
+      if (preset === "semester") {
+        startDate.value = "01/11/2025";
+        endDate.value = "30/04/2026";
+      }
+
+      if (preset === "year") {
+        startDate.value = "01/01/2026";
+        endDate.value = "31/12/2026";
+      }
+    }
+
+    function refreshReports() {
+      updateCards();
+      renderDRE();
+      renderBarChart(expenseChart, reportData.expenses, "expense");
+      renderBarChart(revenueChart, reportData.clients, "income");
+      renderMonthlyChart();
+      renderAnalyticsTable();
+      applyReportVisibility();
+    }
+
+    maskDate(startDate);
+    maskDate(endDate);
+
+    periodPreset.addEventListener("change", () => {
+      setPresetDates();
+      refreshReports();
+    });
+
+    reportType.addEventListener("change", applyReportVisibility);
+    applyFilters.addEventListener("click", refreshReports);
+    refreshBtn.addEventListener("click", refreshReports);
+
+
+
+    let dashboardFilter = null;
+
+    const activeDashboardFilter = document.getElementById("activeDashboardFilter");
+    const activeDashboardText = document.getElementById("activeDashboardText");
+    const clearDashboardFilter = document.getElementById("clearDashboardFilter");
+
+    function setDashboardChip(text) {
+      if (!activeDashboardFilter || !activeDashboardText) return;
+
+      if (text) {
+        activeDashboardText.textContent = text;
+        activeDashboardFilter.classList.add("active");
+      } else {
+        activeDashboardText.textContent = "";
+        activeDashboardFilter.classList.remove("active");
+      }
+    }
+
+    function getMainValues() {
+      const profit = reportData.revenue - reportData.expense;
+      const margin = reportData.revenue > 0 ? (profit / reportData.revenue) * 100 : 0;
+
+      return {
+        profit,
+        margin,
+        revenue: reportData.revenue,
+        expense: reportData.expense
+      };
+    }
+
+    function clearDashboardSelection() {
+      dashboardFilter = null;
+
+      document.querySelectorAll(".dashboard-active").forEach(item => {
+        item.classList.remove("dashboard-active");
+      });
+
+      document.querySelectorAll(".dashboard-muted").forEach(item => {
+        item.classList.remove("dashboard-muted");
+      });
+
+      setDashboardChip("");
+      updateCards();
+      renderAnalyticsTable();
+    }
+
+    function applyDashboardSelection(clickedItem) {
+      const type = clickedItem.dataset.filterType;
+      const name = clickedItem.dataset.filterName;
+      const value = Number(clickedItem.dataset.filterValue || 0);
+
+      const isSameFilter =
+        dashboardFilter &&
+        dashboardFilter.type === type &&
+        dashboardFilter.name === name;
+
+      if (isSameFilter) {
+        clearDashboardSelection();
+        return;
+      }
+
+      dashboardFilter = {
+        type,
+        name,
+        value,
+        revenue: Number(clickedItem.dataset.revenue || 0),
+        expense: Number(clickedItem.dataset.expense || 0)
+      };
+
+      document.querySelectorAll(".dashboard-clickable").forEach(item => {
+        const sameType = item.dataset.filterType === type;
+        const sameName = item.dataset.filterName === name;
+
+        item.classList.remove("dashboard-active", "dashboard-muted");
+
+        if (sameType && sameName) {
+          item.classList.add("dashboard-active");
+        } else if (sameType) {
+          item.classList.add("dashboard-muted");
+        }
+      });
+
+      if (type === "month") {
+        applyMonthFilter(dashboardFilter);
+        return;
+      }
+
+      if (type.startsWith("card")) {
+        applyCardFilter(dashboardFilter);
+        return;
+      }
+
+      applyGenericDashboardFilter(dashboardFilter);
+    }
+
+    function applyMonthFilter(filter) {
+      const profit = filter.revenue - filter.expense;
+      const margin = filter.revenue > 0 ? (profit / filter.revenue) * 100 : 0;
+
+      netProfit.textContent = formatCurrency(profit);
+      profitMargin.textContent = formatPercent(margin);
+      totalRevenue.textContent = formatCurrency(filter.revenue);
+      totalExpense.textContent = formatCurrency(filter.expense);
+
+      netProfit.classList.toggle("positive", profit >= 0);
+      netProfit.classList.toggle("negative", profit < 0);
+
+      profitMargin.classList.toggle("positive", margin >= 20);
+      profitMargin.classList.toggle("warning", margin < 20 && margin >= 10);
+      profitMargin.classList.toggle("negative", margin < 10);
+
+      profitInfo.textContent = `Resultado filtrado do mês de ${filter.name}`;
+
+      setDashboardChip(`Filtro ativo: mês ${filter.name}`);
+      renderFilteredAnalytics(`Mês ${filter.name}`, filter.revenue, filter.expense);
+    }
+
+    function applyCardFilter(filter) {
+      const values = getMainValues();
+
+      setDashboardChip(`Filtro ativo: ${filter.name}`);
+
+      if (filter.type === "card-net-profit") {
+        renderFilteredAnalytics("Lucro líquido", values.revenue, values.expense);
+        profitInfo.textContent = "Visualizando composição do lucro líquido";
+        return;
+      }
+
+      if (filter.type === "card-profit-margin") {
+        renderFilteredAnalytics("Margem de lucro", values.revenue, values.expense);
+        profitInfo.textContent = "Visualizando composição da margem de lucro";
+        return;
+      }
+
+      if (filter.type === "card-total-revenue") {
+        netProfit.textContent = formatCurrency(values.revenue);
+        profitMargin.textContent = "100,0%";
+        totalRevenue.textContent = formatCurrency(values.revenue);
+        totalExpense.textContent = "—";
+        profitInfo.textContent = "Visualizando apenas receitas";
+        renderFilteredAnalytics("Receita total", values.revenue, 0);
+        return;
+      }
+
+      if (filter.type === "card-total-expense") {
+        netProfit.textContent = formatCurrency(-values.expense);
+        profitMargin.textContent = "—";
+        totalRevenue.textContent = "—";
+        totalExpense.textContent = formatCurrency(values.expense);
+        profitInfo.textContent = "Visualizando apenas despesas";
+        renderFilteredAnalytics("Despesa total", 0, values.expense);
+      }
+    }
+
+    function applyGenericDashboardFilter(filter) {
+      setDashboardChip(`Filtro ativo: ${filter.name}`);
+
+      if (filter.type === "expense-category") {
+        netProfit.textContent = formatCurrency(-filter.value);
+        profitMargin.textContent = "—";
+        totalRevenue.textContent = "—";
+        totalExpense.textContent = formatCurrency(filter.value);
+        profitInfo.textContent = `Visualizando despesa: ${filter.name}`;
+
+        renderFilteredAnalytics(filter.name, 0, filter.value);
+        return;
+      }
+
+      if (filter.type === "revenue-client") {
+        netProfit.textContent = formatCurrency(filter.value);
+        profitMargin.textContent = "100,0%";
+        totalRevenue.textContent = formatCurrency(filter.value);
+        totalExpense.textContent = "—";
+        profitInfo.textContent = `Visualizando receita: ${filter.name}`;
+
+        renderFilteredAnalytics(filter.name, filter.value, 0);
+        return;
+      }
+
+      if (filter.type.startsWith("dre")) {
+        const displayValue = Math.abs(filter.value);
+
+        netProfit.textContent = formatCurrency(filter.value);
+        profitMargin.textContent = "—";
+
+        if (filter.value >= 0) {
+          totalRevenue.textContent = formatCurrency(displayValue);
+          totalExpense.textContent = "—";
+        } else {
+          totalRevenue.textContent = "—";
+          totalExpense.textContent = formatCurrency(displayValue);
+        }
+
+        profitInfo.textContent = `Visualizando indicador: ${filter.name}`;
+
+        renderFilteredAnalytics(
+          filter.name,
+          filter.value >= 0 ? displayValue : 0,
+          filter.value < 0 ? displayValue : 0
+        );
+      }
+    }
+
+    function renderFilteredAnalytics(label, revenueValue, expenseValue) {
+      const result = revenueValue - expenseValue;
+      const margin = revenueValue > 0 ? (result / revenueValue) * 100 : 0;
+
+      const rows = [
+        {
+          label: "Filtro aplicado",
+          value: label,
+          variation: "Ativo",
+          analysis: "Os indicadores estão considerando apenas o item selecionado no dashboard."
+        },
+        {
+          label: "Receita filtrada",
+          value: revenueValue > 0 ? formatCurrency(revenueValue) : "—",
+          variation: revenueValue > 0 ? "Selecionado" : "Sem receita",
+          analysis: "Valor de receita relacionado ao filtro selecionado."
+        },
+        {
+          label: "Despesa filtrada",
+          value: expenseValue > 0 ? formatCurrency(expenseValue) : "—",
+          variation: expenseValue > 0 ? "Selecionado" : "Sem despesa",
+          analysis: "Valor de despesa relacionado ao filtro selecionado."
+        },
+        {
+          label: "Resultado filtrado",
+          value: formatCurrency(result),
+          variation: result >= 0 ? "Positivo" : "Negativo",
+          analysis: result >= 0 ? "O filtro selecionado possui impacto positivo no resultado." : "O filtro selecionado representa saída ou custo."
+        },
+        {
+          label: "Margem filtrada",
+          value: revenueValue > 0 ? formatPercent(margin) : "—",
+          variation: revenueValue > 0 ? "Calculado" : "Indisponível",
+          analysis: "Margem calculada apenas quando o filtro possui receita."
+        }
+      ];
+
+      analyticsTable.innerHTML = "";
+
+      rows.forEach(row => {
+        const tr = document.createElement("tr");
+
+        tr.innerHTML = `
+          <td>${row.label}</td>
+          <td>${row.value}</td>
+          <td class="${row.variation.includes("Positivo") ? "positive" : row.variation.includes("Negativo") ? "negative" : ""}">${row.variation}</td>
+          <td>${row.analysis}</td>
+        `;
+
+        analyticsTable.appendChild(tr);
+      });
+    }
+
+    function setupDashboardClicks() {
+      document.querySelectorAll(".dashboard-clickable").forEach(item => {
+        item.onclick = () => {
+          applyDashboardSelection(item);
+        };
+      });
+    }
+
+    if (clearDashboardFilter) {
+      clearDashboardFilter.addEventListener("click", clearDashboardSelection);
+    }
+
+    const originalRefreshReports = refreshReports;
+
+    refreshReports = function () {
+      const previousFilter = dashboardFilter;
+
+      originalRefreshReports();
+      setupDashboardClicks();
+
+      if (previousFilter) {
+        const item = document.querySelector(
+          `.dashboard-clickable[data-filter-type="${previousFilter.type}"][data-filter-name="${previousFilter.name}"]`
+        );
+
+        dashboardFilter = null;
+
+        if (item) {
+          applyDashboardSelection(item);
+        }
+      }
+    };
+
+    refreshReports();
+  </script>
+</body>
+
+</html>

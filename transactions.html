@@ -1,0 +1,1066 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Facilita Financeiro | Movimentações</title>
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: Arial, Helvetica, sans-serif;
+    }
+
+    :root {
+      --bg: #080c14;
+      --card: #101827;
+      --card-2: #121d30;
+      --blue: #1e90ff;
+      --blue-hover: #0f75d8;
+      --text: #f4f7fb;
+      --muted: #9ca8ba;
+      --border: #24324a;
+      --danger: #ff4d4d;
+      --success: #30d158;
+      --warning: #ffcc00;
+    }
+
+    body {
+      min-height: 100vh;
+      background: radial-gradient(circle at top, #10284a 0%, var(--bg) 45%, #05070c 100%);
+      color: var(--text);
+      display: flex;
+    }
+
+    .sidebar {
+      width: 260px;
+      height: 100vh;
+      position: fixed;
+      left: 0;
+      top: 0;
+      background: rgba(16, 24, 39, 0.96);
+      border-right: 1px solid var(--border);
+      padding: 28px 20px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      box-shadow: 10px 0 40px rgba(0, 0, 0, 0.25);
+      z-index: 10;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 20px;
+      font-weight: 800;
+      margin-bottom: 34px;
+    }
+
+    .logo-icon {
+      width: 42px;
+      height: 42px;
+      background: var(--blue);
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 900;
+      color: white;
+      box-shadow: 0 0 35px rgba(30, 144, 255, 0.55);
+    }
+
+    .menu {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .menu a {
+      text-decoration: none;
+      color: var(--muted);
+      padding: 13px 14px;
+      border-radius: 12px;
+      font-weight: 700;
+      font-size: 14px;
+      transition: 0.25s;
+    }
+
+    .menu a:hover,
+    .menu a.active {
+      background: rgba(30, 144, 255, 0.12);
+      color: white;
+    }
+
+    .menu a.active {
+      background: var(--blue);
+      box-shadow: 0 8px 22px rgba(30, 144, 255, 0.28);
+    }
+
+    .sidebar-footer {
+      padding: 14px;
+      border: 1px solid rgba(30, 144, 255, 0.25);
+      background: rgba(30, 144, 255, 0.08);
+      border-radius: 16px;
+      color: #cce7ff;
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    .main {
+      margin-left: 260px;
+      width: calc(100% - 260px);
+      padding: 30px;
+    }
+
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 28px;
+    }
+
+    .page-title h1 {
+      font-size: 30px;
+      margin-bottom: 6px;
+    }
+
+    .page-title p {
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .btn {
+      border: none;
+      border-radius: 12px;
+      padding: 13px 16px;
+      font-size: 14px;
+      font-weight: 800;
+      cursor: pointer;
+      transition: 0.25s;
+    }
+
+    .btn-primary {
+      background: var(--blue);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background: var(--blue-hover);
+      transform: translateY(-1px);
+      box-shadow: 0 12px 28px rgba(30, 144, 255, 0.24);
+    }
+
+    .btn-outline {
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--text);
+    }
+
+    .btn-outline:hover {
+      background: rgba(30, 144, 255, 0.08);
+      color: var(--blue);
+    }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+      margin-bottom: 24px;
+    }
+
+    .card {
+      background: rgba(16, 24, 39, 0.92);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 22px;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.25);
+      position: relative;
+      overflow: hidden;
+      transition: 0.25s;
+    }
+
+    .card:hover {
+      transform: translateY(-3px);
+      border-color: rgba(30, 144, 255, 0.45);
+    }
+
+    .card-title {
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 700;
+      margin-bottom: 12px;
+    }
+
+    .card-value {
+      font-size: 26px;
+      font-weight: 900;
+      margin-bottom: 8px;
+    }
+
+    .card-info {
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .positive {
+      color: var(--success);
+    }
+
+    .negative {
+      color: var(--danger);
+    }
+
+    .panel {
+      background: rgba(16, 24, 39, 0.92);
+      border: 1px solid var(--border);
+      border-radius: 22px;
+      padding: 24px;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.25);
+      margin-bottom: 22px;
+    }
+
+    .filters {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 14px;
+      align-items: end;
+    }
+
+    .input-group label {
+      display: block;
+      margin-bottom: 7px;
+      color: #d8e2f0;
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    input,
+    select,
+    textarea {
+      width: 100%;
+      padding: 14px 15px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      background: #0b1220;
+      color: var(--text);
+      outline: none;
+      font-size: 14px;
+      transition: 0.25s;
+    }
+
+    textarea {
+      resize: none;
+      height: 92px;
+    }
+
+    input:focus,
+    select:focus,
+    textarea:focus {
+      border-color: var(--blue);
+      box-shadow: 0 0 0 4px rgba(30, 144, 255, 0.12);
+    }
+
+    select option {
+      background: #0b1220;
+      color: var(--text);
+    }
+
+    .clear-button {
+      height: 47px;
+      width: 100%;
+      white-space: nowrap;
+    }
+
+    .table-wrapper {
+      overflow-x: auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 850px;
+    }
+
+    th,
+    td {
+      padding: 15px 10px;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+      font-size: 14px;
+    }
+
+    th {
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 800;
+    }
+
+    td {
+      color: var(--text);
+    }
+
+    .type {
+      padding: 6px 10px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 900;
+    }
+
+    .type.income {
+      background: rgba(48, 209, 88, 0.12);
+      color: var(--success);
+    }
+
+    .type.expense {
+      background: rgba(255, 77, 77, 0.12);
+      color: var(--danger);
+    }
+
+    .status {
+      padding: 6px 10px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 900;
+    }
+
+    .status.paid {
+      background: rgba(48, 209, 88, 0.12);
+      color: var(--success);
+    }
+
+    .status.pending {
+      background: rgba(255, 204, 0, 0.12);
+      color: var(--warning);
+    }
+
+    .status.late {
+      background: rgba(255, 77, 77, 0.12);
+      color: var(--danger);
+    }
+
+    .fade-up {
+      animation: fadeUp 0.55s ease both;
+    }
+
+    @keyframes fadeUp {
+      from {
+        opacity: 0;
+        transform: translateY(14px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(5, 7, 12, 0.62);
+      backdrop-filter: blur(10px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 100;
+      padding: 20px;
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+      transition: opacity 0.28s ease, visibility 0.28s ease;
+    }
+
+    .modal-overlay.show {
+      opacity: 1;
+      visibility: visible;
+      pointer-events: auto;
+    }
+
+    .modal-overlay.hide {
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+    }
+
+    .modal {
+      width: 100%;
+      max-width: 720px;
+      background: rgba(16, 24, 39, 0.98);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      box-shadow: 0 30px 100px rgba(0, 0, 0, 0.65);
+      overflow: hidden;
+      position: relative;
+      opacity: 0;
+      transform: translateY(28px) scale(0.94);
+      transition: opacity 0.28s ease, transform 0.28s ease;
+    }
+
+    .modal-overlay.show .modal {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+
+    .modal-overlay.hide .modal {
+      opacity: 0;
+      transform: translateY(24px) scale(0.94);
+    }
+
+    .modal::before {
+      content: "";
+      position: absolute;
+      width: 220px;
+      height: 220px;
+      border-radius: 50%;
+      background: rgba(30, 144, 255, 0.16);
+      filter: blur(12px);
+      top: -90px;
+      right: -80px;
+    }
+
+    .modal-header {
+      padding: 24px 26px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: relative;
+      z-index: 1;
+    }
+
+    .modal-header h2 {
+      font-size: 22px;
+      margin-bottom: 5px;
+    }
+
+    .modal-header p {
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .close-modal {
+      width: 38px;
+      height: 38px;
+      border: 1px solid var(--border);
+      background: #0b1220;
+      color: var(--text);
+      border-radius: 12px;
+      cursor: pointer;
+      font-size: 18px;
+      transition: 0.25s;
+    }
+
+    .close-modal:hover {
+      background: rgba(255, 77, 77, 0.12);
+      color: #ffb3b3;
+      border-color: rgba(255, 77, 77, 0.35);
+    }
+
+    .modal-body {
+      padding: 26px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .launch-form {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+    }
+
+    .launch-form .full {
+      grid-column: 1 / -1;
+    }
+
+    .modal-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 12px;
+      padding: 0 26px 26px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .form-message {
+      display: none;
+      margin-top: 16px;
+      padding: 12px;
+      border-radius: 12px;
+      font-size: 14px;
+      background: rgba(48, 209, 88, 0.12);
+      border: 1px solid rgba(48, 209, 88, 0.35);
+      color: #b8ffc8;
+    }
+
+    .form-message.show {
+      display: block;
+      animation: fadeUp 0.3s ease;
+    }
+
+    @media (max-width: 1350px) {
+      .filters {
+        grid-template-columns: repeat(4, 1fr);
+      }
+    }
+
+    @media (max-width: 1100px) {
+      .cards {
+        grid-template-columns: 1fr;
+      }
+
+      .filters {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 760px) {
+      body {
+        display: block;
+      }
+
+      .sidebar {
+        position: relative;
+        width: 100%;
+        height: auto;
+      }
+
+      .main {
+        margin-left: 0;
+        width: 100%;
+        padding: 22px;
+      }
+
+      .topbar {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px;
+      }
+
+      .btn {
+        width: 100%;
+      }
+
+      .filters {
+        grid-template-columns: 1fr;
+      }
+
+      .launch-form {
+        grid-template-columns: 1fr;
+      }
+
+      .modal-actions {
+        flex-direction: column-reverse;
+      }
+    }
+  </style>
+
+  <link rel="stylesheet" href="sidebar-shared.css" />
+</head>
+
+<body data-page="transactions">
+  <div id="sidebar-container"></div>
+
+<main class="main">
+    <header class="topbar fade-up">
+      <div class="page-title">
+        <h1>Movimentações</h1>
+        <p>Gerencie todos os lançamentos financeiros da empresa.</p>
+      </div>
+
+      <button class="btn btn-primary" id="openModal">Novo lançamento</button>
+    </header>
+
+    <section class="cards">
+      <div class="card fade-up">
+        <div class="card-title">Total de entradas</div>
+        <div class="card-value positive">R$ 86.400,00</div>
+        <div class="card-info">Receitas no período selecionado</div>
+      </div>
+
+      <div class="card fade-up">
+        <div class="card-title">Total de saídas</div>
+        <div class="card-value negative">R$ 52.180,00</div>
+        <div class="card-info">Despesas no período selecionado</div>
+      </div>
+
+      <div class="card fade-up">
+        <div class="card-title">Saldo do período</div>
+        <div class="card-value positive">R$ 34.220,00</div>
+        <div class="card-info">Resultado financeiro consolidado</div>
+      </div>
+    </section>
+
+    <section class="panel fade-up">
+      <div class="filters">
+        <div class="input-group">
+          <label for="startDate">Data inicial</label>
+          <input type="text" id="startDate" placeholder="dd/mm/aaaa" maxlength="10" />
+        </div>
+
+        <div class="input-group">
+          <label for="endDate">Data final</label>
+          <input type="text" id="endDate" placeholder="dd/mm/aaaa" maxlength="10" />
+        </div>
+
+        <div class="input-group">
+          <label for="typeFilter">Tipo</label>
+          <select id="typeFilter">
+            <option value="">Todos</option>
+            <option value="entrada">Entrada</option>
+            <option value="saida">Saída</option>
+          </select>
+        </div>
+
+        <div class="input-group">
+          <label for="categoryFilter">Categoria</label>
+          <select id="categoryFilter">
+            <option value="">Todas</option>
+            <option value="vendas">Vendas</option>
+            <option value="servicos">Serviços</option>
+            <option value="fornecedor">Fornecedor</option>
+            <option value="aluguel">Aluguel</option>
+            <option value="marketing">Marketing</option>
+          </select>
+        </div>
+
+        <div class="input-group">
+          <label for="bankFilter">Conta bancária</label>
+          <select id="bankFilter">
+            <option value="">Todas</option>
+            <option value="banco principal">Banco Principal</option>
+            <option value="caixa interno">Caixa Interno</option>
+            <option value="conta pj">Conta PJ</option>
+          </select>
+        </div>
+
+        <div class="input-group">
+          <label for="statusFilter">Status</label>
+          <select id="statusFilter">
+            <option value="">Todos</option>
+            <option value="pago">Pago</option>
+            <option value="pendente">Pendente</option>
+            <option value="atrasado">Atrasado</option>
+          </select>
+        </div>
+
+        <div class="input-group">
+          <button class="btn btn-primary clear-button" type="button" id="clearFilters">
+            Limpar filtros
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel fade-up">
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>Data</th>
+              <th>Descrição</th>
+              <th>Categoria</th>
+              <th>Tipo</th>
+              <th>Conta</th>
+              <th>Valor</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+
+          <tbody id="transactionsTable">
+            <tr>
+              <td>29/04/2026</td>
+              <td>Recebimento cliente Alpha</td>
+              <td>Vendas</td>
+              <td><span class="type income">Entrada</span></td>
+              <td>Banco Principal</td>
+              <td class="positive">R$ 8.400,00</td>
+              <td><span class="status paid">Pago</span></td>
+            </tr>
+
+            <tr>
+              <td>28/04/2026</td>
+              <td>Aluguel escritório</td>
+              <td>Aluguel</td>
+              <td><span class="type expense">Saída</span></td>
+              <td>Conta PJ</td>
+              <td class="negative">R$ 3.200,00</td>
+              <td><span class="status paid">Pago</span></td>
+            </tr>
+
+            <tr>
+              <td>27/04/2026</td>
+              <td>Campanha tráfego pago</td>
+              <td>Marketing</td>
+              <td><span class="type expense">Saída</span></td>
+              <td>Banco Principal</td>
+              <td class="negative">R$ 1.150,00</td>
+              <td><span class="status pending">Pendente</span></td>
+            </tr>
+
+            <tr>
+              <td>25/04/2026</td>
+              <td>Prestação de serviço</td>
+              <td>Serviços</td>
+              <td><span class="type income">Entrada</span></td>
+              <td>Conta PJ</td>
+              <td class="positive">R$ 12.700,00</td>
+              <td><span class="status paid">Pago</span></td>
+            </tr>
+
+            <tr>
+              <td>22/04/2026</td>
+              <td>Fornecedor sistema</td>
+              <td>Fornecedor</td>
+              <td><span class="type expense">Saída</span></td>
+              <td>Caixa Interno</td>
+              <td class="negative">R$ 1.250,00</td>
+              <td><span class="status late">Atrasado</span></td>
+            </tr>
+
+            <tr>
+              <td>15/04/2026</td>
+              <td>Recebimento contrato mensal</td>
+              <td>Serviços</td>
+              <td><span class="type income">Entrada</span></td>
+              <td>Banco Principal</td>
+              <td class="positive">R$ 18.900,00</td>
+              <td><span class="status paid">Pago</span></td>
+            </tr>
+
+            <tr>
+              <td>10/04/2026</td>
+              <td>Compra de materiais</td>
+              <td>Fornecedor</td>
+              <td><span class="type expense">Saída</span></td>
+              <td>Conta PJ</td>
+              <td class="negative">R$ 2.480,00</td>
+              <td><span class="status pending">Pendente</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <div class="modal-overlay" id="modalOverlay">
+    <div class="modal">
+      <div class="modal-header">
+        <div>
+          <h2>Novo lançamento</h2>
+          <p>Cadastre uma entrada ou saída financeira.</p>
+        </div>
+
+        <button class="close-modal" id="closeModal" type="button">×</button>
+      </div>
+
+      <div class="modal-body">
+        <form id="launchForm" class="launch-form">
+          <div class="input-group">
+            <label for="launchDate">Data</label>
+            <input type="text" id="launchDate" placeholder="dd/mm/aaaa" maxlength="10" required />
+          </div>
+
+          <div class="input-group">
+            <label for="launchType">Tipo</label>
+            <select id="launchType" required>
+              <option value="">Selecione</option>
+              <option value="Entrada">Entrada</option>
+              <option value="Saída">Saída</option>
+            </select>
+          </div>
+
+          <div class="input-group full">
+            <label for="launchDescription">Descrição</label>
+            <input type="text" id="launchDescription" placeholder="Ex: Recebimento cliente, aluguel, fornecedor..." required />
+          </div>
+
+          <div class="input-group">
+            <label for="launchCategory">Categoria</label>
+            <select id="launchCategory" required>
+              <option value="">Selecione</option>
+              <option value="Vendas">Vendas</option>
+              <option value="Serviços">Serviços</option>
+              <option value="Fornecedor">Fornecedor</option>
+              <option value="Aluguel">Aluguel</option>
+              <option value="Marketing">Marketing</option>
+              <option value="Impostos">Impostos</option>
+              <option value="Salários">Salários</option>
+            </select>
+          </div>
+
+          <div class="input-group">
+            <label for="launchBank">Conta bancária</label>
+            <select id="launchBank" required>
+              <option value="">Selecione</option>
+              <option value="Banco Principal">Banco Principal</option>
+              <option value="Caixa Interno">Caixa Interno</option>
+              <option value="Conta PJ">Conta PJ</option>
+            </select>
+          </div>
+
+          <div class="input-group">
+            <label for="launchValue">Valor</label>
+            <input type="text" id="launchValue" placeholder="R$ 0,00" required />
+          </div>
+
+          <div class="input-group">
+            <label for="launchStatus">Status</label>
+            <select id="launchStatus" required>
+              <option value="">Selecione</option>
+              <option value="Pago">Pago</option>
+              <option value="Pendente">Pendente</option>
+              <option value="Atrasado">Atrasado</option>
+            </select>
+          </div>
+
+          <div class="input-group full">
+            <label for="launchNotes">Observações</label>
+            <textarea id="launchNotes" placeholder="Adicione detalhes opcionais sobre este lançamento..."></textarea>
+          </div>
+        </form>
+
+        <div class="form-message" id="formMessage">
+          Lançamento cadastrado com sucesso!
+        </div>
+      </div>
+
+      <div class="modal-actions">
+        <button class="btn btn-outline" type="button" id="cancelModal">Cancelar</button>
+        <button class="btn btn-primary" type="submit" form="launchForm">Salvar lançamento</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const animatedItems = document.querySelectorAll(".fade-up");
+
+    animatedItems.forEach((item, index) => {
+      item.style.animationDelay = `${index * 0.06}s`;
+    });
+
+    const startDate = document.getElementById("startDate");
+    const endDate = document.getElementById("endDate");
+    const typeFilter = document.getElementById("typeFilter");
+    const categoryFilter = document.getElementById("categoryFilter");
+    const bankFilter = document.getElementById("bankFilter");
+    const statusFilter = document.getElementById("statusFilter");
+    const clearFilters = document.getElementById("clearFilters");
+
+    const openModal = document.getElementById("openModal");
+    const closeModal = document.getElementById("closeModal");
+    const cancelModal = document.getElementById("cancelModal");
+    const modalOverlay = document.getElementById("modalOverlay");
+    const launchForm = document.getElementById("launchForm");
+    const formMessage = document.getElementById("formMessage");
+    const transactionsTable = document.getElementById("transactionsTable");
+
+    const launchDate = document.getElementById("launchDate");
+    const launchValue = document.getElementById("launchValue");
+
+    let rows = document.querySelectorAll("#transactionsTable tr");
+
+    function normalize(text) {
+      return text
+        .toLowerCase()
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .trim();
+    }
+
+    function maskDate(input) {
+      input.addEventListener("input", () => {
+        let value = input.value.replace(/\D/g, "");
+
+        if (value.length > 2) {
+          value = value.slice(0, 2) + "/" + value.slice(2);
+        }
+
+        if (value.length > 5) {
+          value = value.slice(0, 5) + "/" + value.slice(5, 9);
+        }
+
+        input.value = value;
+        filterTable();
+      });
+    }
+
+    function maskMoney(input) {
+      input.addEventListener("input", () => {
+        let value = input.value.replace(/\D/g, "");
+
+        if (!value) {
+          input.value = "";
+          return;
+        }
+
+        value = (Number(value) / 100).toLocaleString("pt-BR", {
+          style: "currency",
+          currency: "BRL"
+        });
+
+        input.value = value;
+      });
+    }
+
+    function brDateToNumber(dateBR) {
+      if (!dateBR || dateBR.length !== 10) return null;
+
+      const [day, month, year] = dateBR.split("/");
+
+      if (!day || !month || !year) return null;
+
+      return Number(`${year}${month}${day}`);
+    }
+
+    function filterTable() {
+      rows = document.querySelectorAll("#transactionsTable tr");
+
+      const selectedStartDate = brDateToNumber(startDate.value);
+      const selectedEndDate = brDateToNumber(endDate.value);
+
+      const selectedType = normalize(typeFilter.value);
+      const selectedCategory = normalize(categoryFilter.value);
+      const selectedBank = normalize(bankFilter.value);
+      const selectedStatus = normalize(statusFilter.value);
+
+      rows.forEach(row => {
+        const cells = row.querySelectorAll("td");
+
+        const rowDate = brDateToNumber(cells[0].textContent.trim());
+        const rowCategory = normalize(cells[2].textContent);
+        const rowType = normalize(cells[3].textContent);
+        const rowBank = normalize(cells[4].textContent);
+        const rowStatus = normalize(cells[6].textContent);
+
+        const matchStartDate = !selectedStartDate || rowDate >= selectedStartDate;
+        const matchEndDate = !selectedEndDate || rowDate <= selectedEndDate;
+        const matchType = !selectedType || rowType === selectedType;
+        const matchCategory = !selectedCategory || rowCategory === selectedCategory;
+        const matchBank = !selectedBank || rowBank === selectedBank;
+        const matchStatus = !selectedStatus || rowStatus === selectedStatus;
+
+        row.style.display =
+          matchStartDate &&
+          matchEndDate &&
+          matchType &&
+          matchCategory &&
+          matchBank &&
+          matchStatus
+            ? ""
+            : "none";
+      });
+    }
+
+    function openLaunchModal() {
+      modalOverlay.classList.remove("hide");
+      modalOverlay.classList.add("show");
+      document.body.style.overflow = "hidden";
+
+      setTimeout(() => {
+        launchDate.focus();
+      }, 180);
+    }
+
+    function closeLaunchModal() {
+      modalOverlay.classList.remove("show");
+      modalOverlay.classList.add("hide");
+
+      setTimeout(() => {
+        modalOverlay.classList.remove("hide");
+        document.body.style.overflow = "";
+        formMessage.classList.remove("show");
+      }, 280);
+    }
+
+    function getTypeClass(type) {
+      return type === "Entrada" ? "income" : "expense";
+    }
+
+    function getStatusClass(status) {
+      if (status === "Pago") return "paid";
+      if (status === "Pendente") return "pending";
+      return "late";
+    }
+
+    function addTransaction(event) {
+      event.preventDefault();
+
+      const date = document.getElementById("launchDate").value.trim();
+      const type = document.getElementById("launchType").value;
+      const description = document.getElementById("launchDescription").value.trim();
+      const category = document.getElementById("launchCategory").value;
+      const bank = document.getElementById("launchBank").value;
+      const value = document.getElementById("launchValue").value.trim();
+      const status = document.getElementById("launchStatus").value;
+
+      if (!date || !type || !description || !category || !bank || !value || !status) {
+        return;
+      }
+
+      const row = document.createElement("tr");
+
+      row.innerHTML = `
+        <td>${date}</td>
+        <td>${description}</td>
+        <td>${category}</td>
+        <td><span class="type ${getTypeClass(type)}">${type}</span></td>
+        <td>${bank}</td>
+        <td class="${type === "Entrada" ? "positive" : "negative"}">${value}</td>
+        <td><span class="status ${getStatusClass(status)}">${status}</span></td>
+      `;
+
+      transactionsTable.prepend(row);
+      launchForm.reset();
+      formMessage.classList.add("show");
+
+      setTimeout(() => {
+        closeLaunchModal();
+        filterTable();
+      }, 900);
+    }
+
+    maskDate(startDate);
+    maskDate(endDate);
+    maskDate(launchDate);
+    maskMoney(launchValue);
+
+    [typeFilter, categoryFilter, bankFilter, statusFilter].forEach(input => {
+      input.addEventListener("change", filterTable);
+    });
+
+    clearFilters.addEventListener("click", () => {
+      startDate.value = "";
+      endDate.value = "";
+      typeFilter.value = "";
+      categoryFilter.value = "";
+      bankFilter.value = "";
+      statusFilter.value = "";
+
+      filterTable();
+    });
+
+    openModal.addEventListener("click", openLaunchModal);
+    closeModal.addEventListener("click", closeLaunchModal);
+    cancelModal.addEventListener("click", closeLaunchModal);
+    launchForm.addEventListener("submit", addTransaction);
+
+    modalOverlay.addEventListener("click", event => {
+      if (event.target === modalOverlay) {
+        closeLaunchModal();
+      }
+    });
+
+    document.addEventListener("keydown", event => {
+      if (event.key === "Escape" && modalOverlay.classList.contains("show")) {
+        closeLaunchModal();
+      }
+    });
+  </script>
+  <script src="sidebar-loader.js"></script>
+</body>
+
+</html>

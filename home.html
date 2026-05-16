@@ -1,0 +1,1783 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Facilita Financeiro | Início</title>
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: Arial, Helvetica, sans-serif;
+    }
+
+    :root {
+      --bg: #080c14;
+      --card: #101827;
+      --card-2: #121d30;
+      --blue: #1e90ff;
+      --blue-hover: #0f75d8;
+      --text: #f4f7fb;
+      --muted: #9ca8ba;
+      --border: #24324a;
+      --danger: #ff4d4d;
+      --success: #30d158;
+      --warning: #ffcc00;
+    }
+
+    body {
+      min-height: 100vh;
+      background: radial-gradient(circle at top, #10284a 0%, var(--bg) 45%, #05070c 100%);
+      color: var(--text);
+      display: flex;
+    }
+
+    .sidebar {
+      width: 260px;
+      height: 100vh;
+      position: fixed;
+      left: 0;
+      top: 0;
+      background: rgba(16, 24, 39, 0.96);
+      border-right: 1px solid var(--border);
+      padding: 28px 20px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      box-shadow: 10px 0 40px rgba(0, 0, 0, 0.25);
+      z-index: 10;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 20px;
+      font-weight: 800;
+      margin-bottom: 34px;
+    }
+
+    .logo-icon {
+      width: 42px;
+      height: 42px;
+      background: var(--blue);
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 900;
+      color: white;
+      box-shadow: 0 0 35px rgba(30, 144, 255, 0.55);
+    }
+
+    .menu {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .menu a {
+      text-decoration: none;
+      color: var(--muted);
+      padding: 13px 14px;
+      border-radius: 12px;
+      font-weight: 700;
+      font-size: 14px;
+      transition: 0.25s;
+    }
+
+    .menu a:hover,
+    .menu a.active {
+      background: rgba(30, 144, 255, 0.12);
+      color: white;
+    }
+
+    .menu a.active {
+      background: var(--blue);
+      box-shadow: 0 8px 22px rgba(30, 144, 255, 0.28);
+    }
+
+    .sidebar-footer {
+      padding: 14px;
+      border: 1px solid rgba(30, 144, 255, 0.25);
+      background: rgba(30, 144, 255, 0.08);
+      border-radius: 16px;
+      color: #cce7ff;
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    .main {
+      margin-left: 260px;
+      width: calc(100% - 260px);
+      padding: 30px;
+    }
+
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 28px;
+    }
+
+    .page-title h1 {
+      font-size: 30px;
+      margin-bottom: 6px;
+    }
+
+    .page-title p {
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .top-actions {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .btn {
+      border: none;
+      border-radius: 12px;
+      padding: 13px 16px;
+      font-size: 14px;
+      font-weight: 800;
+      cursor: pointer;
+      transition: 0.25s;
+    }
+
+    .btn-primary {
+      background: var(--blue);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background: var(--blue-hover);
+      transform: translateY(-1px);
+      box-shadow: 0 12px 28px rgba(30, 144, 255, 0.24);
+    }
+
+    .btn-outline {
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--text);
+    }
+
+    .btn-outline:hover {
+      background: rgba(30, 144, 255, 0.08);
+      color: var(--blue);
+    }
+
+    .filter-pill {
+      display: none;
+      align-items: center;
+      gap: 10px;
+      padding: 11px 14px;
+      border-radius: 999px;
+      background: rgba(30, 144, 255, 0.1);
+      border: 1px solid rgba(30, 144, 255, 0.35);
+      color: #cce7ff;
+      font-size: 13px;
+      font-weight: 800;
+    }
+
+    .filter-pill.show {
+      display: flex;
+    }
+
+    .filter-pill button {
+      border: none;
+      background: rgba(255, 255, 255, 0.08);
+      color: white;
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      cursor: pointer;
+      font-weight: 900;
+    }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 18px;
+      margin-bottom: 24px;
+    }
+
+    .card {
+      background: rgba(16, 24, 39, 0.92);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 22px;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.25);
+      position: relative;
+      overflow: hidden;
+      transition: 0.25s;
+    }
+
+    .card:hover {
+      transform: translateY(-3px);
+      border-color: rgba(30, 144, 255, 0.45);
+      box-shadow: 0 22px 60px rgba(0, 0, 0, 0.35);
+    }
+
+    .card::before {
+      content: "";
+      position: absolute;
+      width: 130px;
+      height: 130px;
+      border-radius: 50%;
+      background: rgba(30, 144, 255, 0.12);
+      filter: blur(10px);
+      top: -60px;
+      right: -60px;
+    }
+
+    .card-title {
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 700;
+      margin-bottom: 12px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .card-value {
+      font-size: 24px;
+      font-weight: 900;
+      margin-bottom: 8px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .card-info {
+      font-size: 12px;
+      color: var(--muted);
+      position: relative;
+      z-index: 1;
+    }
+
+    .positive {
+      color: var(--success);
+    }
+
+    .negative {
+      color: var(--danger);
+    }
+
+    .warning {
+      color: var(--warning);
+    }
+
+    .dashboard-grid {
+      display: grid;
+      grid-template-columns: 1.25fr 0.75fr;
+      gap: 22px;
+    }
+
+    .panel {
+      background: rgba(16, 24, 39, 0.92);
+      border: 1px solid var(--border);
+      border-radius: 22px;
+      padding: 24px;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.25);
+    }
+
+    .panel-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 22px;
+      gap: 14px;
+    }
+
+    .panel-header h2 {
+      font-size: 20px;
+    }
+
+    .panel-header span {
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .period-link {
+      border: none;
+      background: transparent;
+      color: var(--blue);
+      font-size: 13px;
+      font-weight: 800;
+      cursor: pointer;
+      padding: 7px 10px;
+      border-radius: 10px;
+      transition: 0.25s;
+    }
+
+    .period-link:hover {
+      background: rgba(30, 144, 255, 0.08);
+      transform: translateY(-1px);
+    }
+
+    .chart-hint {
+      color: var(--muted);
+      font-size: 12px;
+      margin-top: -8px;
+      margin-bottom: 16px;
+    }
+
+    .chart {
+      height: 310px;
+      display: flex;
+      align-items: flex-end;
+      gap: 12px;
+      padding-top: 20px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .bar-group {
+      flex: 1;
+      height: 100%;
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      gap: 5px;
+      position: relative;
+      cursor: pointer;
+      border-radius: 14px;
+      transition: 0.25s;
+      padding: 0 5px;
+    }
+
+    .bar-group:hover {
+      background: rgba(30, 144, 255, 0.08);
+      transform: translateY(-2px);
+    }
+
+    .bar-group.active {
+      background: rgba(30, 144, 255, 0.14);
+      box-shadow: inset 0 0 0 1px rgba(30, 144, 255, 0.35);
+    }
+
+    .bar-group.dimmed {
+      opacity: 0.35;
+    }
+
+    .bar {
+      width: 23px;
+      border-radius: 10px 10px 0 0;
+      transition: 0.3s;
+      position: relative;
+    }
+
+    .bar.income {
+      background: linear-gradient(to top, var(--success), rgba(48, 209, 88, 0.35));
+    }
+
+    .bar.expense {
+      background: linear-gradient(to top, var(--danger), rgba(255, 77, 77, 0.35));
+    }
+
+    .bar-group:hover .bar {
+      filter: brightness(1.14);
+    }
+
+    .chart-labels {
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      gap: 12px;
+      margin-top: 12px;
+      color: var(--muted);
+      font-size: 12px;
+      text-align: center;
+    }
+
+    .chart-labels span {
+      cursor: pointer;
+      padding: 6px 0;
+      border-radius: 8px;
+      transition: 0.25s;
+    }
+
+    .chart-labels span.active {
+      color: white;
+      background: rgba(30, 144, 255, 0.18);
+    }
+
+    .legend {
+      display: flex;
+      gap: 16px;
+      margin-top: 18px;
+      color: var(--muted);
+      font-size: 13px;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .legend-left {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+    }
+
+    .dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+    }
+
+    .dot.green {
+      background: var(--success);
+    }
+
+    .dot.red {
+      background: var(--danger);
+    }
+
+    .clear-chart {
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--muted);
+      padding: 8px 10px;
+      border-radius: 10px;
+      font-size: 12px;
+      font-weight: 800;
+      cursor: pointer;
+      transition: 0.25s;
+    }
+
+    .clear-chart:hover {
+      color: var(--blue);
+      background: rgba(30, 144, 255, 0.08);
+    }
+
+    .alerts {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .alert {
+      padding: 15px;
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      background: #0b1220;
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+      transition: 0.25s;
+    }
+
+    .alert:hover {
+      transform: translateX(3px);
+      border-color: rgba(30, 144, 255, 0.35);
+    }
+
+    .alert-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 900;
+      flex-shrink: 0;
+    }
+
+    .alert-icon.blue {
+      background: rgba(30, 144, 255, 0.12);
+      color: var(--blue);
+    }
+
+    .alert-icon.red {
+      background: rgba(255, 77, 77, 0.12);
+      color: var(--danger);
+    }
+
+    .alert-icon.yellow {
+      background: rgba(255, 204, 0, 0.12);
+      color: var(--warning);
+    }
+
+    .alert-icon.green {
+      background: rgba(48, 209, 88, 0.12);
+      color: var(--success);
+    }
+
+    .alert-content h3 {
+      font-size: 14px;
+      margin-bottom: 5px;
+    }
+
+    .alert-content p {
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    .table-panel {
+      margin-top: 22px;
+    }
+
+    .table-wrapper {
+      overflow-x: auto;
+    }
+
+    .scroll-table,
+    .all-movements-table {
+      max-height: 360px;
+      overflow-y: auto;
+      overflow-x: auto;
+      padding-right: 4px;
+    }
+
+    .all-movements-table {
+      max-height: 520px;
+    }
+
+    .scroll-table::-webkit-scrollbar,
+    .all-movements-table::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+
+    .scroll-table::-webkit-scrollbar-track,
+    .all-movements-table::-webkit-scrollbar-track {
+      background: #0b1220;
+      border-radius: 999px;
+    }
+
+    .scroll-table::-webkit-scrollbar-thumb,
+    .all-movements-table::-webkit-scrollbar-thumb {
+      background: rgba(30, 144, 255, 0.45);
+      border-radius: 999px;
+    }
+
+    .scroll-table::-webkit-scrollbar-thumb:hover,
+    .all-movements-table::-webkit-scrollbar-thumb:hover {
+      background: rgba(30, 144, 255, 0.7);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 12px;
+      min-width: 820px;
+    }
+
+    th,
+    td {
+      padding: 14px 10px;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+      font-size: 14px;
+    }
+
+    th {
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    thead th {
+      position: sticky;
+      top: 0;
+      background: rgba(16, 24, 39, 0.98);
+      z-index: 2;
+    }
+
+    td {
+      color: var(--text);
+    }
+
+    tbody tr {
+      transition: 0.25s;
+    }
+
+    tbody tr:hover {
+      background: rgba(30, 144, 255, 0.05);
+    }
+
+    .type {
+      padding: 6px 10px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 900;
+    }
+
+    .type.income {
+      background: rgba(48, 209, 88, 0.12);
+      color: var(--success);
+    }
+
+    .type.expense {
+      background: rgba(255, 77, 77, 0.12);
+      color: var(--danger);
+    }
+
+    .status {
+      padding: 6px 10px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .status.pending {
+      background: rgba(255, 204, 0, 0.12);
+      color: var(--warning);
+    }
+
+    .status.paid {
+      background: rgba(48, 209, 88, 0.12);
+      color: var(--success);
+    }
+
+    .status.late {
+      background: rgba(255, 77, 77, 0.12);
+      color: var(--danger);
+    }
+
+    .empty-state {
+      display: none;
+      text-align: center;
+      color: var(--muted);
+      padding: 24px;
+      font-size: 14px;
+    }
+
+    .empty-state.show {
+      display: block;
+    }
+
+    .fade-up {
+      animation: fadeUp 0.55s ease both;
+    }
+
+    @keyframes fadeUp {
+      from {
+        opacity: 0;
+        transform: translateY(14px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    input,
+    select,
+    textarea {
+      width: 100%;
+      padding: 14px 15px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      background: #0b1220;
+      color: var(--text);
+      outline: none;
+      font-size: 14px;
+      transition: 0.25s;
+    }
+
+    textarea {
+      resize: none;
+      height: 92px;
+    }
+
+    input:focus,
+    select:focus,
+    textarea:focus {
+      border-color: var(--blue);
+      box-shadow: 0 0 0 4px rgba(30, 144, 255, 0.12);
+    }
+
+    select option {
+      background: #0b1220;
+      color: var(--text);
+    }
+
+    .input-group label {
+      display: block;
+      margin-bottom: 7px;
+      color: #d8e2f0;
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(5, 7, 12, 0.62);
+      backdrop-filter: blur(10px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 100;
+      padding: 20px;
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+      transition: opacity 0.28s ease, visibility 0.28s ease;
+    }
+
+    .modal-overlay.show {
+      opacity: 1;
+      visibility: visible;
+      pointer-events: auto;
+    }
+
+    .modal-overlay.hide {
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+    }
+
+    .modal {
+      width: 100%;
+      max-width: 720px;
+      background: rgba(16, 24, 39, 0.98);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      box-shadow: 0 30px 100px rgba(0, 0, 0, 0.65);
+      overflow: hidden;
+      position: relative;
+      opacity: 0;
+      transform: translateY(28px) scale(0.94);
+      transition: opacity 0.28s ease, transform 0.28s ease;
+    }
+
+    .large-modal {
+      max-width: 1050px;
+    }
+
+    .modal-overlay.show .modal {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+
+    .modal-overlay.hide .modal {
+      opacity: 0;
+      transform: translateY(24px) scale(0.94);
+    }
+
+    .modal::before {
+      content: "";
+      position: absolute;
+      width: 220px;
+      height: 220px;
+      border-radius: 50%;
+      background: rgba(30, 144, 255, 0.16);
+      filter: blur(12px);
+      top: -90px;
+      right: -80px;
+    }
+
+    .modal-header {
+      padding: 24px 26px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: relative;
+      z-index: 1;
+    }
+
+    .modal-header h2 {
+      font-size: 22px;
+      margin-bottom: 5px;
+    }
+
+    .modal-header p {
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .close-modal {
+      width: 38px;
+      height: 38px;
+      border: 1px solid var(--border);
+      background: #0b1220;
+      color: var(--text);
+      border-radius: 12px;
+      cursor: pointer;
+      font-size: 18px;
+      transition: 0.25s;
+    }
+
+    .close-modal:hover {
+      background: rgba(255, 77, 77, 0.12);
+      color: #ffb3b3;
+      border-color: rgba(255, 77, 77, 0.35);
+    }
+
+    .modal-body {
+      padding: 26px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .movement-form {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+    }
+
+    .movement-form .full {
+      grid-column: 1 / -1;
+    }
+
+    .modal-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 12px;
+      padding: 0 26px 26px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .form-message {
+      display: none;
+      margin-top: 16px;
+      padding: 12px;
+      border-radius: 12px;
+      font-size: 14px;
+      background: rgba(48, 209, 88, 0.12);
+      border: 1px solid rgba(48, 209, 88, 0.35);
+      color: #b8ffc8;
+    }
+
+    .form-message.show {
+      display: block;
+      animation: fadeUp 0.3s ease;
+    }
+
+    @media (max-width: 1300px) {
+      .cards {
+        grid-template-columns: repeat(3, 1fr);
+      }
+
+      .chart-labels {
+        font-size: 11px;
+      }
+    }
+
+    @media (max-width: 1100px) {
+      .cards {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .dashboard-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 760px) {
+      body {
+        display: block;
+      }
+
+      .sidebar {
+        position: relative;
+        width: 100%;
+        height: auto;
+      }
+
+      .main {
+        margin-left: 0;
+        width: 100%;
+        padding: 22px;
+      }
+
+      .topbar {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px;
+      }
+
+      .top-actions {
+        width: 100%;
+        flex-direction: column;
+      }
+
+      .btn {
+        width: 100%;
+      }
+
+      .cards {
+        grid-template-columns: 1fr;
+      }
+
+      .chart {
+        gap: 7px;
+      }
+
+      .bar {
+        width: 14px;
+      }
+
+      .chart-labels {
+        gap: 5px;
+        font-size: 10px;
+      }
+
+      .movement-form {
+        grid-template-columns: 1fr;
+      }
+
+      .modal-actions {
+        flex-direction: column-reverse;
+      }
+    }
+  </style>
+
+  <link rel="stylesheet" href="sidebar-shared.css" />
+</head>
+
+<body data-page="home">
+  <div id="sidebar-container"></div>
+
+<main class="main">
+    <header class="topbar fade-up">
+      <div class="page-title">
+        <h1>Início</h1>
+        <p id="pageSubtitle">Resumo financeiro da sua empresa em tempo real.</p>
+      </div>
+
+      <div class="top-actions">
+        <div class="filter-pill" id="filterPill">
+          <span id="filterText">Filtro ativo</span>
+          <button type="button" id="removeChartFilter">×</button>
+        </div>
+
+        <button class="btn btn-outline">Exportar</button>
+        <button class="btn btn-primary" id="openMovementModal">Nova movimentação</button>
+      </div>
+    </header>
+
+    <section class="cards">
+      <div class="card fade-up">
+        <div class="card-title">Saldo atual</div>
+        <div class="card-value" id="saldoAtual">R$ 0,00</div>
+        <div class="card-info" id="saldoInfo">Saldo consolidado</div>
+      </div>
+
+      <div class="card fade-up">
+        <div class="card-title">Receitas</div>
+        <div class="card-value positive" id="receitasMes">R$ 0,00</div>
+        <div class="card-info">Entradas confirmadas no período</div>
+      </div>
+
+      <div class="card fade-up">
+        <div class="card-title">Despesas</div>
+        <div class="card-value negative" id="despesasMes">R$ 0,00</div>
+        <div class="card-info">Saídas registradas no período</div>
+      </div>
+
+      <div class="card fade-up">
+        <div class="card-title">Lucro / Prejuízo</div>
+        <div class="card-value" id="lucroPrejuizo">R$ 0,00</div>
+        <div class="card-info" id="lucroInfo">Resultado financeiro</div>
+      </div>
+
+      <div class="card fade-up">
+        <div class="card-title">Contas vencendo</div>
+        <div class="card-value warning" id="contasVencendo">0</div>
+        <div class="card-info">Próximos vencimentos do período</div>
+      </div>
+    </section>
+
+    <section class="dashboard-grid">
+      <div class="panel fade-up">
+        <div class="panel-header">
+          <div>
+            <h2>Fluxo de caixa</h2>
+            <span>Clique em um mês para filtrar a página</span>
+          </div>
+          <span id="chartPeriodLabel">2026</span>
+        </div>
+
+        <p class="chart-hint">Clique em um mês do gráfico para filtrar cards, alertas e movimentações.</p>
+
+        <div class="chart" id="cashFlowChart"></div>
+
+        <div class="chart-labels" id="chartLabels"></div>
+
+        <div class="legend">
+          <div class="legend-left">
+            <div class="legend-item">
+              <span class="dot green"></span>
+              Receitas
+            </div>
+
+            <div class="legend-item">
+              <span class="dot red"></span>
+              Despesas
+            </div>
+          </div>
+
+          <button class="clear-chart" id="clearChartFilter">Limpar seleção</button>
+        </div>
+      </div>
+
+      <div class="panel fade-up">
+        <div class="panel-header">
+          <h2>Alertas financeiros</h2>
+          <span id="alertsPeriod">Geral</span>
+        </div>
+
+        <div class="alerts" id="alertsList"></div>
+      </div>
+    </section>
+
+    <section class="panel table-panel fade-up">
+      <div class="panel-header">
+        <h2>Últimas movimentações</h2>
+        <button class="period-link" id="tablePeriod" type="button">
+          Todas as movimentações
+        </button>
+      </div>
+
+      <div class="table-wrapper scroll-table">
+        <table>
+          <thead>
+            <tr>
+              <th>Descrição</th>
+              <th>Categoria</th>
+              <th>Tipo</th>
+              <th>Conta</th>
+              <th>Data</th>
+              <th>Valor</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+
+          <tbody id="latestTransactionsTable"></tbody>
+        </table>
+
+        <div class="empty-state" id="emptyState">Nenhuma movimentação encontrada para este filtro.</div>
+      </div>
+    </section>
+  </main>
+
+  <div class="modal-overlay" id="allMovementsOverlay">
+    <div class="modal large-modal">
+      <div class="modal-header">
+        <div>
+          <h2>Todas as movimentações</h2>
+          <p>Visualize todos os lançamentos financeiros cadastrados.</p>
+        </div>
+
+        <button class="close-modal" id="closeAllMovements" type="button">×</button>
+      </div>
+
+      <div class="modal-body">
+        <div class="table-wrapper all-movements-table">
+          <table>
+            <thead>
+              <tr>
+                <th>Descrição</th>
+                <th>Categoria</th>
+                <th>Tipo</th>
+                <th>Conta</th>
+                <th>Data</th>
+                <th>Valor</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+
+            <tbody id="allMovementsTable"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="modal-actions">
+        <button class="btn btn-outline" type="button" id="closeAllMovementsBottom">
+          Fechar
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="movementModalOverlay">
+    <div class="modal">
+      <div class="modal-header">
+        <div>
+          <h2>Nova movimentação</h2>
+          <p>Cadastre uma entrada ou saída financeira.</p>
+        </div>
+
+        <button class="close-modal" id="closeMovementModal" type="button">×</button>
+      </div>
+
+      <div class="modal-body">
+        <form id="movementForm" class="movement-form">
+          <div class="input-group">
+            <label for="movementDate">Data</label>
+            <input type="text" id="movementDate" placeholder="dd/mm/aaaa" maxlength="10" required />
+          </div>
+
+          <div class="input-group">
+            <label for="movementType">Tipo</label>
+            <select id="movementType" required>
+              <option value="">Selecione</option>
+              <option value="Entrada">Entrada</option>
+              <option value="Saída">Saída</option>
+            </select>
+          </div>
+
+          <div class="input-group full">
+            <label for="movementDescription">Descrição</label>
+            <input type="text" id="movementDescription" placeholder="Ex: Recebimento cliente, aluguel, fornecedor..." required />
+          </div>
+
+          <div class="input-group">
+            <label for="movementCategory">Categoria</label>
+            <select id="movementCategory" required>
+              <option value="">Selecione</option>
+              <option value="Receita">Receita</option>
+              <option value="Vendas">Vendas</option>
+              <option value="Serviços">Serviços</option>
+              <option value="Despesa fixa">Despesa fixa</option>
+              <option value="Fornecedor">Fornecedor</option>
+              <option value="Aluguel">Aluguel</option>
+              <option value="Marketing">Marketing</option>
+              <option value="Impostos">Impostos</option>
+              <option value="Salários">Salários</option>
+              <option value="Tecnologia">Tecnologia</option>
+              <option value="Logística">Logística</option>
+            </select>
+          </div>
+
+          <div class="input-group">
+            <label for="movementBank">Conta bancária</label>
+            <select id="movementBank" required>
+              <option value="">Selecione</option>
+              <option value="Banco Principal">Banco Principal</option>
+              <option value="Caixa Interno">Caixa Interno</option>
+              <option value="Conta PJ">Conta PJ</option>
+              <option value="Conta Reserva">Conta Reserva</option>
+            </select>
+          </div>
+
+          <div class="input-group">
+            <label for="movementValue">Valor</label>
+            <input type="text" id="movementValue" placeholder="R$ 0,00" required />
+          </div>
+
+          <div class="input-group">
+            <label for="movementStatus">Status</label>
+            <select id="movementStatus" required>
+              <option value="">Selecione</option>
+              <option value="Pago">Pago</option>
+              <option value="Pendente">Pendente</option>
+              <option value="Atrasado">Atrasado</option>
+            </select>
+          </div>
+
+          <div class="input-group full">
+            <label for="movementNotes">Observações</label>
+            <textarea id="movementNotes" placeholder="Adicione detalhes opcionais sobre esta movimentação..."></textarea>
+          </div>
+        </form>
+
+        <div class="form-message" id="movementFormMessage">
+          Movimentação cadastrada com sucesso!
+        </div>
+      </div>
+
+      <div class="modal-actions">
+        <button class="btn btn-outline" type="button" id="cancelMovementModal">Cancelar</button>
+        <button class="btn btn-primary" type="submit" form="movementForm">Salvar movimentação</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const animatedItems = document.querySelectorAll(".fade-up");
+
+    animatedItems.forEach((item, index) => {
+      item.style.animationDelay = `${index * 0.06}s`;
+    });
+
+    const monthLabels = ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"];
+
+    let selectedMonth = null;
+
+    let transactions = [
+      { date: "05/01/2026", description: "Recebimento contrato mensal", category: "Serviços", type: "Entrada", bank: "Banco Principal", value: 18200, status: "Pago" },
+      { date: "08/01/2026", description: "Pagamento fornecedor Alpha", category: "Fornecedor", type: "Saída", bank: "Conta PJ", value: 5200, status: "Pago" },
+      { date: "12/01/2026", description: "Campanha tráfego pago", category: "Marketing", type: "Saída", bank: "Banco Principal", value: 1900, status: "Pago" },
+      { date: "18/01/2026", description: "Venda pacote premium", category: "Vendas", type: "Entrada", bank: "Banco Principal", value: 15400, status: "Pago" },
+      { date: "24/01/2026", description: "Aluguel escritório", category: "Aluguel", type: "Saída", bank: "Conta PJ", value: 3200, status: "Pago" },
+
+      { date: "03/02/2026", description: "Recebimento cliente Beta", category: "Vendas", type: "Entrada", bank: "Banco Principal", value: 22400, status: "Pago" },
+      { date: "07/02/2026", description: "Software financeiro", category: "Tecnologia", type: "Saída", bank: "Conta PJ", value: 1250, status: "Pago" },
+      { date: "12/02/2026", description: "Folha equipe operacional", category: "Salários", type: "Saída", bank: "Banco Principal", value: 9800, status: "Pago" },
+      { date: "19/02/2026", description: "Serviço recorrente mensal", category: "Serviços", type: "Entrada", bank: "Banco Principal", value: 17600, status: "Pago" },
+      { date: "26/02/2026", description: "Impostos mensais", category: "Impostos", type: "Saída", bank: "Conta PJ", value: 4300, status: "Pago" },
+
+      { date: "04/03/2026", description: "Contrato cliente Gamma", category: "Serviços", type: "Entrada", bank: "Banco Principal", value: 19800, status: "Pago" },
+      { date: "09/03/2026", description: "Manutenção sistemas internos", category: "Tecnologia", type: "Saída", bank: "Conta PJ", value: 3400, status: "Pago" },
+      { date: "15/03/2026", description: "Compra de materiais", category: "Fornecedor", type: "Saída", bank: "Caixa Interno", value: 7800, status: "Pago" },
+      { date: "22/03/2026", description: "Recebimento consultoria", category: "Receita", type: "Entrada", bank: "Banco Principal", value: 14300, status: "Pago" },
+      { date: "28/03/2026", description: "Campanha redes sociais", category: "Marketing", type: "Saída", bank: "Conta PJ", value: 2750, status: "Pendente" },
+
+      { date: "02/04/2026", description: "Recebimento cliente Alpha", category: "Vendas", type: "Entrada", bank: "Banco Principal", value: 8400, status: "Pago" },
+      { date: "05/04/2026", description: "Prestação de serviço", category: "Serviços", type: "Entrada", bank: "Conta PJ", value: 12700, status: "Pago" },
+      { date: "10/04/2026", description: "Compra de materiais", category: "Fornecedor", type: "Saída", bank: "Conta PJ", value: 2480, status: "Pendente" },
+      { date: "15/04/2026", description: "Recebimento contrato mensal", category: "Serviços", type: "Entrada", bank: "Banco Principal", value: 18900, status: "Pago" },
+      { date: "22/04/2026", description: "Fornecedor sistema", category: "Fornecedor", type: "Saída", bank: "Caixa Interno", value: 1250, status: "Atrasado" },
+      { date: "27/04/2026", description: "Campanha tráfego pago", category: "Marketing", type: "Saída", bank: "Banco Principal", value: 1150, status: "Pendente" },
+      { date: "28/04/2026", description: "Aluguel escritório", category: "Aluguel", type: "Saída", bank: "Conta PJ", value: 3200, status: "Pago" },
+
+      { date: "04/05/2026", description: "Recebimento contrato Maio", category: "Serviços", type: "Entrada", bank: "Banco Principal", value: 20500, status: "Pago" },
+      { date: "09/05/2026", description: "Folha equipe administrativa", category: "Salários", type: "Saída", bank: "Banco Principal", value: 10400, status: "Pago" },
+      { date: "14/05/2026", description: "Venda projeto avulso", category: "Vendas", type: "Entrada", bank: "Conta PJ", value: 16300, status: "Pago" },
+      { date: "22/05/2026", description: "Fornecedor equipamentos", category: "Fornecedor", type: "Saída", bank: "Conta PJ", value: 6900, status: "Pendente" },
+
+      { date: "03/06/2026", description: "Recebimento cliente Delta", category: "Vendas", type: "Entrada", bank: "Banco Principal", value: 24100, status: "Pago" },
+      { date: "11/06/2026", description: "Licenças e tecnologia", category: "Tecnologia", type: "Saída", bank: "Conta PJ", value: 4100, status: "Pago" },
+      { date: "17/06/2026", description: "Serviços adicionais", category: "Serviços", type: "Entrada", bank: "Banco Principal", value: 9700, status: "Pago" },
+      { date: "25/06/2026", description: "Impostos trimestrais", category: "Impostos", type: "Saída", bank: "Conta PJ", value: 8200, status: "Pendente" },
+
+      { date: "05/07/2026", description: "Recebimento recorrente Julho", category: "Serviços", type: "Entrada", bank: "Banco Principal", value: 22600, status: "Pago" },
+      { date: "10/07/2026", description: "Campanha institucional", category: "Marketing", type: "Saída", bank: "Banco Principal", value: 3900, status: "Pago" },
+      { date: "18/07/2026", description: "Venda pacote anual", category: "Vendas", type: "Entrada", bank: "Conta PJ", value: 31800, status: "Pago" },
+      { date: "27/07/2026", description: "Aluguel e condomínio", category: "Aluguel", type: "Saída", bank: "Conta PJ", value: 3550, status: "Pago" },
+
+      { date: "06/08/2026", description: "Contrato cliente Omega", category: "Serviços", type: "Entrada", bank: "Banco Principal", value: 20700, status: "Pago" },
+      { date: "13/08/2026", description: "Fornecedor logístico", category: "Logística", type: "Saída", bank: "Banco Principal", value: 7400, status: "Pago" },
+      { date: "19/08/2026", description: "Venda consultiva", category: "Vendas", type: "Entrada", bank: "Conta PJ", value: 13600, status: "Pago" },
+      { date: "28/08/2026", description: "Atualização de software", category: "Tecnologia", type: "Saída", bank: "Conta PJ", value: 2200, status: "Pendente" },
+
+      { date: "04/09/2026", description: "Recebimento contrato Setembro", category: "Serviços", type: "Entrada", bank: "Banco Principal", value: 23400, status: "Pago" },
+      { date: "08/09/2026", description: "Folha operacional", category: "Salários", type: "Saída", bank: "Banco Principal", value: 11200, status: "Pago" },
+      { date: "18/09/2026", description: "Projeto extra cliente", category: "Receita", type: "Entrada", bank: "Conta PJ", value: 16400, status: "Pendente" },
+      { date: "26/09/2026", description: "Serviços terceiros", category: "Fornecedor", type: "Saída", bank: "Conta PJ", value: 5200, status: "Pendente" },
+
+      { date: "03/10/2026", description: "Recebimento cliente Outubro", category: "Serviços", type: "Entrada", bank: "Banco Principal", value: 24600, status: "Pago" },
+      { date: "09/10/2026", description: "Marketing performance", category: "Marketing", type: "Saída", bank: "Banco Principal", value: 4700, status: "Pago" },
+      { date: "17/10/2026", description: "Venda plataforma", category: "Vendas", type: "Entrada", bank: "Conta PJ", value: 18900, status: "Pago" },
+      { date: "25/10/2026", description: "Impostos mensais", category: "Impostos", type: "Saída", bank: "Conta PJ", value: 6100, status: "Pendente" },
+
+      { date: "05/11/2026", description: "Receita Black Week", category: "Vendas", type: "Entrada", bank: "Banco Principal", value: 28900, status: "Pago" },
+      { date: "12/11/2026", description: "Campanha Black Week", category: "Marketing", type: "Saída", bank: "Banco Principal", value: 9200, status: "Pago" },
+      { date: "19/11/2026", description: "Contrato enterprise", category: "Serviços", type: "Entrada", bank: "Conta PJ", value: 38400, status: "Pendente" },
+      { date: "27/11/2026", description: "Fornecedor cloud", category: "Tecnologia", type: "Saída", bank: "Conta PJ", value: 7600, status: "Pendente" },
+
+      { date: "04/12/2026", description: "Recebimento Dezembro", category: "Serviços", type: "Entrada", bank: "Banco Principal", value: 26700, status: "Pago" },
+      { date: "10/12/2026", description: "Bônus equipe", category: "Salários", type: "Saída", bank: "Banco Principal", value: 14800, status: "Pendente" },
+      { date: "18/12/2026", description: "Venda fechamento anual", category: "Vendas", type: "Entrada", bank: "Conta PJ", value: 44200, status: "Pendente" },
+      { date: "28/12/2026", description: "Fornecedor equipamentos", category: "Fornecedor", type: "Saída", bank: "Conta PJ", value: 12600, status: "Pendente" }
+    ];
+
+    const saldoAtual = document.getElementById("saldoAtual");
+    const receitasMes = document.getElementById("receitasMes");
+    const despesasMes = document.getElementById("despesasMes");
+    const lucroPrejuizo = document.getElementById("lucroPrejuizo");
+    const lucroInfo = document.getElementById("lucroInfo");
+    const saldoInfo = document.getElementById("saldoInfo");
+    const contasVencendo = document.getElementById("contasVencendo");
+    const pageSubtitle = document.getElementById("pageSubtitle");
+
+    const cashFlowChart = document.getElementById("cashFlowChart");
+    const chartLabels = document.getElementById("chartLabels");
+    const chartPeriodLabel = document.getElementById("chartPeriodLabel");
+    const clearChartFilter = document.getElementById("clearChartFilter");
+    const removeChartFilter = document.getElementById("removeChartFilter");
+    const filterPill = document.getElementById("filterPill");
+    const filterText = document.getElementById("filterText");
+
+    const alertsList = document.getElementById("alertsList");
+    const alertsPeriod = document.getElementById("alertsPeriod");
+    const tablePeriod = document.getElementById("tablePeriod");
+    const latestTransactionsTable = document.getElementById("latestTransactionsTable");
+    const emptyState = document.getElementById("emptyState");
+
+    const allMovementsOverlay = document.getElementById("allMovementsOverlay");
+    const closeAllMovements = document.getElementById("closeAllMovements");
+    const closeAllMovementsBottom = document.getElementById("closeAllMovementsBottom");
+    const allMovementsTable = document.getElementById("allMovementsTable");
+
+    const openMovementModal = document.getElementById("openMovementModal");
+    const closeMovementModal = document.getElementById("closeMovementModal");
+    const cancelMovementModal = document.getElementById("cancelMovementModal");
+    const movementModalOverlay = document.getElementById("movementModalOverlay");
+    const movementForm = document.getElementById("movementForm");
+    const movementFormMessage = document.getElementById("movementFormMessage");
+
+    const movementDate = document.getElementById("movementDate");
+    const movementValue = document.getElementById("movementValue");
+
+    function formatCurrency(value) {
+      return value.toLocaleString("pt-BR", {
+        style: "currency",
+        currency: "BRL"
+      });
+    }
+
+    function parseDateBR(dateBR) {
+      const [day, month, year] = dateBR.split("/");
+      return new Date(Number(year), Number(month) - 1, Number(day));
+    }
+
+    function getMonthIndex(dateBR) {
+      return parseDateBR(dateBR).getMonth();
+    }
+
+    function getTransactionsByFilter() {
+      if (selectedMonth === null) return transactions;
+      return transactions.filter(item => getMonthIndex(item.date) === selectedMonth);
+    }
+
+    function getMonthlyTotals() {
+      return monthLabels.map((month, index) => {
+        const monthTransactions = transactions.filter(item => getMonthIndex(item.date) === index);
+
+        const income = monthTransactions
+          .filter(item => item.type === "Entrada")
+          .reduce((sum, item) => sum + item.value, 0);
+
+        const expense = monthTransactions
+          .filter(item => item.type === "Saída")
+          .reduce((sum, item) => sum + item.value, 0);
+
+        return {
+          month,
+          index,
+          income,
+          expense,
+          balance: income - expense,
+          total: income + expense
+        };
+      });
+    }
+
+    function updateCards() {
+      const filtered = getTransactionsByFilter();
+
+      const income = filtered
+        .filter(item => item.type === "Entrada")
+        .reduce((sum, item) => sum + item.value, 0);
+
+      const expense = filtered
+        .filter(item => item.type === "Saída")
+        .reduce((sum, item) => sum + item.value, 0);
+
+      const balance = income - expense;
+
+      const pending = filtered
+        .filter(item => item.status === "Pendente" || item.status === "Atrasado")
+        .length;
+
+      saldoAtual.textContent = formatCurrency(balance);
+      receitasMes.textContent = formatCurrency(income);
+      despesasMes.textContent = formatCurrency(expense);
+      lucroPrejuizo.textContent = formatCurrency(balance);
+      contasVencendo.textContent = pending;
+
+      lucroPrejuizo.classList.toggle("positive", balance >= 0);
+      lucroPrejuizo.classList.toggle("negative", balance < 0);
+
+      lucroInfo.textContent = balance >= 0 ? "Resultado positivo no período" : "Resultado negativo no período";
+      saldoInfo.textContent = selectedMonth === null ? "Saldo consolidado do ano" : `Saldo filtrado em ${monthLabels[selectedMonth]}`;
+    }
+
+    function renderChart() {
+      const totals = getMonthlyTotals();
+      const maxValue = Math.max(...totals.map(item => Math.max(item.income, item.expense)), 1);
+
+      cashFlowChart.innerHTML = "";
+      chartLabels.innerHTML = "";
+
+      totals.forEach(item => {
+        const incomeHeight = Math.max((item.income / maxValue) * 100, 4);
+        const expenseHeight = Math.max((item.expense / maxValue) * 100, 4);
+
+        const group = document.createElement("div");
+        group.className = "bar-group";
+        group.dataset.month = item.index;
+
+        if (selectedMonth === item.index) {
+          group.classList.add("active");
+        }
+
+        if (selectedMonth !== null && selectedMonth !== item.index) {
+          group.classList.add("dimmed");
+        }
+
+        group.title = `${item.month} | Receitas: ${formatCurrency(item.income)} | Despesas: ${formatCurrency(item.expense)}`;
+
+        group.innerHTML = `
+          <div class="bar income" style="height: ${incomeHeight}%;"></div>
+          <div class="bar expense" style="height: ${expenseHeight}%;"></div>
+        `;
+
+        group.addEventListener("click", () => {
+          selectMonth(item.index);
+        });
+
+        cashFlowChart.appendChild(group);
+
+        const label = document.createElement("span");
+        label.textContent = item.month;
+        label.dataset.month = item.index;
+
+        if (selectedMonth === item.index) {
+          label.classList.add("active");
+        }
+
+        label.addEventListener("click", () => {
+          selectMonth(item.index);
+        });
+
+        chartLabels.appendChild(label);
+      });
+    }
+
+    function createTransactionRow(item) {
+      const row = document.createElement("tr");
+
+      const typeClass = item.type === "Entrada" ? "income" : "expense";
+      const valueClass = item.type === "Entrada" ? "positive" : "negative";
+
+      let statusClass = "paid";
+
+      if (item.status === "Pendente") {
+        statusClass = "pending";
+      }
+
+      if (item.status === "Atrasado") {
+        statusClass = "late";
+      }
+
+      row.innerHTML = `
+        <td>${item.description}</td>
+        <td>${item.category}</td>
+        <td><span class="type ${typeClass}">${item.type}</span></td>
+        <td>${item.bank}</td>
+        <td>${item.date}</td>
+        <td class="${valueClass}">${formatCurrency(item.value)}</td>
+        <td><span class="status ${statusClass}">${item.status}</span></td>
+      `;
+
+      return row;
+    }
+
+    function renderTable() {
+      const filtered = getTransactionsByFilter()
+        .slice()
+        .sort((a, b) => parseDateBR(b.date) - parseDateBR(a.date));
+
+      latestTransactionsTable.innerHTML = "";
+
+      filtered.forEach(item => {
+        latestTransactionsTable.appendChild(createTransactionRow(item));
+      });
+
+      emptyState.classList.toggle("show", filtered.length === 0);
+    }
+
+    function renderAllMovementsTable() {
+      const allItems = transactions
+        .slice()
+        .sort((a, b) => parseDateBR(b.date) - parseDateBR(a.date));
+
+      allMovementsTable.innerHTML = "";
+
+      allItems.forEach(item => {
+        allMovementsTable.appendChild(createTransactionRow(item));
+      });
+    }
+
+    function renderAlerts() {
+      const filtered = getTransactionsByFilter();
+
+      const income = filtered
+        .filter(item => item.type === "Entrada")
+        .reduce((sum, item) => sum + item.value, 0);
+
+      const expense = filtered
+        .filter(item => item.type === "Saída")
+        .reduce((sum, item) => sum + item.value, 0);
+
+      const balance = income - expense;
+
+      const pendingValue = filtered
+        .filter(item => item.status === "Pendente" || item.status === "Atrasado")
+        .reduce((sum, item) => sum + item.value, 0);
+
+      const marketingExpense = filtered
+        .filter(item => item.type === "Saída" && item.category === "Marketing")
+        .reduce((sum, item) => sum + item.value, 0);
+
+      alertsList.innerHTML = "";
+
+      const alerts = [];
+
+      if (balance >= 0) {
+        alerts.push({
+          icon: "✓",
+          color: "green",
+          title: "Caixa positivo",
+          text: `O período está positivo em ${formatCurrency(balance)}.`
+        });
+      } else {
+        alerts.push({
+          icon: "!",
+          color: "red",
+          title: "Atenção ao caixa",
+          text: `O período está negativo em ${formatCurrency(Math.abs(balance))}.`
+        });
+      }
+
+      if (pendingValue > 0) {
+        alerts.push({
+          icon: "⏱",
+          color: "yellow",
+          title: "Pendências financeiras",
+          text: `Existem ${formatCurrency(pendingValue)} em lançamentos pendentes ou atrasados.`
+        });
+      }
+
+      if (marketingExpense > 3500) {
+        alerts.push({
+          icon: "IA",
+          color: "blue",
+          title: "Sugestão da IA",
+          text: `Gastos com marketing chegaram a ${formatCurrency(marketingExpense)}. Vale revisar o retorno dessas campanhas.`
+        });
+      } else {
+        alerts.push({
+          icon: "IA",
+          color: "blue",
+          title: "Sugestão da IA",
+          text: "A saúde financeira está controlada. Continue acompanhando despesas recorrentes e recebíveis."
+        });
+      }
+
+      alerts.forEach(alert => {
+        const div = document.createElement("div");
+        div.className = "alert";
+
+        div.innerHTML = `
+          <div class="alert-icon ${alert.color}">${alert.icon}</div>
+          <div class="alert-content">
+            <h3>${alert.title}</h3>
+            <p>${alert.text}</p>
+          </div>
+        `;
+
+        alertsList.appendChild(div);
+      });
+    }
+
+    function updateFilterUI() {
+      if (selectedMonth === null) {
+        filterPill.classList.remove("show");
+        pageSubtitle.textContent = "Resumo financeiro da sua empresa em tempo real.";
+        chartPeriodLabel.textContent = "2026";
+        alertsPeriod.textContent = "Geral";
+        tablePeriod.textContent = "Todas as movimentações";
+        return;
+      }
+
+      filterPill.classList.add("show");
+      filterText.textContent = `Filtrado por ${monthLabels[selectedMonth]}/2026`;
+      pageSubtitle.textContent = `Resumo financeiro filtrado por ${monthLabels[selectedMonth]}/2026.`;
+      chartPeriodLabel.textContent = `${monthLabels[selectedMonth]}/2026`;
+      alertsPeriod.textContent = `${monthLabels[selectedMonth]}/2026`;
+      tablePeriod.textContent = `Movimentações de ${monthLabels[selectedMonth]}/2026`;
+    }
+
+    function refreshDashboard() {
+      updateCards();
+      renderChart();
+      renderTable();
+      renderAlerts();
+      updateFilterUI();
+    }
+
+    function selectMonth(monthIndex) {
+      selectedMonth = selectedMonth === monthIndex ? null : monthIndex;
+      refreshDashboard();
+    }
+
+    function clearMonthFilter() {
+      selectedMonth = null;
+      refreshDashboard();
+    }
+
+    function maskDate(input) {
+      input.addEventListener("input", () => {
+        let value = input.value.replace(/\D/g, "");
+
+        if (value.length > 2) {
+          value = value.slice(0, 2) + "/" + value.slice(2);
+        }
+
+        if (value.length > 5) {
+          value = value.slice(0, 5) + "/" + value.slice(5, 9);
+        }
+
+        input.value = value;
+      });
+    }
+
+    function maskMoney(input) {
+      input.addEventListener("input", () => {
+        let value = input.value.replace(/\D/g, "");
+
+        if (!value) {
+          input.value = "";
+          return;
+        }
+
+        value = (Number(value) / 100).toLocaleString("pt-BR", {
+          style: "currency",
+          currency: "BRL"
+        });
+
+        input.value = value;
+      });
+    }
+
+    function currencyToNumber(value) {
+      return Number(
+        value
+          .replace("R$", "")
+          .replace(/\./g, "")
+          .replace(",", ".")
+          .trim()
+      );
+    }
+
+    function openAllMovementsModal() {
+      renderAllMovementsTable();
+
+      allMovementsOverlay.classList.remove("hide");
+      allMovementsOverlay.classList.add("show");
+      document.body.style.overflow = "hidden";
+    }
+
+    function closeAllMovementsModal() {
+      allMovementsOverlay.classList.remove("show");
+      allMovementsOverlay.classList.add("hide");
+
+      setTimeout(() => {
+        allMovementsOverlay.classList.remove("hide");
+        document.body.style.overflow = "";
+      }, 280);
+    }
+
+    function openModal() {
+      movementModalOverlay.classList.remove("hide");
+      movementModalOverlay.classList.add("show");
+      document.body.style.overflow = "hidden";
+
+      setTimeout(() => {
+        movementDate.focus();
+      }, 180);
+    }
+
+    function closeModal() {
+      movementModalOverlay.classList.remove("show");
+      movementModalOverlay.classList.add("hide");
+
+      setTimeout(() => {
+        movementModalOverlay.classList.remove("hide");
+        document.body.style.overflow = "";
+        movementFormMessage.classList.remove("show");
+      }, 280);
+    }
+
+    function addMovement(event) {
+      event.preventDefault();
+
+      const date = document.getElementById("movementDate").value.trim();
+      const type = document.getElementById("movementType").value;
+      const description = document.getElementById("movementDescription").value.trim();
+      const category = document.getElementById("movementCategory").value;
+      const bank = document.getElementById("movementBank").value;
+      const value = currencyToNumber(document.getElementById("movementValue").value.trim());
+      const status = document.getElementById("movementStatus").value;
+
+      if (!date || !type || !description || !category || !bank || !value || !status) {
+        return;
+      }
+
+      transactions.push({
+        date,
+        description,
+        category,
+        type,
+        bank,
+        value,
+        status
+      });
+
+      const newMonth = getMonthIndex(date);
+
+      if (selectedMonth !== null && selectedMonth !== newMonth) {
+        selectedMonth = newMonth;
+      }
+
+      movementForm.reset();
+      movementFormMessage.classList.add("show");
+
+      refreshDashboard();
+
+      setTimeout(() => {
+        closeModal();
+      }, 900);
+    }
+
+    maskDate(movementDate);
+    maskMoney(movementValue);
+
+    clearChartFilter.addEventListener("click", clearMonthFilter);
+    removeChartFilter.addEventListener("click", clearMonthFilter);
+
+    tablePeriod.addEventListener("click", openAllMovementsModal);
+    closeAllMovements.addEventListener("click", closeAllMovementsModal);
+    closeAllMovementsBottom.addEventListener("click", closeAllMovementsModal);
+
+    allMovementsOverlay.addEventListener("click", event => {
+      if (event.target === allMovementsOverlay) {
+        closeAllMovementsModal();
+      }
+    });
+
+    openMovementModal.addEventListener("click", openModal);
+    closeMovementModal.addEventListener("click", closeModal);
+    cancelMovementModal.addEventListener("click", closeModal);
+    movementForm.addEventListener("submit", addMovement);
+
+    movementModalOverlay.addEventListener("click", event => {
+      if (event.target === movementModalOverlay) {
+        closeModal();
+      }
+    });
+
+    document.addEventListener("keydown", event => {
+      if (event.key === "Escape" && movementModalOverlay.classList.contains("show")) {
+        closeModal();
+      }
+
+      if (event.key === "Escape" && allMovementsOverlay.classList.contains("show")) {
+        closeAllMovementsModal();
+      }
+    });
+
+    refreshDashboard();
+  </script>
+  <script src="sidebar-loader.js"></script>
+</body>
+
+</html>

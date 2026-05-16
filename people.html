@@ -1,0 +1,1507 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Facilita Financeiro | Pessoas</title>
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: Arial, Helvetica, sans-serif;
+    }
+
+    :root {
+      --bg: #080c14;
+      --card: #101827;
+      --card-2: #121d30;
+      --blue: #1e90ff;
+      --blue-hover: #0f75d8;
+      --text: #f4f7fb;
+      --muted: #9ca8ba;
+      --border: #24324a;
+      --danger: #ff4d4d;
+      --success: #30d158;
+      --warning: #ffcc00;
+    }
+
+    body {
+      min-height: 100vh;
+      background: radial-gradient(circle at top, #10284a 0%, var(--bg) 45%, #05070c 100%);
+      color: var(--text);
+      display: flex;
+    }
+
+    .sidebar {
+      width: 260px;
+      height: 100vh;
+      position: fixed;
+      left: 0;
+      top: 0;
+      background: rgba(16, 24, 39, 0.96);
+      border-right: 1px solid var(--border);
+      padding: 28px 20px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      box-shadow: 10px 0 40px rgba(0, 0, 0, 0.25);
+      z-index: 10;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 20px;
+      font-weight: 800;
+      margin-bottom: 34px;
+    }
+
+    .logo-icon {
+      width: 42px;
+      height: 42px;
+      background: var(--blue);
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 900;
+      color: white;
+      box-shadow: 0 0 35px rgba(30, 144, 255, 0.55);
+    }
+
+    .menu {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .menu a {
+      text-decoration: none;
+      color: var(--muted);
+      padding: 13px 14px;
+      border-radius: 12px;
+      font-weight: 700;
+      font-size: 14px;
+      transition: 0.25s;
+    }
+
+    .menu a:hover,
+    .menu a.active {
+      background: rgba(30, 144, 255, 0.12);
+      color: white;
+    }
+
+    .menu a.active {
+      background: var(--blue);
+      box-shadow: 0 8px 22px rgba(30, 144, 255, 0.28);
+    }
+
+    .sidebar-footer {
+      padding: 14px;
+      border: 1px solid rgba(30, 144, 255, 0.25);
+      background: rgba(30, 144, 255, 0.08);
+      border-radius: 16px;
+      color: #cce7ff;
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    .main {
+      margin-left: 260px;
+      width: calc(100% - 260px);
+      padding: 30px;
+    }
+
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 18px;
+      margin-bottom: 28px;
+    }
+
+    .page-title h1 {
+      font-size: 30px;
+      margin-bottom: 6px;
+    }
+
+    .page-title p {
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .top-actions {
+      display: flex;
+      gap: 12px;
+    }
+
+    .btn {
+      border: none;
+      border-radius: 12px;
+      padding: 13px 16px;
+      font-size: 14px;
+      font-weight: 800;
+      cursor: pointer;
+      transition: 0.25s;
+      white-space: nowrap;
+    }
+
+    .btn-primary {
+      background: var(--blue);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background: var(--blue-hover);
+      transform: translateY(-1px);
+      box-shadow: 0 12px 28px rgba(30, 144, 255, 0.24);
+    }
+
+    .btn-outline {
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--text);
+    }
+
+    .btn-outline:hover {
+      background: rgba(30, 144, 255, 0.08);
+      color: var(--blue);
+      transform: translateY(-1px);
+    }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 18px;
+      margin-bottom: 24px;
+    }
+
+    .card {
+      background: rgba(16, 24, 39, 0.92);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 22px;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.25);
+      position: relative;
+      overflow: hidden;
+      transition: 0.25s;
+    }
+
+    .card:hover {
+      transform: translateY(-3px);
+      border-color: rgba(30, 144, 255, 0.45);
+      box-shadow: 0 22px 60px rgba(0, 0, 0, 0.35);
+    }
+
+    .card::before {
+      content: "";
+      position: absolute;
+      width: 130px;
+      height: 130px;
+      border-radius: 50%;
+      background: rgba(30, 144, 255, 0.12);
+      filter: blur(10px);
+      top: -60px;
+      right: -60px;
+    }
+
+    .card-title {
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 700;
+      margin-bottom: 12px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .card-value {
+      font-size: 26px;
+      font-weight: 900;
+      margin-bottom: 8px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .card-info {
+      font-size: 12px;
+      color: var(--muted);
+      position: relative;
+      z-index: 1;
+    }
+
+    .positive {
+      color: var(--success);
+    }
+
+    .negative {
+      color: var(--danger);
+    }
+
+    .warning {
+      color: var(--warning);
+    }
+
+    .panel {
+      background: rgba(16, 24, 39, 0.92);
+      border: 1px solid var(--border);
+      border-radius: 22px;
+      padding: 24px;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.25);
+      margin-bottom: 22px;
+    }
+
+    .panel-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 22px;
+    }
+
+    .panel-header h2 {
+      font-size: 20px;
+    }
+
+    .panel-header span {
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .filters-row {
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      gap: 14px;
+      align-items: center;
+      margin-bottom: 22px;
+    }
+
+    .tabs {
+      display: flex;
+      background: var(--card-2);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 5px;
+      width: fit-content;
+      min-width: 310px;
+    }
+
+    .tab-btn {
+      flex: 1;
+      border: none;
+      background: transparent;
+      color: var(--muted);
+      padding: 12px 18px;
+      border-radius: 10px;
+      cursor: pointer;
+      font-weight: 800;
+      transition: 0.25s;
+    }
+
+    .tab-btn:hover {
+      color: white;
+      transform: translateY(-1px);
+    }
+
+    .tab-btn.active {
+      background: var(--blue);
+      color: white;
+      box-shadow: 0 8px 22px rgba(30, 144, 255, 0.28);
+    }
+
+    .search-box {
+      position: relative;
+    }
+
+    .search-box input {
+      padding-left: 42px;
+    }
+
+    .search-icon {
+      position: absolute;
+      left: 15px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--muted);
+      font-weight: 900;
+      pointer-events: none;
+    }
+
+    input,
+    select,
+    textarea {
+      width: 100%;
+      padding: 14px 15px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      background: #0b1220;
+      color: var(--text);
+      outline: none;
+      font-size: 14px;
+      transition: 0.25s;
+    }
+
+    textarea {
+      resize: none;
+      height: 92px;
+    }
+
+    input:focus,
+    select:focus,
+    textarea:focus {
+      border-color: var(--blue);
+      box-shadow: 0 0 0 4px rgba(30, 144, 255, 0.12);
+    }
+
+    select option {
+      background: #0b1220;
+      color: var(--text);
+    }
+
+    .input-group label {
+      display: block;
+      margin-bottom: 7px;
+      color: #d8e2f0;
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .table-wrapper {
+      overflow-x: auto;
+      max-height: 530px;
+      overflow-y: auto;
+      padding-right: 4px;
+    }
+
+    .table-wrapper::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+
+    .table-wrapper::-webkit-scrollbar-track {
+      background: #0b1220;
+      border-radius: 999px;
+    }
+
+    .table-wrapper::-webkit-scrollbar-thumb {
+      background: rgba(30, 144, 255, 0.45);
+      border-radius: 999px;
+    }
+
+    .table-wrapper::-webkit-scrollbar-thumb:hover {
+      background: rgba(30, 144, 255, 0.7);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 980px;
+    }
+
+    th,
+    td {
+      padding: 15px 10px;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+      font-size: 14px;
+    }
+
+    th {
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 800;
+      position: sticky;
+      top: 0;
+      background: rgba(16, 24, 39, 0.98);
+      z-index: 2;
+    }
+
+    td {
+      color: var(--text);
+    }
+
+    tbody tr {
+      transition: 0.25s;
+    }
+
+    tbody tr:hover {
+      background: rgba(30, 144, 255, 0.05);
+    }
+
+    .person-name {
+      font-weight: 800;
+      margin-bottom: 4px;
+    }
+
+    .person-note {
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .type-badge,
+    .status {
+      padding: 6px 10px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 900;
+      white-space: nowrap;
+    }
+
+    .type-badge.client {
+      background: rgba(30, 144, 255, 0.12);
+      color: var(--blue);
+    }
+
+    .type-badge.supplier {
+      background: rgba(255, 204, 0, 0.12);
+      color: var(--warning);
+    }
+
+    .status.active {
+      background: rgba(48, 209, 88, 0.12);
+      color: var(--success);
+    }
+
+    .status.inactive {
+      background: rgba(156, 168, 186, 0.12);
+      color: var(--muted);
+    }
+
+    .status.defaulting {
+      background: rgba(255, 77, 77, 0.12);
+      color: var(--danger);
+    }
+
+    .status.pending {
+      background: rgba(255, 204, 0, 0.12);
+      color: var(--warning);
+    }
+
+    .actions {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .action-btn {
+      border: 1px solid var(--border);
+      background: #0b1220;
+      color: var(--text);
+      border-radius: 10px;
+      padding: 8px 10px;
+      font-size: 12px;
+      font-weight: 800;
+      cursor: pointer;
+      transition: 0.25s;
+      white-space: nowrap;
+    }
+
+    .action-btn:hover {
+      transform: translateY(-1px);
+      border-color: rgba(30, 144, 255, 0.45);
+      background: rgba(30, 144, 255, 0.08);
+      color: var(--blue);
+    }
+
+    .empty-state {
+      display: none;
+      text-align: center;
+      color: var(--muted);
+      padding: 26px;
+      font-size: 14px;
+    }
+
+    .empty-state.show {
+      display: block;
+    }
+
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(5, 7, 12, 0.62);
+      backdrop-filter: blur(10px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 100;
+      padding: 20px;
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+      transition: opacity 0.28s ease, visibility 0.28s ease;
+    }
+
+    .modal-overlay.show {
+      opacity: 1;
+      visibility: visible;
+      pointer-events: auto;
+    }
+
+    .modal-overlay.hide {
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+    }
+
+    .modal {
+      width: 100%;
+      max-width: 740px;
+      background: rgba(16, 24, 39, 0.98);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      box-shadow: 0 30px 100px rgba(0, 0, 0, 0.65);
+      overflow: hidden;
+      position: relative;
+      opacity: 0;
+      transform: translateY(28px) scale(0.94);
+      transition: opacity 0.28s ease, transform 0.28s ease;
+    }
+
+    .modal-overlay.show .modal {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+
+    .modal-overlay.hide .modal {
+      opacity: 0;
+      transform: translateY(24px) scale(0.94);
+    }
+
+    .modal::before {
+      content: "";
+      position: absolute;
+      width: 220px;
+      height: 220px;
+      border-radius: 50%;
+      background: rgba(30, 144, 255, 0.16);
+      filter: blur(12px);
+      top: -90px;
+      right: -80px;
+    }
+
+    .modal-header {
+      padding: 24px 26px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: relative;
+      z-index: 1;
+    }
+
+    .modal-header h2 {
+      font-size: 22px;
+      margin-bottom: 5px;
+    }
+
+    .modal-header p {
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .close-modal {
+      width: 38px;
+      height: 38px;
+      border: 1px solid var(--border);
+      background: #0b1220;
+      color: var(--text);
+      border-radius: 12px;
+      cursor: pointer;
+      font-size: 18px;
+      transition: 0.25s;
+    }
+
+    .close-modal:hover {
+      background: rgba(255, 77, 77, 0.12);
+      color: #ffb3b3;
+      border-color: rgba(255, 77, 77, 0.35);
+    }
+
+    .modal-body {
+      padding: 26px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .person-form {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+    }
+
+    .person-form .full {
+      grid-column: 1 / -1;
+    }
+
+    .modal-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 12px;
+      padding: 0 26px 26px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .form-message {
+      display: none;
+      margin-top: 16px;
+      padding: 12px;
+      border-radius: 12px;
+      font-size: 14px;
+      background: rgba(48, 209, 88, 0.12);
+      border: 1px solid rgba(48, 209, 88, 0.35);
+      color: #b8ffc8;
+    }
+
+    .form-message.show {
+      display: block;
+      animation: fadeUp 0.3s ease;
+    }
+
+    .detail-list {
+      display: grid;
+      gap: 12px;
+    }
+
+    .detail-item {
+      padding: 14px;
+      background: #0b1220;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+    }
+
+    .detail-item span {
+      display: block;
+      color: var(--muted);
+      font-size: 12px;
+      margin-bottom: 5px;
+    }
+
+    .detail-item strong {
+      font-size: 15px;
+    }
+
+    .fade-up {
+      animation: fadeUp 0.55s ease both;
+    }
+
+    @keyframes fadeUp {
+      from {
+        opacity: 0;
+        transform: translateY(14px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @media (max-width: 1250px) {
+      .cards {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .filters-row {
+        grid-template-columns: 1fr;
+      }
+
+      .tabs {
+        width: 100%;
+      }
+    }
+
+    @media (max-width: 760px) {
+      body {
+        display: block;
+      }
+
+      .sidebar {
+        position: relative;
+        width: 100%;
+        height: auto;
+      }
+
+      .main {
+        margin-left: 0;
+        width: 100%;
+        padding: 22px;
+      }
+
+      .topbar {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .top-actions {
+        width: 100%;
+        flex-direction: column;
+      }
+
+      .btn {
+        width: 100%;
+      }
+
+      .cards {
+        grid-template-columns: 1fr;
+      }
+
+      .panel-header {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .person-form {
+        grid-template-columns: 1fr;
+      }
+
+      .modal-actions {
+        flex-direction: column-reverse;
+      }
+    }
+  </style>
+
+  <link rel="stylesheet" href="sidebar-shared.css" />
+</head>
+
+<body data-page="people">
+  <div id="sidebar-container"></div>
+
+<main class="main">
+    <header class="topbar fade-up">
+      <div class="page-title">
+        <h1>Pessoas</h1>
+        <p>Gerencie clientes e fornecedores em um único cadastro.</p>
+      </div>
+
+      <div class="top-actions">
+        <button class="btn btn-outline" type="button" id="exportBtn">Exportar</button>
+        <button class="btn btn-primary" type="button" id="openPersonModal">Cadastrar pessoa</button>
+      </div>
+    </header>
+
+    <section class="cards">
+      <div class="card fade-up">
+        <div class="card-title">Total de clientes</div>
+        <div class="card-value positive" id="totalClients">0</div>
+        <div class="card-info">Clientes cadastrados na base</div>
+      </div>
+
+      <div class="card fade-up">
+        <div class="card-title">Total de fornecedores</div>
+        <div class="card-value warning" id="totalSuppliers">0</div>
+        <div class="card-info">Fornecedores cadastrados</div>
+      </div>
+
+      <div class="card fade-up">
+        <div class="card-title">Clientes inadimplentes</div>
+        <div class="card-value negative" id="defaultingClients">0</div>
+        <div class="card-info">Clientes com valores em atraso</div>
+      </div>
+
+      <div class="card fade-up">
+        <div class="card-title">Fornecedores ativos</div>
+        <div class="card-value positive" id="activeSuppliers">0</div>
+        <div class="card-info">Fornecedores com relacionamento ativo</div>
+      </div>
+    </section>
+
+    <section class="panel fade-up">
+      <div class="panel-header">
+        <div>
+          <h2>Cadastro de pessoas</h2>
+          <span id="tableInfo">Exibindo clientes</span>
+        </div>
+      </div>
+
+      <div class="filters-row">
+        <div class="tabs">
+          <button class="tab-btn active" id="clientsTab" type="button">Clientes</button>
+          <button class="tab-btn" id="suppliersTab" type="button">Fornecedores</button>
+        </div>
+
+        <div class="search-box">
+          <span class="search-icon">⌕</span>
+          <input type="text" id="searchInput" placeholder="Buscar por nome, CPF/CNPJ, telefone ou e-mail..." />
+        </div>
+
+        <button class="btn btn-outline" type="button" id="clearSearch">Limpar busca</button>
+      </div>
+
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>Nome</th>
+              <th>Tipo</th>
+              <th>CPF/CNPJ</th>
+              <th>Telefone</th>
+              <th>E-mail</th>
+              <th>Valor em aberto</th>
+              <th>Status</th>
+              <th>Ação</th>
+            </tr>
+          </thead>
+
+          <tbody id="peopleTable"></tbody>
+        </table>
+
+        <div class="empty-state" id="emptyState">Nenhuma pessoa encontrada.</div>
+      </div>
+    </section>
+  </main>
+
+  <div class="modal-overlay" id="personModalOverlay">
+    <div class="modal">
+      <div class="modal-header">
+        <div>
+          <h2 id="personModalTitle">Cadastrar pessoa</h2>
+          <p>Adicione um cliente ou fornecedor ao cadastro financeiro.</p>
+        </div>
+
+        <button class="close-modal" id="closePersonModal" type="button">×</button>
+      </div>
+
+      <div class="modal-body">
+        <form id="personForm" class="person-form">
+          <div class="input-group">
+            <label for="personName">Nome / Razão social</label>
+            <input type="text" id="personName" placeholder="Ex: Cliente Alpha Ltda" required />
+          </div>
+
+          <div class="input-group">
+            <label for="personType">Tipo</label>
+            <select id="personType" required>
+              <option value="">Selecione</option>
+              <option value="client">Cliente</option>
+              <option value="supplier">Fornecedor</option>
+            </select>
+          </div>
+
+          <div class="input-group">
+            <label for="personDocument">CPF/CNPJ</label>
+            <input type="text" id="personDocument" placeholder="000.000.000-00 ou 00.000.000/0000-00" required />
+          </div>
+
+          <div class="input-group">
+            <label for="personPhone">Telefone</label>
+            <input type="text" id="personPhone" placeholder="(00) 00000-0000" required />
+          </div>
+
+          <div class="input-group full">
+            <label for="personEmail">E-mail</label>
+            <input type="email" id="personEmail" placeholder="email@empresa.com" required />
+          </div>
+
+          <div class="input-group">
+            <label for="personOpenValue">Valor em aberto</label>
+            <input type="text" id="personOpenValue" placeholder="R$ 0,00" required />
+          </div>
+
+          <div class="input-group">
+            <label for="personStatus">Status</label>
+            <select id="personStatus" required>
+              <option value="">Selecione</option>
+              <option value="Ativo">Ativo</option>
+              <option value="Inativo">Inativo</option>
+              <option value="Inadimplente">Inadimplente</option>
+              <option value="Pendente">Pendente</option>
+            </select>
+          </div>
+
+          <div class="input-group full">
+            <label for="personNotes">Observações</label>
+            <textarea id="personNotes" placeholder="Adicione detalhes opcionais sobre essa pessoa..."></textarea>
+          </div>
+        </form>
+
+        <div class="form-message" id="personFormMessage">
+          Pessoa salva com sucesso!
+        </div>
+      </div>
+
+      <div class="modal-actions">
+        <button class="btn btn-outline" type="button" id="cancelPersonModal">Cancelar</button>
+        <button class="btn btn-primary" type="submit" form="personForm">Salvar pessoa</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="detailsModalOverlay">
+    <div class="modal">
+      <div class="modal-header">
+        <div>
+          <h2>Detalhes da pessoa</h2>
+          <p>Informações completas do cadastro selecionado.</p>
+        </div>
+
+        <button class="close-modal" id="closeDetailsModal" type="button">×</button>
+      </div>
+
+      <div class="modal-body">
+        <div class="detail-list" id="detailList"></div>
+      </div>
+
+      <div class="modal-actions">
+        <button class="btn btn-outline" type="button" id="closeDetailsBottom">Fechar</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const animatedItems = document.querySelectorAll(".fade-up");
+
+    animatedItems.forEach((item, index) => {
+      item.style.animationDelay = `${index * 0.06}s`;
+    });
+
+    let activeTab = "client";
+    let editingId = null;
+
+    let people = [
+      {
+        id: 1,
+        name: "Cliente Alpha Ltda",
+        type: "client",
+        document: "12.345.678/0001-90",
+        phone: "(31) 98888-1122",
+        email: "financeiro@alpha.com",
+        openValue: 8400,
+        status: "Ativo",
+        notes: "Cliente recorrente com contrato mensal."
+      },
+      {
+        id: 2,
+        name: "Grupo Delta",
+        type: "client",
+        document: "45.987.321/0001-55",
+        phone: "(31) 97777-2233",
+        email: "contas@grupodelta.com",
+        openValue: 12700,
+        status: "Pendente",
+        notes: "Projeto avulso em andamento."
+      },
+      {
+        id: 3,
+        name: "Cliente Omega",
+        type: "client",
+        document: "22.111.333/0001-44",
+        phone: "(11) 96666-3344",
+        email: "omega@cliente.com",
+        openValue: 4800,
+        status: "Inadimplente",
+        notes: "Pagamento em atraso desde o mês anterior."
+      },
+      {
+        id: 4,
+        name: "Empresa Nova Era",
+        type: "client",
+        document: "33.222.111/0001-77",
+        phone: "(21) 95555-4455",
+        email: "financeiro@novaera.com",
+        openValue: 0,
+        status: "Ativo",
+        notes: "Cliente com pagamentos em dia."
+      },
+      {
+        id: 5,
+        name: "Beta Comércio",
+        type: "client",
+        document: "18.444.555/0001-61",
+        phone: "(31) 94444-5566",
+        email: "adm@betacomercio.com",
+        openValue: 15400,
+        status: "Pendente",
+        notes: "Contrato premium anual parcelado."
+      },
+      {
+        id: 6,
+        name: "Tech Solutions Ltda",
+        type: "supplier",
+        document: "77.888.999/0001-10",
+        phone: "(31) 93333-6677",
+        email: "cobranca@techsolutions.com",
+        openValue: 1250,
+        status: "Ativo",
+        notes: "Fornecedor de sistema e infraestrutura."
+      },
+      {
+        id: 7,
+        name: "Imobiliária Central",
+        type: "supplier",
+        document: "99.111.222/0001-88",
+        phone: "(31) 92222-7788",
+        email: "financeiro@imobcentral.com",
+        openValue: 3200,
+        status: "Ativo",
+        notes: "Locação do escritório."
+      },
+      {
+        id: 8,
+        name: "Agência Blue Ads",
+        type: "supplier",
+        document: "66.555.444/0001-33",
+        phone: "(31) 91111-8899",
+        email: "financeiro@blueads.com",
+        openValue: 1850,
+        status: "Pendente",
+        notes: "Campanhas de tráfego pago."
+      },
+      {
+        id: 9,
+        name: "Fornecedor Alpha",
+        type: "supplier",
+        document: "55.666.777/0001-22",
+        phone: "(31) 90000-9900",
+        email: "vendas@fornecedoralpha.com",
+        openValue: 2480,
+        status: "Ativo",
+        notes: "Materiais de escritório e operação."
+      },
+      {
+        id: 10,
+        name: "Cloud Pro",
+        type: "supplier",
+        document: "44.333.222/0001-19",
+        phone: "(11) 98888-2020",
+        email: "billing@cloudpro.com",
+        openValue: 920,
+        status: "Ativo",
+        notes: "Licenças mensais de software."
+      }
+    ];
+
+    const totalClients = document.getElementById("totalClients");
+    const totalSuppliers = document.getElementById("totalSuppliers");
+    const defaultingClients = document.getElementById("defaultingClients");
+    const activeSuppliers = document.getElementById("activeSuppliers");
+
+    const clientsTab = document.getElementById("clientsTab");
+    const suppliersTab = document.getElementById("suppliersTab");
+    const tableInfo = document.getElementById("tableInfo");
+    const peopleTable = document.getElementById("peopleTable");
+    const emptyState = document.getElementById("emptyState");
+
+    const searchInput = document.getElementById("searchInput");
+    const clearSearch = document.getElementById("clearSearch");
+
+    const openPersonModal = document.getElementById("openPersonModal");
+    const closePersonModal = document.getElementById("closePersonModal");
+    const cancelPersonModal = document.getElementById("cancelPersonModal");
+    const personModalOverlay = document.getElementById("personModalOverlay");
+    const personForm = document.getElementById("personForm");
+    const personFormMessage = document.getElementById("personFormMessage");
+    const personModalTitle = document.getElementById("personModalTitle");
+
+    const personName = document.getElementById("personName");
+    const personType = document.getElementById("personType");
+    const personDocument = document.getElementById("personDocument");
+    const personPhone = document.getElementById("personPhone");
+    const personEmail = document.getElementById("personEmail");
+    const personOpenValue = document.getElementById("personOpenValue");
+    const personStatus = document.getElementById("personStatus");
+    const personNotes = document.getElementById("personNotes");
+
+    const detailsModalOverlay = document.getElementById("detailsModalOverlay");
+    const closeDetailsModal = document.getElementById("closeDetailsModal");
+    const closeDetailsBottom = document.getElementById("closeDetailsBottom");
+    const detailList = document.getElementById("detailList");
+
+    function formatCurrency(value) {
+      return value.toLocaleString("pt-BR", {
+        style: "currency",
+        currency: "BRL"
+      });
+    }
+
+    function currencyToNumber(value) {
+      if (!value) return 0;
+
+      return Number(
+        value
+          .replace("R$", "")
+          .replace(/\./g, "")
+          .replace(",", ".")
+          .trim()
+      );
+    }
+
+    function normalize(text) {
+      return String(text)
+        .toLowerCase()
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .trim();
+    }
+
+    function maskMoney(input) {
+      input.addEventListener("input", () => {
+        let value = input.value.replace(/\D/g, "");
+
+        if (!value) {
+          input.value = "";
+          return;
+        }
+
+        value = (Number(value) / 100).toLocaleString("pt-BR", {
+          style: "currency",
+          currency: "BRL"
+        });
+
+        input.value = value;
+      });
+    }
+
+    function maskPhone(input) {
+      input.addEventListener("input", () => {
+        let value = input.value.replace(/\D/g, "").slice(0, 11);
+
+        if (value.length > 0) {
+          value = "(" + value;
+        }
+
+        if (value.length > 3) {
+          value = value.slice(0, 3) + ") " + value.slice(3);
+        }
+
+        if (value.length > 10) {
+          value = value.slice(0, 10) + "-" + value.slice(10);
+        }
+
+        input.value = value;
+      });
+    }
+
+    function maskDocument(input) {
+      input.addEventListener("input", () => {
+        let value = input.value.replace(/\D/g, "").slice(0, 14);
+
+        if (value.length <= 11) {
+          if (value.length > 3) {
+            value = value.slice(0, 3) + "." + value.slice(3);
+          }
+
+          if (value.length > 7) {
+            value = value.slice(0, 7) + "." + value.slice(7);
+          }
+
+          if (value.length > 11) {
+            value = value.slice(0, 11) + "-" + value.slice(11);
+          }
+        } else {
+          value =
+            value.slice(0, 2) + "." +
+            value.slice(2, 5) + "." +
+            value.slice(5, 8) + "/" +
+            value.slice(8, 12) + "-" +
+            value.slice(12, 14);
+        }
+
+        input.value = value;
+      });
+    }
+
+    function getTypeLabel(type) {
+      return type === "client" ? "Cliente" : "Fornecedor";
+    }
+
+    function getTypeClass(type) {
+      return type === "client" ? "client" : "supplier";
+    }
+
+    function getStatusClass(status) {
+      if (status === "Ativo") return "active";
+      if (status === "Inativo") return "inactive";
+      if (status === "Inadimplente") return "defaulting";
+      return "pending";
+    }
+
+    function updateCards() {
+      totalClients.textContent = people.filter(person => person.type === "client").length;
+      totalSuppliers.textContent = people.filter(person => person.type === "supplier").length;
+      defaultingClients.textContent = people.filter(person => person.type === "client" && person.status === "Inadimplente").length;
+      activeSuppliers.textContent = people.filter(person => person.type === "supplier" && person.status === "Ativo").length;
+    }
+
+    function getFilteredPeople() {
+      const search = normalize(searchInput.value);
+
+      return people.filter(person => {
+        const isCorrectType = person.type === activeTab;
+
+        const searchableText = normalize(`
+          ${person.name}
+          ${person.document}
+          ${person.phone}
+          ${person.email}
+          ${person.status}
+        `);
+
+        const matchesSearch = !search || searchableText.includes(search);
+
+        return isCorrectType && matchesSearch;
+      });
+    }
+
+    function renderTable() {
+      const filtered = getFilteredPeople();
+
+      peopleTable.innerHTML = "";
+
+      filtered.forEach(person => {
+        const row = document.createElement("tr");
+
+        const valueClass = person.openValue > 0 ? (person.type === "client" ? "positive" : "negative") : "";
+
+        row.innerHTML = `
+          <td>
+            <div class="person-name">${person.name}</div>
+            <div class="person-note">${person.notes || "Sem observações cadastradas."}</div>
+          </td>
+          <td><span class="type-badge ${getTypeClass(person.type)}">${getTypeLabel(person.type)}</span></td>
+          <td>${person.document}</td>
+          <td>${person.phone}</td>
+          <td>${person.email}</td>
+          <td class="${valueClass}">${formatCurrency(person.openValue)}</td>
+          <td><span class="status ${getStatusClass(person.status)}">${person.status}</span></td>
+          <td>
+            <div class="actions">
+              <button class="action-btn" type="button" onclick="editPerson(${person.id})">Editar</button>
+              <button class="action-btn" type="button" onclick="viewDetails(${person.id})">Detalhes</button>
+            </div>
+          </td>
+        `;
+
+        peopleTable.appendChild(row);
+      });
+
+      emptyState.classList.toggle("show", filtered.length === 0);
+      tableInfo.textContent = activeTab === "client" ? "Exibindo clientes" : "Exibindo fornecedores";
+    }
+
+    function refreshPage() {
+      updateCards();
+      renderTable();
+    }
+
+    function setActiveTab(tab) {
+      activeTab = tab;
+
+      clientsTab.classList.toggle("active", tab === "client");
+      suppliersTab.classList.toggle("active", tab === "supplier");
+
+      renderTable();
+    }
+
+    function openModal(overlay) {
+      overlay.classList.remove("hide");
+      overlay.classList.add("show");
+      document.body.style.overflow = "hidden";
+    }
+
+    function closeModal(overlay) {
+      overlay.classList.remove("show");
+      overlay.classList.add("hide");
+
+      setTimeout(() => {
+        overlay.classList.remove("hide");
+        document.body.style.overflow = "";
+      }, 280);
+    }
+
+    function openNewPersonModal() {
+      editingId = null;
+      personModalTitle.textContent = "Cadastrar pessoa";
+      personForm.reset();
+      personFormMessage.classList.remove("show");
+      personType.value = activeTab;
+      openModal(personModalOverlay);
+
+      setTimeout(() => {
+        personName.focus();
+      }, 180);
+    }
+
+    function closePersonWindow() {
+      closeModal(personModalOverlay);
+      personFormMessage.classList.remove("show");
+    }
+
+    function savePerson(event) {
+      event.preventDefault();
+
+      const name = personName.value.trim();
+      const type = personType.value;
+      const documentValue = personDocument.value.trim();
+      const phone = personPhone.value.trim();
+      const email = personEmail.value.trim();
+      const openValue = currencyToNumber(personOpenValue.value.trim());
+      const status = personStatus.value;
+      const notes = personNotes.value.trim();
+
+      if (!name || !type || !documentValue || !phone || !email || !status) {
+        return;
+      }
+
+      if (editingId) {
+        const person = people.find(item => item.id === editingId);
+
+        person.name = name;
+        person.type = type;
+        person.document = documentValue;
+        person.phone = phone;
+        person.email = email;
+        person.openValue = openValue;
+        person.status = status;
+        person.notes = notes;
+
+        activeTab = type;
+      } else {
+        people.push({
+          id: Date.now(),
+          name,
+          type,
+          document: documentValue,
+          phone,
+          email,
+          openValue,
+          status,
+          notes
+        });
+
+        activeTab = type;
+      }
+
+      personFormMessage.classList.add("show");
+      updateCards();
+      setActiveTab(activeTab);
+
+      setTimeout(() => {
+        closePersonWindow();
+      }, 900);
+    }
+
+    function editPerson(id) {
+      const person = people.find(item => item.id === id);
+
+      if (!person) return;
+
+      editingId = id;
+      personModalTitle.textContent = "Editar pessoa";
+
+      personName.value = person.name;
+      personType.value = person.type;
+      personDocument.value = person.document;
+      personPhone.value = person.phone;
+      personEmail.value = person.email;
+      personOpenValue.value = formatCurrency(person.openValue);
+      personStatus.value = person.status;
+      personNotes.value = person.notes || "";
+
+      personFormMessage.classList.remove("show");
+      openModal(personModalOverlay);
+    }
+
+    function viewDetails(id) {
+      const person = people.find(item => item.id === id);
+
+      if (!person) return;
+
+      detailList.innerHTML = `
+        <div class="detail-item">
+          <span>Nome / Razão social</span>
+          <strong>${person.name}</strong>
+        </div>
+
+        <div class="detail-item">
+          <span>Tipo</span>
+          <strong>${getTypeLabel(person.type)}</strong>
+        </div>
+
+        <div class="detail-item">
+          <span>CPF/CNPJ</span>
+          <strong>${person.document}</strong>
+        </div>
+
+        <div class="detail-item">
+          <span>Telefone</span>
+          <strong>${person.phone}</strong>
+        </div>
+
+        <div class="detail-item">
+          <span>E-mail</span>
+          <strong>${person.email}</strong>
+        </div>
+
+        <div class="detail-item">
+          <span>Valor em aberto</span>
+          <strong>${formatCurrency(person.openValue)}</strong>
+        </div>
+
+        <div class="detail-item">
+          <span>Status</span>
+          <strong>${person.status}</strong>
+        </div>
+
+        <div class="detail-item">
+          <span>Observações</span>
+          <strong>${person.notes || "Nenhuma observação cadastrada."}</strong>
+        </div>
+      `;
+
+      openModal(detailsModalOverlay);
+    }
+
+    maskMoney(personOpenValue);
+    maskPhone(personPhone);
+    maskDocument(personDocument);
+
+    clientsTab.addEventListener("click", () => setActiveTab("client"));
+    suppliersTab.addEventListener("click", () => setActiveTab("supplier"));
+
+    searchInput.addEventListener("input", renderTable);
+
+    clearSearch.addEventListener("click", () => {
+      searchInput.value = "";
+      renderTable();
+    });
+
+    openPersonModal.addEventListener("click", openNewPersonModal);
+    closePersonModal.addEventListener("click", closePersonWindow);
+    cancelPersonModal.addEventListener("click", closePersonWindow);
+    personForm.addEventListener("submit", savePerson);
+
+    closeDetailsModal.addEventListener("click", () => closeModal(detailsModalOverlay));
+    closeDetailsBottom.addEventListener("click", () => closeModal(detailsModalOverlay));
+
+    personModalOverlay.addEventListener("click", event => {
+      if (event.target === personModalOverlay) {
+        closePersonWindow();
+      }
+    });
+
+    detailsModalOverlay.addEventListener("click", event => {
+      if (event.target === detailsModalOverlay) {
+        closeModal(detailsModalOverlay);
+      }
+    });
+
+    document.addEventListener("keydown", event => {
+      if (event.key === "Escape" && personModalOverlay.classList.contains("show")) {
+        closePersonWindow();
+      }
+
+      if (event.key === "Escape" && detailsModalOverlay.classList.contains("show")) {
+        closeModal(detailsModalOverlay);
+      }
+    });
+
+    refreshPage();
+  </script>
+  <script src="sidebar-loader.js"></script>
+</body>
+
+</html>

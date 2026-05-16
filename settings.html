@@ -1,0 +1,1724 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Facilita Financeiro | Configurações</title>
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: Arial, Helvetica, sans-serif;
+    }
+
+    :root {
+      --bg: #080c14;
+      --card: #101827;
+      --card-2: #121d30;
+      --blue: #1e90ff;
+      --blue-hover: #0f75d8;
+      --text: #f4f7fb;
+      --muted: #9ca8ba;
+      --border: #24324a;
+      --danger: #ff4d4d;
+      --success: #30d158;
+      --warning: #ffcc00;
+    }
+
+    body {
+      min-height: 100vh;
+      background: radial-gradient(circle at top, #10284a 0%, var(--bg) 45%, #05070c 100%);
+      color: var(--text);
+      display: flex;
+    }
+
+    .sidebar {
+      width: 260px;
+      height: 100vh;
+      position: fixed;
+      left: 0;
+      top: 0;
+      background: rgba(16, 24, 39, 0.96);
+      border-right: 1px solid var(--border);
+      padding: 28px 20px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      box-shadow: 10px 0 40px rgba(0, 0, 0, 0.25);
+      z-index: 10;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 20px;
+      font-weight: 800;
+      margin-bottom: 34px;
+    }
+
+    .logo-icon {
+      width: 42px;
+      height: 42px;
+      background: var(--blue);
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 900;
+      color: white;
+      box-shadow: 0 0 35px rgba(30, 144, 255, 0.55);
+    }
+
+    .menu {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .menu a {
+      text-decoration: none;
+      color: var(--muted);
+      padding: 13px 14px;
+      border-radius: 12px;
+      font-weight: 700;
+      font-size: 14px;
+      transition: 0.25s;
+    }
+
+    .menu a:hover,
+    .menu a.active {
+      background: rgba(30, 144, 255, 0.12);
+      color: white;
+    }
+
+    .menu a.active {
+      background: var(--blue);
+      box-shadow: 0 8px 22px rgba(30, 144, 255, 0.28);
+    }
+
+    .sidebar-footer {
+      padding: 14px;
+      border: 1px solid rgba(30, 144, 255, 0.25);
+      background: rgba(30, 144, 255, 0.08);
+      border-radius: 16px;
+      color: #cce7ff;
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    .main {
+      margin-left: 260px;
+      width: calc(100% - 260px);
+      padding: 30px;
+    }
+
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 18px;
+      margin-bottom: 28px;
+    }
+
+    .page-title h1 {
+      font-size: 30px;
+      margin-bottom: 6px;
+    }
+
+    .page-title p {
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .top-actions {
+      display: flex;
+      gap: 12px;
+    }
+
+    .btn {
+      border: none;
+      border-radius: 12px;
+      padding: 13px 16px;
+      font-size: 14px;
+      font-weight: 800;
+      cursor: pointer;
+      transition: 0.25s;
+      white-space: nowrap;
+    }
+
+    .btn-primary {
+      background: var(--blue);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background: var(--blue-hover);
+      transform: translateY(-1px);
+      box-shadow: 0 12px 28px rgba(30, 144, 255, 0.24);
+    }
+
+    .btn-outline {
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--text);
+    }
+
+    .btn-outline:hover {
+      background: rgba(30, 144, 255, 0.08);
+      color: var(--blue);
+      transform: translateY(-1px);
+    }
+
+    .settings-layout {
+      display: grid;
+      grid-template-columns: 280px 1fr;
+      gap: 22px;
+      align-items: start;
+    }
+
+    .settings-nav {
+      background: rgba(16, 24, 39, 0.92);
+      border: 1px solid var(--border);
+      border-radius: 22px;
+      padding: 16px;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.25);
+      position: sticky;
+      top: 30px;
+    }
+
+    .settings-nav button {
+      width: 100%;
+      border: none;
+      background: transparent;
+      color: var(--muted);
+      padding: 13px 14px;
+      border-radius: 12px;
+      text-align: left;
+      font-size: 14px;
+      font-weight: 800;
+      cursor: pointer;
+      transition: 0.25s;
+    }
+
+    .settings-nav button:hover,
+    .settings-nav button.active {
+      background: rgba(30, 144, 255, 0.12);
+      color: white;
+    }
+
+    .settings-nav button.active {
+      background: var(--blue);
+      box-shadow: 0 8px 22px rgba(30, 144, 255, 0.28);
+    }
+
+    .panel {
+      background: rgba(16, 24, 39, 0.92);
+      border: 1px solid var(--border);
+      border-radius: 22px;
+      padding: 24px;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.25);
+      margin-bottom: 22px;
+    }
+
+    .panel.hidden {
+      display: none;
+    }
+
+    .panel-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 22px;
+    }
+
+    .panel-header h2 {
+      font-size: 20px;
+      margin-bottom: 5px;
+    }
+
+    .panel-header p,
+    .panel-header span {
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+    }
+
+    .form-grid .full {
+      grid-column: 1 / -1;
+    }
+
+    .input-group label {
+      display: block;
+      margin-bottom: 7px;
+      color: #d8e2f0;
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    input,
+    select,
+    textarea {
+      width: 100%;
+      padding: 14px 15px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      background: #0b1220;
+      color: var(--text);
+      outline: none;
+      font-size: 14px;
+      transition: 0.25s;
+    }
+
+    textarea {
+      resize: none;
+      height: 92px;
+    }
+
+    input[type="file"] {
+      padding: 12px;
+      cursor: pointer;
+    }
+
+    input:focus,
+    select:focus,
+    textarea:focus {
+      border-color: var(--blue);
+      box-shadow: 0 0 0 4px rgba(30, 144, 255, 0.12);
+    }
+
+    select option {
+      background: #0b1220;
+      color: var(--text);
+    }
+
+    .logo-upload {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      background: #0b1220;
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 18px;
+    }
+
+    .company-logo-preview {
+      width: 78px;
+      height: 78px;
+      border-radius: 20px;
+      background: rgba(30, 144, 255, 0.14);
+      border: 1px solid rgba(30, 144, 255, 0.25);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--blue);
+      font-size: 28px;
+      font-weight: 900;
+      flex-shrink: 0;
+      overflow: hidden;
+    }
+
+    .company-logo-preview img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .logo-upload-info h3 {
+      font-size: 15px;
+      margin-bottom: 5px;
+    }
+
+    .logo-upload-info p {
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.5;
+      margin-bottom: 12px;
+    }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+      margin-bottom: 22px;
+    }
+
+    .card {
+      background: #0b1220;
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 20px;
+      transition: 0.25s;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .card:hover {
+      transform: translateY(-2px);
+      border-color: rgba(30, 144, 255, 0.35);
+    }
+
+    .card::before {
+      content: "";
+      position: absolute;
+      width: 110px;
+      height: 110px;
+      border-radius: 50%;
+      background: rgba(30, 144, 255, 0.1);
+      filter: blur(10px);
+      top: -55px;
+      right: -55px;
+    }
+
+    .card-title {
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 700;
+      margin-bottom: 10px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .card-value {
+      font-size: 24px;
+      font-weight: 900;
+      position: relative;
+      z-index: 1;
+    }
+
+    .positive {
+      color: var(--success);
+    }
+
+    .negative {
+      color: var(--danger);
+    }
+
+    .warning {
+      color: var(--warning);
+    }
+
+    .table-wrapper {
+      overflow-x: auto;
+      max-height: 430px;
+      overflow-y: auto;
+      padding-right: 4px;
+    }
+
+    .table-wrapper::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+
+    .table-wrapper::-webkit-scrollbar-track {
+      background: #0b1220;
+      border-radius: 999px;
+    }
+
+    .table-wrapper::-webkit-scrollbar-thumb {
+      background: rgba(30, 144, 255, 0.45);
+      border-radius: 999px;
+    }
+
+    .table-wrapper::-webkit-scrollbar-thumb:hover {
+      background: rgba(30, 144, 255, 0.7);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 820px;
+    }
+
+    th,
+    td {
+      padding: 15px 10px;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+      font-size: 14px;
+    }
+
+    th {
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 800;
+      position: sticky;
+      top: 0;
+      background: rgba(16, 24, 39, 0.98);
+      z-index: 2;
+    }
+
+    td {
+      color: var(--text);
+    }
+
+    tbody tr {
+      transition: 0.25s;
+    }
+
+    tbody tr:hover {
+      background: rgba(30, 144, 255, 0.05);
+    }
+
+    .badge {
+      padding: 6px 10px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 900;
+      white-space: nowrap;
+    }
+
+    .badge.owner {
+      background: rgba(30, 144, 255, 0.12);
+      color: var(--blue);
+    }
+
+    .badge.finance {
+      background: rgba(48, 209, 88, 0.12);
+      color: var(--success);
+    }
+
+    .badge.accountant {
+      background: rgba(255, 204, 0, 0.12);
+      color: var(--warning);
+    }
+
+    .badge.manager {
+      background: rgba(156, 168, 186, 0.12);
+      color: #d8e2f0;
+    }
+
+    .badge.viewer {
+      background: rgba(255, 255, 255, 0.08);
+      color: var(--muted);
+    }
+
+    .status {
+      padding: 6px 10px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 900;
+      white-space: nowrap;
+    }
+
+    .status.active {
+      background: rgba(48, 209, 88, 0.12);
+      color: var(--success);
+    }
+
+    .status.pending {
+      background: rgba(255, 204, 0, 0.12);
+      color: var(--warning);
+    }
+
+    .actions {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .action-btn {
+      border: 1px solid var(--border);
+      background: #0b1220;
+      color: var(--text);
+      border-radius: 10px;
+      padding: 8px 10px;
+      font-size: 12px;
+      font-weight: 800;
+      cursor: pointer;
+      transition: 0.25s;
+      white-space: nowrap;
+    }
+
+    .action-btn:hover {
+      transform: translateY(-1px);
+      border-color: rgba(30, 144, 255, 0.45);
+      background: rgba(30, 144, 255, 0.08);
+      color: var(--blue);
+    }
+
+    .action-btn.danger:hover {
+      border-color: rgba(255, 77, 77, 0.45);
+      background: rgba(255, 77, 77, 0.1);
+      color: var(--danger);
+    }
+
+    .switch-list {
+      display: grid;
+      gap: 14px;
+    }
+
+    .switch-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      padding: 16px;
+      border: 1px solid var(--border);
+      background: #0b1220;
+      border-radius: 16px;
+    }
+
+    .switch-text h3 {
+      font-size: 15px;
+      margin-bottom: 5px;
+    }
+
+    .switch-text p {
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    .switch {
+      width: 54px;
+      height: 30px;
+      background: #1b2638;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      position: relative;
+      cursor: pointer;
+      transition: 0.25s;
+      flex-shrink: 0;
+    }
+
+    .switch::before {
+      content: "";
+      position: absolute;
+      width: 22px;
+      height: 22px;
+      background: var(--muted);
+      border-radius: 50%;
+      top: 3px;
+      left: 4px;
+      transition: 0.25s;
+    }
+
+    .switch.active {
+      background: rgba(30, 144, 255, 0.25);
+      border-color: rgba(30, 144, 255, 0.5);
+    }
+
+    .switch.active::before {
+      left: 26px;
+      background: var(--blue);
+      box-shadow: 0 0 16px rgba(30, 144, 255, 0.65);
+    }
+
+    .integration-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+    }
+
+    .integration-card {
+      background: #0b1220;
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 18px;
+      transition: 0.25s;
+    }
+
+    .integration-card:hover {
+      transform: translateY(-2px);
+      border-color: rgba(30, 144, 255, 0.35);
+    }
+
+    .integration-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 14px;
+      gap: 12px;
+    }
+
+    .integration-icon {
+      width: 42px;
+      height: 42px;
+      border-radius: 14px;
+      background: rgba(30, 144, 255, 0.12);
+      color: var(--blue);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 900;
+    }
+
+    .integration-card h3 {
+      font-size: 15px;
+      margin-bottom: 6px;
+    }
+
+    .integration-card p {
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.5;
+      margin-bottom: 15px;
+    }
+
+    .category-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+    }
+
+    .category-box {
+      background: #0b1220;
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 18px;
+    }
+
+    .category-box h3 {
+      font-size: 16px;
+      margin-bottom: 14px;
+    }
+
+    .category-tags {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .category-tag {
+      padding: 8px 11px;
+      background: rgba(30, 144, 255, 0.1);
+      border: 1px solid rgba(30, 144, 255, 0.25);
+      border-radius: 999px;
+      color: #cce7ff;
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .plan-card {
+      background: linear-gradient(145deg, rgba(30, 144, 255, 0.16), rgba(16, 24, 39, 0.94));
+      border: 1px solid rgba(30, 144, 255, 0.35);
+      border-radius: 22px;
+      padding: 24px;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 20px;
+      align-items: center;
+    }
+
+    .plan-card h3 {
+      font-size: 22px;
+      margin-bottom: 7px;
+    }
+
+    .plan-card p {
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    .plan-price {
+      font-size: 30px;
+      font-weight: 900;
+      color: var(--success);
+      text-align: right;
+    }
+
+    .plan-price span {
+      display: block;
+      font-size: 12px;
+      color: var(--muted);
+      margin-top: 4px;
+    }
+
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(5, 7, 12, 0.62);
+      backdrop-filter: blur(10px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 100;
+      padding: 20px;
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+      transition: opacity 0.28s ease, visibility 0.28s ease;
+    }
+
+    .modal-overlay.show {
+      opacity: 1;
+      visibility: visible;
+      pointer-events: auto;
+    }
+
+    .modal-overlay.hide {
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+    }
+
+    .modal {
+      width: 100%;
+      max-width: 720px;
+      background: rgba(16, 24, 39, 0.98);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      box-shadow: 0 30px 100px rgba(0, 0, 0, 0.65);
+      overflow: hidden;
+      position: relative;
+      opacity: 0;
+      transform: translateY(28px) scale(0.94);
+      transition: opacity 0.28s ease, transform 0.28s ease;
+    }
+
+    .modal-overlay.show .modal {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+
+    .modal-overlay.hide .modal {
+      opacity: 0;
+      transform: translateY(24px) scale(0.94);
+    }
+
+    .modal::before {
+      content: "";
+      position: absolute;
+      width: 220px;
+      height: 220px;
+      border-radius: 50%;
+      background: rgba(30, 144, 255, 0.16);
+      filter: blur(12px);
+      top: -90px;
+      right: -80px;
+    }
+
+    .modal-header {
+      padding: 24px 26px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: relative;
+      z-index: 1;
+    }
+
+    .modal-header h2 {
+      font-size: 22px;
+      margin-bottom: 5px;
+    }
+
+    .modal-header p {
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .close-modal {
+      width: 38px;
+      height: 38px;
+      border: 1px solid var(--border);
+      background: #0b1220;
+      color: var(--text);
+      border-radius: 12px;
+      cursor: pointer;
+      font-size: 18px;
+      transition: 0.25s;
+    }
+
+    .close-modal:hover {
+      background: rgba(255, 77, 77, 0.12);
+      color: #ffb3b3;
+      border-color: rgba(255, 77, 77, 0.35);
+    }
+
+    .modal-body {
+      padding: 26px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .modal-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 12px;
+      padding: 0 26px 26px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .user-form {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+    }
+
+    .user-form .full {
+      grid-column: 1 / -1;
+    }
+
+    .form-message {
+      display: none;
+      margin-top: 16px;
+      padding: 12px;
+      border-radius: 12px;
+      font-size: 14px;
+      background: rgba(48, 209, 88, 0.12);
+      border: 1px solid rgba(48, 209, 88, 0.35);
+      color: #b8ffc8;
+    }
+
+    .form-message.show {
+      display: block;
+      animation: fadeUp 0.3s ease;
+    }
+
+    .fade-up {
+      animation: fadeUp 0.55s ease both;
+    }
+
+    @keyframes fadeUp {
+      from {
+        opacity: 0;
+        transform: translateY(14px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @media (max-width: 1250px) {
+      .settings-layout {
+        grid-template-columns: 1fr;
+      }
+
+      .settings-nav {
+        position: static;
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 8px;
+      }
+
+      .cards,
+      .integration-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 760px) {
+      body {
+        display: block;
+      }
+
+      .sidebar {
+        position: relative;
+        width: 100%;
+        height: auto;
+      }
+
+      .main {
+        margin-left: 0;
+        width: 100%;
+        padding: 22px;
+      }
+
+      .topbar {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .top-actions {
+        width: 100%;
+        flex-direction: column;
+      }
+
+      .btn {
+        width: 100%;
+      }
+
+      .settings-nav,
+      .cards,
+      .integration-grid,
+      .category-grid,
+      .form-grid,
+      .user-form {
+        grid-template-columns: 1fr;
+      }
+
+      .plan-card {
+        grid-template-columns: 1fr;
+      }
+
+      .plan-price {
+        text-align: left;
+      }
+
+      .modal-actions {
+        flex-direction: column-reverse;
+      }
+    }
+  </style>
+
+  <link rel="stylesheet" href="sidebar-shared.css" />
+</head>
+
+<body data-page="settings">
+  <div id="sidebar-container"></div>
+
+<main class="main">
+    <header class="topbar fade-up">
+      <div class="page-title">
+        <h1>Configurações</h1>
+        <p>Gerencie dados da empresa, usuários, permissões, integrações e assinatura.</p>
+      </div>
+
+      <div class="top-actions">
+        <button class="btn btn-outline" type="button" id="resetBtn">Restaurar padrão</button>
+        <button class="btn btn-primary" type="button" id="saveSettingsBtn">Salvar alterações</button>
+      </div>
+    </header>
+
+    <section class="settings-layout">
+      <aside class="settings-nav fade-up">
+        <button class="active" type="button" data-section="company">Dados da empresa</button>
+        <button type="button" data-section="users">Usuários e permissões</button>
+        <button type="button" data-section="integrations">Integrações</button>
+        <button type="button" data-section="categories">Categorias padrão</button>
+        <button type="button" data-section="notifications">Notificações</button>
+        <button type="button" data-section="plan">Plano e assinatura</button>
+      </aside>
+
+      <div>
+        <section class="panel fade-up settings-section" id="company">
+          <div class="panel-header">
+            <div>
+              <h2>Dados da empresa</h2>
+              <p>Informações usadas em relatórios, documentos financeiros e configurações fiscais.</p>
+            </div>
+          </div>
+
+          <div class="logo-upload full">
+            <div class="company-logo-preview" id="logoPreview">F</div>
+
+            <div class="logo-upload-info">
+              <h3>Logo da empresa</h3>
+              <p>Envie a logo para aparecer em relatórios, telas internas e documentos exportados.</p>
+              <input type="file" id="companyLogo" accept="image/*" />
+            </div>
+          </div>
+
+          <br />
+
+          <form class="form-grid" id="companyForm">
+            <div class="input-group">
+              <label for="companyName">Nome da empresa</label>
+              <input type="text" id="companyName" value="Facilita Financeiro" />
+            </div>
+
+            <div class="input-group">
+              <label for="companyCnpj">CNPJ</label>
+              <input type="text" id="companyCnpj" value="12.345.678/0001-90" maxlength="18" />
+            </div>
+
+            <div class="input-group">
+              <label for="companyEmail">E-mail</label>
+              <input type="email" id="companyEmail" value="financeiro@facilita.com.br" />
+            </div>
+
+            <div class="input-group">
+              <label for="companyPhone">Telefone</label>
+              <input type="text" id="companyPhone" value="(31) 99999-0000" maxlength="15" />
+            </div>
+
+            <div class="input-group">
+              <label for="taxRegime">Regime tributário</label>
+              <select id="taxRegime">
+                <option>Simples Nacional</option>
+                <option>Lucro Presumido</option>
+                <option>Lucro Real</option>
+                <option>MEI</option>
+              </select>
+            </div>
+
+            <div class="input-group">
+              <label for="companySegment">Segmento</label>
+              <select id="companySegment">
+                <option>Serviços</option>
+                <option>Comércio</option>
+                <option>Indústria</option>
+                <option>Logística</option>
+                <option>Tecnologia</option>
+              </select>
+            </div>
+
+            <div class="input-group full">
+              <label for="companyAddress">Endereço fiscal</label>
+              <input type="text" id="companyAddress" value="Av. Principal, 1000 - Belo Horizonte/MG" />
+            </div>
+          </form>
+        </section>
+
+        <section class="panel fade-up settings-section hidden" id="users">
+          <div class="panel-header">
+            <div>
+              <h2>Usuários e permissões</h2>
+              <p>Gerencie quem pode acessar o sistema e o nível de permissão de cada pessoa.</p>
+            </div>
+
+            <button class="btn btn-primary" type="button" id="openUserModal">Adicionar usuário</button>
+          </div>
+
+          <div class="cards">
+            <div class="card">
+              <div class="card-title">Usuários ativos</div>
+              <div class="card-value positive" id="activeUsersCount">0</div>
+            </div>
+
+            <div class="card">
+              <div class="card-title">Convites pendentes</div>
+              <div class="card-value warning" id="pendingUsersCount">0</div>
+            </div>
+
+            <div class="card">
+              <div class="card-title">Administradores</div>
+              <div class="card-value" id="adminUsersCount">0</div>
+            </div>
+          </div>
+
+          <div class="table-wrapper">
+            <table>
+              <thead>
+                <tr>
+                  <th>Nome</th>
+                  <th>E-mail</th>
+                  <th>Nível de acesso</th>
+                  <th>Status</th>
+                  <th>Ação</th>
+                </tr>
+              </thead>
+
+              <tbody id="usersTable"></tbody>
+            </table>
+          </div>
+        </section>
+
+        <section class="panel fade-up settings-section hidden" id="integrations">
+          <div class="panel-header">
+            <div>
+              <h2>Integrações</h2>
+              <p>Conecte bancos, contabilidade, emissão fiscal e ferramentas externas.</p>
+            </div>
+          </div>
+
+          <div class="integration-grid" id="integrationsGrid"></div>
+        </section>
+
+        <section class="panel fade-up settings-section hidden" id="categories">
+          <div class="panel-header">
+            <div>
+              <h2>Categorias padrão</h2>
+              <p>Configure categorias automáticas para receitas, despesas, contas e movimentações.</p>
+            </div>
+
+            <button class="btn btn-primary" type="button" id="addCategoryBtn">Adicionar categoria</button>
+          </div>
+
+          <div class="category-grid">
+            <div class="category-box">
+              <h3>Receitas</h3>
+              <div class="category-tags" id="incomeCategories"></div>
+            </div>
+
+            <div class="category-box">
+              <h3>Despesas</h3>
+              <div class="category-tags" id="expenseCategories"></div>
+            </div>
+
+            <div class="category-box">
+              <h3>Contas a pagar</h3>
+              <div class="category-tags" id="payableCategories"></div>
+            </div>
+
+            <div class="category-box">
+              <h3>Contas a receber</h3>
+              <div class="category-tags" id="receivableCategories"></div>
+            </div>
+          </div>
+        </section>
+
+        <section class="panel fade-up settings-section hidden" id="notifications">
+          <div class="panel-header">
+            <div>
+              <h2>Notificações</h2>
+              <p>Escolha quais alertas o sistema deve enviar para sua empresa.</p>
+            </div>
+          </div>
+
+          <div class="switch-list">
+            <div class="switch-item">
+              <div class="switch-text">
+                <h3>Contas vencendo hoje</h3>
+                <p>Receber alerta quando houver contas a pagar ou receber vencendo no dia.</p>
+              </div>
+              <div class="switch active"></div>
+            </div>
+
+            <div class="switch-item">
+              <div class="switch-text">
+                <h3>Clientes inadimplentes</h3>
+                <p>Enviar aviso quando clientes ultrapassarem o prazo de pagamento.</p>
+              </div>
+              <div class="switch active"></div>
+            </div>
+
+            <div class="switch-item">
+              <div class="switch-text">
+                <h3>Saldo baixo em conta</h3>
+                <p>Alertar quando o saldo disponível ficar abaixo do mínimo configurado.</p>
+              </div>
+              <div class="switch"></div>
+            </div>
+
+            <div class="switch-item">
+              <div class="switch-text">
+                <h3>Resumo financeiro semanal</h3>
+                <p>Enviar um resumo com receitas, despesas, lucro e contas pendentes.</p>
+              </div>
+              <div class="switch active"></div>
+            </div>
+
+            <div class="switch-item">
+              <div class="switch-text">
+                <h3>Sugestões da IA Financeira</h3>
+                <p>Receber insights inteligentes sobre economia, caixa e saúde financeira.</p>
+              </div>
+              <div class="switch active"></div>
+            </div>
+          </div>
+        </section>
+
+        <section class="panel fade-up settings-section hidden" id="plan">
+          <div class="panel-header">
+            <div>
+              <h2>Plano e assinatura</h2>
+              <p>Gerencie seu plano atual, recursos disponíveis e cobrança.</p>
+            </div>
+          </div>
+
+          <div class="plan-card">
+            <div>
+              <h3>Facilita Pro</h3>
+              <p>Plano ativo com IA Financeira, relatórios avançados, múltiplos usuários, integrações e exportação de dados.</p>
+            </div>
+
+            <div class="plan-price">
+              R$ 149,90
+              <span>por mês</span>
+            </div>
+          </div>
+
+          <br />
+
+          <div class="cards">
+            <div class="card">
+              <div class="card-title">Próxima cobrança</div>
+              <div class="card-value warning">10/06</div>
+            </div>
+
+            <div class="card">
+              <div class="card-title">Usuários disponíveis</div>
+              <div class="card-value positive">12</div>
+            </div>
+
+            <div class="card">
+              <div class="card-title">Status</div>
+              <div class="card-value positive">Ativo</div>
+            </div>
+          </div>
+
+          <div class="top-actions">
+            <button class="btn btn-primary" type="button">Alterar plano</button>
+            <button class="btn btn-outline" type="button">Ver faturas</button>
+            <button class="btn btn-outline" type="button">Atualizar pagamento</button>
+          </div>
+        </section>
+      </div>
+    </section>
+  </main>
+
+  <div class="modal-overlay" id="userModalOverlay">
+    <div class="modal">
+      <div class="modal-header">
+        <div>
+          <h2 id="userModalTitle">Adicionar usuário</h2>
+          <p>Convide uma pessoa e defina o nível de acesso ao sistema.</p>
+        </div>
+
+        <button class="close-modal" id="closeUserModal" type="button">×</button>
+      </div>
+
+      <div class="modal-body">
+        <form id="userForm" class="user-form">
+          <div class="input-group">
+            <label for="userName">Nome</label>
+            <input type="text" id="userName" placeholder="Ex: Maria Oliveira" required />
+          </div>
+
+          <div class="input-group">
+            <label for="userEmail">E-mail</label>
+            <input type="email" id="userEmail" placeholder="email@empresa.com" required />
+          </div>
+
+          <div class="input-group">
+            <label for="userRole">Nível de acesso</label>
+            <select id="userRole" required>
+              <option value="">Selecione</option>
+              <option value="owner">Dono</option>
+              <option value="finance">Financeiro</option>
+              <option value="accountant">Contador</option>
+              <option value="manager">Gestor</option>
+              <option value="viewer">Visualizador</option>
+            </select>
+          </div>
+
+          <div class="input-group">
+            <label for="userStatus">Status</label>
+            <select id="userStatus" required>
+              <option value="Ativo">Ativo</option>
+              <option value="Pendente">Pendente</option>
+            </select>
+          </div>
+
+          <div class="input-group full">
+            <label for="userNotes">Observações</label>
+            <textarea id="userNotes" placeholder="Detalhes opcionais sobre este usuário..."></textarea>
+          </div>
+        </form>
+
+        <div class="form-message" id="userFormMessage">
+          Usuário salvo com sucesso!
+        </div>
+      </div>
+
+      <div class="modal-actions">
+        <button class="btn btn-outline" type="button" id="cancelUserModal">Cancelar</button>
+        <button class="btn btn-primary" type="submit" form="userForm">Salvar usuário</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const navButtons = document.querySelectorAll(".settings-nav button");
+    const sections = document.querySelectorAll(".settings-section");
+    const switches = document.querySelectorAll(".switch");
+
+    const companyLogo = document.getElementById("companyLogo");
+    const logoPreview = document.getElementById("logoPreview");
+
+    const usersTable = document.getElementById("usersTable");
+    const activeUsersCount = document.getElementById("activeUsersCount");
+    const pendingUsersCount = document.getElementById("pendingUsersCount");
+    const adminUsersCount = document.getElementById("adminUsersCount");
+
+    const openUserModal = document.getElementById("openUserModal");
+    const closeUserModal = document.getElementById("closeUserModal");
+    const cancelUserModal = document.getElementById("cancelUserModal");
+    const userModalOverlay = document.getElementById("userModalOverlay");
+    const userForm = document.getElementById("userForm");
+    const userFormMessage = document.getElementById("userFormMessage");
+    const userModalTitle = document.getElementById("userModalTitle");
+
+    const userName = document.getElementById("userName");
+    const userEmail = document.getElementById("userEmail");
+    const userRole = document.getElementById("userRole");
+    const userStatus = document.getElementById("userStatus");
+    const userNotes = document.getElementById("userNotes");
+
+    const integrationsGrid = document.getElementById("integrationsGrid");
+
+    const incomeCategories = document.getElementById("incomeCategories");
+    const expenseCategories = document.getElementById("expenseCategories");
+    const payableCategories = document.getElementById("payableCategories");
+    const receivableCategories = document.getElementById("receivableCategories");
+
+    const saveSettingsBtn = document.getElementById("saveSettingsBtn");
+
+    let editingUserId = null;
+
+    let users = [
+      {
+        id: 1,
+        name: "Eduardo Rodrigues",
+        email: "eduardo@facilita.com.br",
+        role: "owner",
+        status: "Ativo",
+        notes: "Responsável principal pela empresa."
+      },
+      {
+        id: 2,
+        name: "Marina Souza",
+        email: "financeiro@facilita.com.br",
+        role: "finance",
+        status: "Ativo",
+        notes: "Acesso ao financeiro e movimentações."
+      },
+      {
+        id: 3,
+        name: "Carlos Contador",
+        email: "contador@contabilidade.com",
+        role: "accountant",
+        status: "Ativo",
+        notes: "Acesso a relatórios e documentos fiscais."
+      },
+      {
+        id: 4,
+        name: "Ana Gestora",
+        email: "gestao@facilita.com.br",
+        role: "manager",
+        status: "Pendente",
+        notes: "Convite enviado."
+      },
+      {
+        id: 5,
+        name: "João Visualizador",
+        email: "joao@facilita.com.br",
+        role: "viewer",
+        status: "Ativo",
+        notes: "Acesso somente leitura."
+      }
+    ];
+
+    const integrations = [
+      {
+        name: "Banco via Open Finance",
+        icon: "B",
+        description: "Conecte contas bancárias para leitura automática de extratos.",
+        active: true
+      },
+      {
+        name: "Contabilidade",
+        icon: "C",
+        description: "Compartilhe relatórios e documentos com o contador.",
+        active: true
+      },
+      {
+        name: "Notas fiscais",
+        icon: "NF",
+        description: "Integre emissão fiscal e dados tributários.",
+        active: false
+      },
+      {
+        name: "E-mail",
+        icon: "@",
+        description: "Envie alertas, cobranças e resumos automáticos.",
+        active: true
+      },
+      {
+        name: "WhatsApp",
+        icon: "W",
+        description: "Notifique clientes e equipe via mensagens automáticas.",
+        active: false
+      },
+      {
+        name: "Power BI",
+        icon: "BI",
+        description: "Exporte dados para dashboards analíticos externos.",
+        active: false
+      }
+    ];
+
+    const categories = {
+      income: ["Vendas", "Serviços", "Consultoria", "Assinaturas", "Receita recorrente"],
+      expense: ["Fornecedor", "Marketing", "Aluguel", "Salários", "Impostos", "Tecnologia"],
+      payable: ["Contas fixas", "Fornecedores", "Impostos", "Folha", "Cartões"],
+      receivable: ["Clientes", "Contratos", "Parcelas", "Cobranças", "Receitas futuras"]
+    };
+
+    function roleLabel(role) {
+      if (role === "owner") return "Dono";
+      if (role === "finance") return "Financeiro";
+      if (role === "accountant") return "Contador";
+      if (role === "manager") return "Gestor";
+      return "Visualizador";
+    }
+
+    function roleClass(role) {
+      if (role === "owner") return "owner";
+      if (role === "finance") return "finance";
+      if (role === "accountant") return "accountant";
+      if (role === "manager") return "manager";
+      return "viewer";
+    }
+
+    function showSection(sectionId) {
+      navButtons.forEach(button => {
+        button.classList.toggle("active", button.dataset.section === sectionId);
+      });
+
+      sections.forEach(section => {
+        section.classList.toggle("hidden", section.id !== sectionId);
+      });
+    }
+
+    function renderUsers() {
+      usersTable.innerHTML = "";
+
+      users.forEach(user => {
+        const row = document.createElement("tr");
+
+        row.innerHTML = `
+          <td>${user.name}</td>
+          <td>${user.email}</td>
+          <td><span class="badge ${roleClass(user.role)}">${roleLabel(user.role)}</span></td>
+          <td><span class="status ${user.status === "Ativo" ? "active" : "pending"}">${user.status}</span></td>
+          <td>
+            <div class="actions">
+              <button class="action-btn" type="button" onclick="editUser(${user.id})">Editar</button>
+              <button class="action-btn danger" type="button" onclick="removeUser(${user.id})">Remover</button>
+            </div>
+          </td>
+        `;
+
+        usersTable.appendChild(row);
+      });
+
+      activeUsersCount.textContent = users.filter(user => user.status === "Ativo").length;
+      pendingUsersCount.textContent = users.filter(user => user.status === "Pendente").length;
+      adminUsersCount.textContent = users.filter(user => user.role === "owner" || user.role === "finance").length;
+    }
+
+    function renderIntegrations() {
+      integrationsGrid.innerHTML = "";
+
+      integrations.forEach(item => {
+        const card = document.createElement("div");
+        card.className = "integration-card";
+
+        card.innerHTML = `
+          <div class="integration-top">
+            <div class="integration-icon">${item.icon}</div>
+            <div class="switch ${item.active ? "active" : ""}"></div>
+          </div>
+
+          <h3>${item.name}</h3>
+          <p>${item.description}</p>
+
+          <button class="btn btn-outline" type="button">
+            ${item.active ? "Configurar" : "Conectar"}
+          </button>
+        `;
+
+        integrationsGrid.appendChild(card);
+      });
+
+      document.querySelectorAll(".integration-card .switch").forEach(item => {
+        item.addEventListener("click", () => {
+          item.classList.toggle("active");
+        });
+      });
+    }
+
+    function renderCategories() {
+      function fill(container, list) {
+        container.innerHTML = "";
+
+        list.forEach(category => {
+          const tag = document.createElement("span");
+          tag.className = "category-tag";
+          tag.textContent = category;
+          container.appendChild(tag);
+        });
+      }
+
+      fill(incomeCategories, categories.income);
+      fill(expenseCategories, categories.expense);
+      fill(payableCategories, categories.payable);
+      fill(receivableCategories, categories.receivable);
+    }
+
+    function openModal() {
+      userModalOverlay.classList.remove("hide");
+      userModalOverlay.classList.add("show");
+      document.body.style.overflow = "hidden";
+
+      setTimeout(() => {
+        userName.focus();
+      }, 180);
+    }
+
+    function closeModal() {
+      userModalOverlay.classList.remove("show");
+      userModalOverlay.classList.add("hide");
+
+      setTimeout(() => {
+        userModalOverlay.classList.remove("hide");
+        document.body.style.overflow = "";
+        userFormMessage.classList.remove("show");
+      }, 280);
+    }
+
+    function openNewUserModal() {
+      editingUserId = null;
+      userModalTitle.textContent = "Adicionar usuário";
+      userForm.reset();
+      userStatus.value = "Ativo";
+      openModal();
+    }
+
+    function editUser(id) {
+      const user = users.find(item => item.id === id);
+
+      if (!user) return;
+
+      editingUserId = id;
+      userModalTitle.textContent = "Editar usuário";
+
+      userName.value = user.name;
+      userEmail.value = user.email;
+      userRole.value = user.role;
+      userStatus.value = user.status;
+      userNotes.value = user.notes || "";
+
+      openModal();
+    }
+
+    function removeUser(id) {
+      users = users.filter(user => user.id !== id);
+      renderUsers();
+    }
+
+    function saveUser(event) {
+      event.preventDefault();
+
+      const name = userName.value.trim();
+      const email = userEmail.value.trim();
+      const role = userRole.value;
+      const status = userStatus.value;
+      const notes = userNotes.value.trim();
+
+      if (!name || !email || !role || !status) return;
+
+      if (editingUserId) {
+        const user = users.find(item => item.id === editingUserId);
+
+        user.name = name;
+        user.email = email;
+        user.role = role;
+        user.status = status;
+        user.notes = notes;
+      } else {
+        users.push({
+          id: Date.now(),
+          name,
+          email,
+          role,
+          status,
+          notes
+        });
+      }
+
+      userFormMessage.classList.add("show");
+      renderUsers();
+
+      setTimeout(() => {
+        closeModal();
+      }, 900);
+    }
+
+    function maskCnpj(input) {
+      input.addEventListener("input", () => {
+        let value = input.value.replace(/\D/g, "").slice(0, 14);
+
+        if (value.length > 2) value = value.slice(0, 2) + "." + value.slice(2);
+        if (value.length > 6) value = value.slice(0, 6) + "." + value.slice(6);
+        if (value.length > 10) value = value.slice(0, 10) + "/" + value.slice(10);
+        if (value.length > 15) value = value.slice(0, 15) + "-" + value.slice(15);
+
+        input.value = value;
+      });
+    }
+
+    function maskPhone(input) {
+      input.addEventListener("input", () => {
+        let value = input.value.replace(/\D/g, "").slice(0, 11);
+
+        if (value.length > 0) value = "(" + value;
+        if (value.length > 3) value = value.slice(0, 3) + ") " + value.slice(3);
+        if (value.length > 10) value = value.slice(0, 10) + "-" + value.slice(10);
+
+        input.value = value;
+      });
+    }
+
+    navButtons.forEach(button => {
+      button.addEventListener("click", () => {
+        showSection(button.dataset.section);
+      });
+    });
+
+    switches.forEach(item => {
+      item.addEventListener("click", () => {
+        item.classList.toggle("active");
+      });
+    });
+
+    companyLogo.addEventListener("change", event => {
+      const file = event.target.files[0];
+
+      if (!file) return;
+
+      const reader = new FileReader();
+
+      reader.onload = () => {
+        logoPreview.innerHTML = `<img src="${reader.result}" alt="Logo da empresa">`;
+      };
+
+      reader.readAsDataURL(file);
+    });
+
+    openUserModal.addEventListener("click", openNewUserModal);
+    closeUserModal.addEventListener("click", closeModal);
+    cancelUserModal.addEventListener("click", closeModal);
+    userForm.addEventListener("submit", saveUser);
+
+    userModalOverlay.addEventListener("click", event => {
+      if (event.target === userModalOverlay) {
+        closeModal();
+      }
+    });
+
+    document.addEventListener("keydown", event => {
+      if (event.key === "Escape" && userModalOverlay.classList.contains("show")) {
+        closeModal();
+      }
+    });
+
+    saveSettingsBtn.addEventListener("click", () => {
+      saveSettingsBtn.textContent = "Salvo!";
+      saveSettingsBtn.style.background = "var(--success)";
+
+      setTimeout(() => {
+        saveSettingsBtn.textContent = "Salvar alterações";
+        saveSettingsBtn.style.background = "var(--blue)";
+      }, 1200);
+    });
+
+    maskCnpj(document.getElementById("companyCnpj"));
+    maskPhone(document.getElementById("companyPhone"));
+
+    renderUsers();
+    renderIntegrations();
+    renderCategories();
+  </script>
+  <script src="sidebar-loader.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,1401 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Facilita Financeiro | Caixa e Bancos</title>
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: Arial, Helvetica, sans-serif;
+    }
+
+    :root {
+      --bg: #080c14;
+      --card: #101827;
+      --card-2: #121d30;
+      --blue: #1e90ff;
+      --blue-hover: #0f75d8;
+      --text: #f4f7fb;
+      --muted: #9ca8ba;
+      --border: #24324a;
+      --danger: #ff4d4d;
+      --success: #30d158;
+      --warning: #ffcc00;
+    }
+
+    body {
+      min-height: 100vh;
+      background: radial-gradient(circle at top, #10284a 0%, var(--bg) 45%, #05070c 100%);
+      color: var(--text);
+      display: flex;
+    }
+
+    .sidebar {
+      width: 260px;
+      height: 100vh;
+      position: fixed;
+      left: 0;
+      top: 0;
+      background: rgba(16, 24, 39, 0.96);
+      border-right: 1px solid var(--border);
+      padding: 28px 20px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      box-shadow: 10px 0 40px rgba(0, 0, 0, 0.25);
+      z-index: 10;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 20px;
+      font-weight: 800;
+      margin-bottom: 34px;
+    }
+
+    .logo-icon {
+      width: 42px;
+      height: 42px;
+      background: var(--blue);
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 900;
+      color: white;
+      box-shadow: 0 0 35px rgba(30, 144, 255, 0.55);
+    }
+
+    .menu {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .menu a {
+      text-decoration: none;
+      color: var(--muted);
+      padding: 13px 14px;
+      border-radius: 12px;
+      font-weight: 700;
+      font-size: 14px;
+      transition: 0.25s;
+    }
+
+    .menu a:hover,
+    .menu a.active {
+      background: rgba(30, 144, 255, 0.12);
+      color: white;
+    }
+
+    .menu a.active {
+      background: var(--blue);
+      box-shadow: 0 8px 22px rgba(30, 144, 255, 0.28);
+    }
+
+    .sidebar-footer {
+      padding: 14px;
+      border: 1px solid rgba(30, 144, 255, 0.25);
+      background: rgba(30, 144, 255, 0.08);
+      border-radius: 16px;
+      color: #cce7ff;
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    .main {
+      margin-left: 260px;
+      width: calc(100% - 260px);
+      padding: 30px;
+    }
+
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 18px;
+      margin-bottom: 28px;
+    }
+
+    .page-title h1 {
+      font-size: 30px;
+      margin-bottom: 6px;
+    }
+
+    .page-title p {
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .top-actions {
+      display: flex;
+      gap: 12px;
+    }
+
+    .btn {
+      border: none;
+      border-radius: 12px;
+      padding: 13px 16px;
+      font-size: 14px;
+      font-weight: 800;
+      cursor: pointer;
+      transition: 0.25s;
+    }
+
+    .btn-primary {
+      background: var(--blue);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background: var(--blue-hover);
+      transform: translateY(-1px);
+      box-shadow: 0 12px 28px rgba(30, 144, 255, 0.24);
+    }
+
+    .btn-outline {
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--text);
+    }
+
+    .btn-outline:hover {
+      background: rgba(30, 144, 255, 0.08);
+      color: var(--blue);
+      transform: translateY(-1px);
+    }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 18px;
+      margin-bottom: 24px;
+    }
+
+    .card {
+      background: rgba(16, 24, 39, 0.92);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 22px;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.25);
+      position: relative;
+      overflow: hidden;
+      transition: 0.25s;
+    }
+
+    .card:hover {
+      transform: translateY(-3px);
+      border-color: rgba(30, 144, 255, 0.45);
+      box-shadow: 0 22px 60px rgba(0, 0, 0, 0.35);
+    }
+
+    .card::before {
+      content: "";
+      position: absolute;
+      width: 130px;
+      height: 130px;
+      border-radius: 50%;
+      background: rgba(30, 144, 255, 0.12);
+      filter: blur(10px);
+      top: -60px;
+      right: -60px;
+    }
+
+    .card-title {
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 700;
+      margin-bottom: 12px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .card-value {
+      font-size: 25px;
+      font-weight: 900;
+      margin-bottom: 8px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .card-info {
+      font-size: 12px;
+      color: var(--muted);
+      position: relative;
+      z-index: 1;
+    }
+
+    .positive {
+      color: var(--success);
+    }
+
+    .negative {
+      color: var(--danger);
+    }
+
+    .warning {
+      color: var(--warning);
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: 22px;
+      margin-bottom: 22px;
+    }
+
+    .panel {
+      background: rgba(16, 24, 39, 0.92);
+      border: 1px solid var(--border);
+      border-radius: 22px;
+      padding: 24px;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.25);
+      margin-bottom: 22px;
+    }
+
+    .panel-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 22px;
+    }
+
+    .panel-header h2 {
+      font-size: 20px;
+    }
+
+    .panel-header span {
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .projection-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+      margin-bottom: 22px;
+    }
+
+    .projection-box {
+      background: #0b1220;
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 20px;
+      transition: 0.25s;
+    }
+
+    .projection-box:hover {
+      transform: translateY(-2px);
+      border-color: rgba(30, 144, 255, 0.35);
+    }
+
+    .projection-box h3 {
+      font-size: 15px;
+      margin-bottom: 10px;
+    }
+
+    .projection-value {
+      font-size: 26px;
+      font-weight: 900;
+      margin-bottom: 8px;
+    }
+
+    .projection-info {
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    .cash-flow-chart {
+      height: 260px;
+      display: flex;
+      align-items: flex-end;
+      gap: 14px;
+      border-bottom: 1px solid var(--border);
+      padding-top: 16px;
+    }
+
+    .flow-column {
+      flex: 1;
+      height: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: flex-end;
+      gap: 6px;
+      padding: 0 5px;
+      border-radius: 14px;
+      cursor: pointer;
+      transition: 0.25s;
+    }
+
+    .flow-column:hover {
+      background: rgba(30, 144, 255, 0.08);
+      transform: translateY(-2px);
+    }
+
+    .flow-bar {
+      width: 26px;
+      border-radius: 10px 10px 0 0;
+      transition: 0.25s;
+    }
+
+    .flow-bar.income {
+      background: linear-gradient(to top, var(--success), rgba(48, 209, 88, 0.35));
+    }
+
+    .flow-bar.expense {
+      background: linear-gradient(to top, var(--danger), rgba(255, 77, 77, 0.35));
+    }
+
+    .flow-labels {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 14px;
+      color: var(--muted);
+      font-size: 12px;
+      text-align: center;
+      margin-top: 12px;
+    }
+
+    .legend {
+      display: flex;
+      gap: 16px;
+      margin-top: 18px;
+      color: var(--muted);
+      font-size: 13px;
+      flex-wrap: wrap;
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+    }
+
+    .dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+    }
+
+    .dot.green {
+      background: var(--success);
+    }
+
+    .dot.red {
+      background: var(--danger);
+    }
+
+    .account-list {
+      display: grid;
+      gap: 14px;
+    }
+
+    .account-card {
+      background: #0b1220;
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 17px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      transition: 0.25s;
+    }
+
+    .account-card:hover {
+      transform: translateX(3px);
+      border-color: rgba(30, 144, 255, 0.35);
+    }
+
+    .account-left {
+      display: flex;
+      align-items: center;
+      gap: 13px;
+    }
+
+    .account-icon {
+      width: 42px;
+      height: 42px;
+      border-radius: 14px;
+      background: rgba(30, 144, 255, 0.12);
+      color: var(--blue);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 900;
+      flex-shrink: 0;
+    }
+
+    .account-info h3 {
+      font-size: 15px;
+      margin-bottom: 5px;
+    }
+
+    .account-info p {
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .account-value {
+      text-align: right;
+    }
+
+    .account-value strong {
+      display: block;
+      font-size: 16px;
+      margin-bottom: 5px;
+    }
+
+    .account-value span {
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .table-wrapper {
+      overflow-x: auto;
+      max-height: 420px;
+      overflow-y: auto;
+      padding-right: 4px;
+    }
+
+    .table-wrapper::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+
+    .table-wrapper::-webkit-scrollbar-track {
+      background: #0b1220;
+      border-radius: 999px;
+    }
+
+    .table-wrapper::-webkit-scrollbar-thumb {
+      background: rgba(30, 144, 255, 0.45);
+      border-radius: 999px;
+    }
+
+    .table-wrapper::-webkit-scrollbar-thumb:hover {
+      background: rgba(30, 144, 255, 0.7);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 900px;
+    }
+
+    th,
+    td {
+      padding: 15px 10px;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+      font-size: 14px;
+    }
+
+    th {
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 800;
+      position: sticky;
+      top: 0;
+      background: rgba(16, 24, 39, 0.98);
+      z-index: 2;
+    }
+
+    td {
+      color: var(--text);
+    }
+
+    tbody tr {
+      transition: 0.25s;
+    }
+
+    tbody tr:hover {
+      background: rgba(30, 144, 255, 0.05);
+    }
+
+    .status {
+      padding: 6px 10px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 900;
+      white-space: nowrap;
+    }
+
+    .status.confirmed {
+      background: rgba(48, 209, 88, 0.12);
+      color: var(--success);
+    }
+
+    .status.pending {
+      background: rgba(255, 204, 0, 0.12);
+      color: var(--warning);
+    }
+
+    .type {
+      padding: 6px 10px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 900;
+      white-space: nowrap;
+    }
+
+    .type.income {
+      background: rgba(48, 209, 88, 0.12);
+      color: var(--success);
+    }
+
+    .type.expense {
+      background: rgba(255, 77, 77, 0.12);
+      color: var(--danger);
+    }
+
+    input,
+    select,
+    textarea {
+      width: 100%;
+      padding: 14px 15px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      background: #0b1220;
+      color: var(--text);
+      outline: none;
+      font-size: 14px;
+      transition: 0.25s;
+    }
+
+    textarea {
+      resize: none;
+      height: 92px;
+    }
+
+    input:focus,
+    select:focus,
+    textarea:focus {
+      border-color: var(--blue);
+      box-shadow: 0 0 0 4px rgba(30, 144, 255, 0.12);
+    }
+
+    select option {
+      background: #0b1220;
+      color: var(--text);
+    }
+
+    .input-group label {
+      display: block;
+      margin-bottom: 7px;
+      color: #d8e2f0;
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(5, 7, 12, 0.62);
+      backdrop-filter: blur(10px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 100;
+      padding: 20px;
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+      transition: opacity 0.28s ease, visibility 0.28s ease;
+    }
+
+    .modal-overlay.show {
+      opacity: 1;
+      visibility: visible;
+      pointer-events: auto;
+    }
+
+    .modal-overlay.hide {
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+    }
+
+    .modal {
+      width: 100%;
+      max-width: 720px;
+      background: rgba(16, 24, 39, 0.98);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      box-shadow: 0 30px 100px rgba(0, 0, 0, 0.65);
+      overflow: hidden;
+      position: relative;
+      opacity: 0;
+      transform: translateY(28px) scale(0.94);
+      transition: opacity 0.28s ease, transform 0.28s ease;
+    }
+
+    .modal-overlay.show .modal {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+
+    .modal-overlay.hide .modal {
+      opacity: 0;
+      transform: translateY(24px) scale(0.94);
+    }
+
+    .modal::before {
+      content: "";
+      position: absolute;
+      width: 220px;
+      height: 220px;
+      border-radius: 50%;
+      background: rgba(30, 144, 255, 0.16);
+      filter: blur(12px);
+      top: -90px;
+      right: -80px;
+    }
+
+    .modal-header {
+      padding: 24px 26px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: relative;
+      z-index: 1;
+    }
+
+    .modal-header h2 {
+      font-size: 22px;
+      margin-bottom: 5px;
+    }
+
+    .modal-header p {
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .close-modal {
+      width: 38px;
+      height: 38px;
+      border: 1px solid var(--border);
+      background: #0b1220;
+      color: var(--text);
+      border-radius: 12px;
+      cursor: pointer;
+      font-size: 18px;
+      transition: 0.25s;
+    }
+
+    .close-modal:hover {
+      background: rgba(255, 77, 77, 0.12);
+      color: #ffb3b3;
+      border-color: rgba(255, 77, 77, 0.35);
+    }
+
+    .modal-body {
+      padding: 26px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .bank-form {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+    }
+
+    .bank-form .full {
+      grid-column: 1 / -1;
+    }
+
+    .modal-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 12px;
+      padding: 0 26px 26px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .form-message {
+      display: none;
+      margin-top: 16px;
+      padding: 12px;
+      border-radius: 12px;
+      font-size: 14px;
+      background: rgba(48, 209, 88, 0.12);
+      border: 1px solid rgba(48, 209, 88, 0.35);
+      color: #b8ffc8;
+    }
+
+    .form-message.show {
+      display: block;
+      animation: fadeUp 0.3s ease;
+    }
+
+    .fade-up {
+      animation: fadeUp 0.55s ease both;
+    }
+
+    @keyframes fadeUp {
+      from {
+        opacity: 0;
+        transform: translateY(14px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @media (max-width: 1250px) {
+      .cards {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 760px) {
+      body {
+        display: block;
+      }
+
+      .sidebar {
+        position: relative;
+        width: 100%;
+        height: auto;
+      }
+
+      .main {
+        margin-left: 0;
+        width: 100%;
+        padding: 22px;
+      }
+
+      .topbar {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .top-actions {
+        width: 100%;
+        flex-direction: column;
+      }
+
+      .btn {
+        width: 100%;
+      }
+
+      .cards,
+      .projection-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .bank-form {
+        grid-template-columns: 1fr;
+      }
+
+      .modal-actions {
+        flex-direction: column-reverse;
+      }
+
+      .account-card {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .account-value {
+        text-align: left;
+      }
+
+      .flow-bar {
+        width: 16px;
+      }
+
+      .cash-flow-chart {
+        gap: 7px;
+      }
+    }
+  </style>
+
+  <link rel="stylesheet" href="sidebar-shared.css" />
+</head>
+
+<body data-page="cash">
+  <div id="sidebar-container"></div>
+
+<main class="main">
+    <header class="topbar fade-up">
+      <div class="page-title">
+        <h1>Caixa e Bancos</h1>
+        <p>Controle saldos, contas bancárias, cartões e projeções de caixa.</p>
+      </div>
+
+      <div class="top-actions">
+        <button class="btn btn-outline" type="button">Conciliar extrato</button>
+        <button class="btn btn-primary" type="button" id="openBankModal">Nova conta/cartão</button>
+      </div>
+    </header>
+
+    <section class="cards">
+      <div class="card fade-up">
+        <div class="card-title">Saldo total</div>
+        <div class="card-value positive" id="totalBalance">R$ 0,00</div>
+        <div class="card-info">Bancos + caixa físico</div>
+      </div>
+
+      <div class="card fade-up">
+        <div class="card-title">Saldo em bancos</div>
+        <div class="card-value positive" id="bankBalance">R$ 0,00</div>
+        <div class="card-info">Total disponível em contas bancárias</div>
+      </div>
+
+      <div class="card fade-up">
+        <div class="card-title">Caixa físico</div>
+        <div class="card-value warning" id="cashBalance">R$ 0,00</div>
+        <div class="card-info">Dinheiro disponível em caixa</div>
+      </div>
+
+      <div class="card fade-up">
+        <div class="card-title">Faturas em aberto</div>
+        <div class="card-value negative" id="openInvoices">R$ 0,00</div>
+        <div class="card-info">Cartões com fatura pendente</div>
+      </div>
+    </section>
+
+    <section class="grid">
+      <div class="panel fade-up">
+        <div class="panel-header">
+          <div>
+            <h2>Projeção de caixa</h2>
+            <span>Entradas e saídas previstas para os próximos meses</span>
+          </div>
+          <span>2026</span>
+        </div>
+
+        <div class="projection-grid">
+          <div class="projection-box">
+            <h3>Entradas previstas</h3>
+            <div class="projection-value positive" id="expectedIncome">R$ 0,00</div>
+            <div class="projection-info">Recebimentos esperados nos próximos 30 dias.</div>
+          </div>
+
+          <div class="projection-box">
+            <h3>Saídas previstas</h3>
+            <div class="projection-value negative" id="expectedExpense">R$ 0,00</div>
+            <div class="projection-info">Pagamentos e despesas programadas nos próximos 30 dias.</div>
+          </div>
+        </div>
+
+        <div class="cash-flow-chart" id="cashFlowChart"></div>
+
+        <div class="flow-labels">
+          <span>Mai</span>
+          <span>Jun</span>
+          <span>Jul</span>
+          <span>Ago</span>
+          <span>Set</span>
+          <span>Out</span>
+        </div>
+
+        <div class="legend">
+          <div class="legend-item">
+            <span class="dot green"></span>
+            Entradas previstas
+          </div>
+
+          <div class="legend-item">
+            <span class="dot red"></span>
+            Saídas previstas
+          </div>
+        </div>
+      </div>
+
+      <div class="panel fade-up">
+        <div class="panel-header">
+          <div>
+            <h2>Contas e cartões</h2>
+            <span>Resumo dos meios financeiros cadastrados</span>
+          </div>
+        </div>
+
+        <div class="account-list" id="accountCardsList"></div>
+      </div>
+    </section>
+
+    <section class="panel fade-up">
+      <div class="panel-header">
+        <div>
+          <h2>Fluxo de caixa detalhado</h2>
+          <span>Movimentações previstas e confirmadas</span>
+        </div>
+      </div>
+
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>Data</th>
+              <th>Descrição</th>
+              <th>Tipo</th>
+              <th>Conta</th>
+              <th>Valor</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+
+          <tbody id="cashFlowTable"></tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <div class="modal-overlay" id="bankModalOverlay">
+    <div class="modal">
+      <div class="modal-header">
+        <div>
+          <h2>Nova conta/cartão</h2>
+          <p>Cadastre uma conta bancária, caixa físico ou cartão de crédito.</p>
+        </div>
+
+        <button class="close-modal" id="closeBankModal" type="button">×</button>
+      </div>
+
+      <div class="modal-body">
+        <form id="bankForm" class="bank-form">
+          <div class="input-group">
+            <label for="resourceName">Nome</label>
+            <input type="text" id="resourceName" placeholder="Ex: Banco Principal, Cartão PJ..." required />
+          </div>
+
+          <div class="input-group">
+            <label for="resourceType">Tipo</label>
+            <select id="resourceType" required>
+              <option value="">Selecione</option>
+              <option value="bank">Conta bancária</option>
+              <option value="cash">Caixa físico</option>
+              <option value="credit">Cartão de crédito</option>
+            </select>
+          </div>
+
+          <div class="input-group">
+            <label for="resourceBalance">Saldo atual</label>
+            <input type="text" id="resourceBalance" placeholder="R$ 0,00" required />
+          </div>
+
+          <div class="input-group">
+            <label for="resourceLimit">Limite ou fatura atual</label>
+            <input type="text" id="resourceLimit" placeholder="R$ 0,00" />
+          </div>
+
+          <div class="input-group full">
+            <label for="resourceNotes">Observações</label>
+            <textarea id="resourceNotes" placeholder="Adicione informações opcionais sobre essa conta ou cartão..."></textarea>
+          </div>
+        </form>
+
+        <div class="form-message" id="bankFormMessage">
+          Conta/cartão cadastrado com sucesso!
+        </div>
+      </div>
+
+      <div class="modal-actions">
+        <button class="btn btn-outline" type="button" id="cancelBankModal">Cancelar</button>
+        <button class="btn btn-primary" type="submit" form="bankForm">Salvar cadastro</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const animatedItems = document.querySelectorAll(".fade-up");
+
+    animatedItems.forEach((item, index) => {
+      item.style.animationDelay = `${index * 0.06}s`;
+    });
+
+    let resources = [
+      {
+        id: 1,
+        name: "Banco Principal",
+        type: "bank",
+        balance: 32500,
+        limit: 0,
+        notes: "Conta principal da empresa."
+      },
+      {
+        id: 2,
+        name: "Conta PJ",
+        type: "bank",
+        balance: 18420,
+        limit: 0,
+        notes: "Conta usada para pagamentos operacionais."
+      },
+      {
+        id: 3,
+        name: "Caixa Interno",
+        type: "cash",
+        balance: 4200,
+        limit: 0,
+        notes: "Caixa físico disponível para despesas rápidas."
+      },
+      {
+        id: 4,
+        name: "Cartão Corporativo",
+        type: "credit",
+        balance: 0,
+        limit: 6800,
+        notes: "Fatura atual do cartão corporativo."
+      },
+      {
+        id: 5,
+        name: "Cartão Marketing",
+        type: "credit",
+        balance: 0,
+        limit: 2450,
+        notes: "Cartão utilizado para anúncios e assinaturas."
+      }
+    ];
+
+    let cashFlow = [
+      {
+        date: "03/05/2026",
+        description: "Recebimento cliente Alpha",
+        type: "Entrada",
+        account: "Banco Principal",
+        value: 8400,
+        status: "Confirmado"
+      },
+      {
+        date: "05/05/2026",
+        description: "Prestação de serviço",
+        type: "Entrada",
+        account: "Conta PJ",
+        value: 12700,
+        status: "Pendente"
+      },
+      {
+        date: "07/05/2026",
+        description: "Pagamento fornecedor",
+        type: "Saída",
+        account: "Conta PJ",
+        value: 2480,
+        status: "Pendente"
+      },
+      {
+        date: "10/05/2026",
+        description: "Aluguel escritório",
+        type: "Saída",
+        account: "Banco Principal",
+        value: 3200,
+        status: "Confirmado"
+      },
+      {
+        date: "12/05/2026",
+        description: "Recebimento contrato mensal",
+        type: "Entrada",
+        account: "Banco Principal",
+        value: 18900,
+        status: "Pendente"
+      },
+      {
+        date: "15/05/2026",
+        description: "Fatura cartão corporativo",
+        type: "Saída",
+        account: "Cartão Corporativo",
+        value: 6800,
+        status: "Pendente"
+      },
+      {
+        date: "20/05/2026",
+        description: "Campanha de marketing",
+        type: "Saída",
+        account: "Cartão Marketing",
+        value: 2450,
+        status: "Pendente"
+      }
+    ];
+
+    const totalBalance = document.getElementById("totalBalance");
+    const bankBalance = document.getElementById("bankBalance");
+    const cashBalance = document.getElementById("cashBalance");
+    const openInvoices = document.getElementById("openInvoices");
+
+    const expectedIncome = document.getElementById("expectedIncome");
+    const expectedExpense = document.getElementById("expectedExpense");
+    const cashFlowChart = document.getElementById("cashFlowChart");
+    const accountCardsList = document.getElementById("accountCardsList");
+    const cashFlowTable = document.getElementById("cashFlowTable");
+
+    const openBankModal = document.getElementById("openBankModal");
+    const closeBankModal = document.getElementById("closeBankModal");
+    const cancelBankModal = document.getElementById("cancelBankModal");
+    const bankModalOverlay = document.getElementById("bankModalOverlay");
+    const bankForm = document.getElementById("bankForm");
+    const bankFormMessage = document.getElementById("bankFormMessage");
+
+    const resourceName = document.getElementById("resourceName");
+    const resourceType = document.getElementById("resourceType");
+    const resourceBalance = document.getElementById("resourceBalance");
+    const resourceLimit = document.getElementById("resourceLimit");
+    const resourceNotes = document.getElementById("resourceNotes");
+
+    function formatCurrency(value) {
+      return value.toLocaleString("pt-BR", {
+        style: "currency",
+        currency: "BRL"
+      });
+    }
+
+    function currencyToNumber(value) {
+      if (!value) return 0;
+
+      return Number(
+        value
+          .replace("R$", "")
+          .replace(/\./g, "")
+          .replace(",", ".")
+          .trim()
+      );
+    }
+
+    function maskMoney(input) {
+      input.addEventListener("input", () => {
+        let value = input.value.replace(/\D/g, "");
+
+        if (!value) {
+          input.value = "";
+          return;
+        }
+
+        value = (Number(value) / 100).toLocaleString("pt-BR", {
+          style: "currency",
+          currency: "BRL"
+        });
+
+        input.value = value;
+      });
+    }
+
+    function getTypeLabel(type) {
+      if (type === "bank") return "Conta bancária";
+      if (type === "cash") return "Caixa físico";
+      return "Cartão de crédito";
+    }
+
+    function getTypeIcon(type) {
+      if (type === "bank") return "B";
+      if (type === "cash") return "R$";
+      return "C";
+    }
+
+    function updateCards() {
+      const banks = resources
+        .filter(item => item.type === "bank")
+        .reduce((sum, item) => sum + item.balance, 0);
+
+      const cash = resources
+        .filter(item => item.type === "cash")
+        .reduce((sum, item) => sum + item.balance, 0);
+
+      const invoices = resources
+        .filter(item => item.type === "credit")
+        .reduce((sum, item) => sum + item.limit, 0);
+
+      totalBalance.textContent = formatCurrency(banks + cash);
+      bankBalance.textContent = formatCurrency(banks);
+      cashBalance.textContent = formatCurrency(cash);
+      openInvoices.textContent = formatCurrency(invoices);
+    }
+
+    function updateProjection() {
+      const income = cashFlow
+        .filter(item => item.type === "Entrada")
+        .reduce((sum, item) => sum + item.value, 0);
+
+      const expense = cashFlow
+        .filter(item => item.type === "Saída")
+        .reduce((sum, item) => sum + item.value, 0);
+
+      expectedIncome.textContent = formatCurrency(income);
+      expectedExpense.textContent = formatCurrency(expense);
+    }
+
+    function renderChart() {
+      const months = [
+        { label: "Mai", income: 40000, expense: 18200 },
+        { label: "Jun", income: 37500, expense: 22800 },
+        { label: "Jul", income: 51200, expense: 21400 },
+        { label: "Ago", income: 43800, expense: 26000 },
+        { label: "Set", income: 48500, expense: 28600 },
+        { label: "Out", income: 55600, expense: 31200 }
+      ];
+
+      const maxValue = Math.max(...months.map(item => Math.max(item.income, item.expense)));
+
+      cashFlowChart.innerHTML = "";
+
+      months.forEach(item => {
+        const incomeHeight = Math.max((item.income / maxValue) * 100, 5);
+        const expenseHeight = Math.max((item.expense / maxValue) * 100, 5);
+
+        const column = document.createElement("div");
+        column.className = "flow-column";
+        column.title = `${item.label} | Entradas: ${formatCurrency(item.income)} | Saídas: ${formatCurrency(item.expense)}`;
+
+        column.innerHTML = `
+          <div class="flow-bar income" style="height: ${incomeHeight}%"></div>
+          <div class="flow-bar expense" style="height: ${expenseHeight}%"></div>
+        `;
+
+        cashFlowChart.appendChild(column);
+      });
+    }
+
+    function renderAccounts() {
+      accountCardsList.innerHTML = "";
+
+      resources.forEach(item => {
+        const isCredit = item.type === "credit";
+
+        const card = document.createElement("div");
+        card.className = "account-card";
+
+        card.innerHTML = `
+          <div class="account-left">
+            <div class="account-icon">${getTypeIcon(item.type)}</div>
+            <div class="account-info">
+              <h3>${item.name}</h3>
+              <p>${getTypeLabel(item.type)}</p>
+            </div>
+          </div>
+
+          <div class="account-value">
+            <strong class="${isCredit ? "negative" : "positive"}">
+              ${formatCurrency(isCredit ? item.limit : item.balance)}
+            </strong>
+            <span>${isCredit ? "Fatura atual" : "Saldo atual"}</span>
+          </div>
+        `;
+
+        accountCardsList.appendChild(card);
+      });
+    }
+
+    function renderCashFlowTable() {
+      cashFlowTable.innerHTML = "";
+
+      cashFlow.forEach(item => {
+        const row = document.createElement("tr");
+
+        const typeClass = item.type === "Entrada" ? "income" : "expense";
+        const valueClass = item.type === "Entrada" ? "positive" : "negative";
+        const statusClass = item.status === "Confirmado" ? "confirmed" : "pending";
+
+        row.innerHTML = `
+          <td>${item.date}</td>
+          <td>${item.description}</td>
+          <td><span class="type ${typeClass}">${item.type}</span></td>
+          <td>${item.account}</td>
+          <td class="${valueClass}">${formatCurrency(item.value)}</td>
+          <td><span class="status ${statusClass}">${item.status}</span></td>
+        `;
+
+        cashFlowTable.appendChild(row);
+      });
+    }
+
+    function refreshPage() {
+      updateCards();
+      updateProjection();
+      renderChart();
+      renderAccounts();
+      renderCashFlowTable();
+    }
+
+    function openModal() {
+      bankModalOverlay.classList.remove("hide");
+      bankModalOverlay.classList.add("show");
+      document.body.style.overflow = "hidden";
+
+      setTimeout(() => {
+        resourceName.focus();
+      }, 180);
+    }
+
+    function closeModal() {
+      bankModalOverlay.classList.remove("show");
+      bankModalOverlay.classList.add("hide");
+
+      setTimeout(() => {
+        bankModalOverlay.classList.remove("hide");
+        document.body.style.overflow = "";
+        bankFormMessage.classList.remove("show");
+      }, 280);
+    }
+
+    function saveResource(event) {
+      event.preventDefault();
+
+      const name = resourceName.value.trim();
+      const type = resourceType.value;
+      const balance = currencyToNumber(resourceBalance.value);
+      const limit = currencyToNumber(resourceLimit.value);
+      const notes = resourceNotes.value.trim();
+
+      if (!name || !type) return;
+
+      resources.push({
+        id: Date.now(),
+        name,
+        type,
+        balance,
+        limit,
+        notes
+      });
+
+      bankForm.reset();
+      bankFormMessage.classList.add("show");
+      refreshPage();
+
+      setTimeout(() => {
+        closeModal();
+      }, 900);
+    }
+
+    maskMoney(resourceBalance);
+    maskMoney(resourceLimit);
+
+    openBankModal.addEventListener("click", openModal);
+    closeBankModal.addEventListener("click", closeModal);
+    cancelBankModal.addEventListener("click", closeModal);
+    bankForm.addEventListener("submit", saveResource);
+
+    bankModalOverlay.addEventListener("click", event => {
+      if (event.target === bankModalOverlay) {
+        closeModal();
+      }
+    });
+
+    document.addEventListener("keydown", event => {
+      if (event.key === "Escape" && bankModalOverlay.classList.contains("show")) {
+        closeModal();
+      }
+    });
+
+    refreshPage();
+  </script>
+  <script src="sidebar-loader.js"></script>
+</body>
+
+</html>
